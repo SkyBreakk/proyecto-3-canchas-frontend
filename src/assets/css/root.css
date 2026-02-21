@@ -1,0 +1,59 @@
+:root {
+  /* --- PALETA DE COLORES --- */
+  /* Verdes: El alma de la cancha */
+  --primary-grass: #2d8a39; /* Verde principal (césped natural) */
+  --primary-light: #4caf50; /* Verde vibrante para hovers */
+  --primary-dark: #1e5e26; /* Verde oscuro para acentos */
+
+  /* Neutros: Estructura y elegancia */
+  --bg-stadium: #f4f7f6; /* Fondo gris muy claro (casi blanco) */
+  --card-bg: #ffffff; /* Fondo de tarjetas de canchas */
+  --text-main: #1a1d1a; /* Gris casi negro para lectura */
+  --text-muted: #626b63; /* Gris para info secundaria (ej: dirección) */
+
+  /* Acción y Estado: El "balón" y las alertas */
+  --accent-action: #ff9800; /* Naranja para el botón "Reservar Ahora" */
+  --status-available: #2ecc71; /* Verde para horarios libres */
+  --status-booked: #e74c3c; /* Rojo para horarios ocupados */
+
+  /* --- TIPOGRAFÍA --- */
+  --font-main: "Inter", system-ui, -apple-system, sans-serif;
+  --font-display: "Oswald", sans-serif; /* Ideal para títulos deportivos */
+
+  /* --- MEDIDAS Y ESPACIADOS --- */
+  --base-padding: 1rem;
+  --border-radius-sm: 8px;
+  --border-radius-lg: 16px; /* Esquinas redondeadas y modernas */
+  --transition-speed: 0.3s;
+
+  /* --- SOMBRAS (Para que las canchas "salten" de la pantalla) --- */
+  --shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-heavy: 0 8px 24px rgba(0, 0, 0, 0.15);
+
+  /* --- EXTENSIÓN: AMBIENTE Y DETALLES --- */
+  
+  /* Superficies y Texturas */
+  --primary-synthetic: #25a18e; /* Verde azulado para canchas de pasto sintético */
+  --surface-clay: #d4a373; /* Ocre para canchas de tierra o detalles de borde */
+  --chalk-line: #ffffff; /* Blanco puro para líneas de cal y límites */
+
+  /* Iluminación y Nocturno (Ideal para footers o secciones oscuras) */
+  --bg-night-stadium: #0a1f0d; /* Verde casi negro, como el estadio de noche */
+  --floodlight-glow: #fff9e6; /* Blanco cálido para simular focos de estadio */
+
+  /* Componentes Tácticos y UI */
+  --accent-gold: #d4af37; /* Dorado para "Jugador del partido" o Torneos VIP */
+  --secondary-steel: #bdc3c7; /* Gris metálico para cercados y estructuras */
+
+  /* Estados de Alerta (Inspirados en tarjetas de árbitro) */
+  --status-warning: #f1c40f; /* Amarillo "Tarjeta": avisos de tiempo límite */
+  --status-error: #c0392b; /* Rojo intenso para cancelaciones o errores críticos */
+
+  /* Capas y Elevación */
+  --overlay-dark: rgba(
+    26,
+    29,
+    26,
+    0.6
+  ); /* Para modales y fondos al abrir fotos de canchas */
+}
