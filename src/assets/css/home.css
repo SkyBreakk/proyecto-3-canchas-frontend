@@ -1,0 +1,9 @@
+.home-container {
+  /* background-color: #2e7d32; */
+
+  background-image: url('../img/pasto.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;   
+  min-height: 100vh; 
+}
