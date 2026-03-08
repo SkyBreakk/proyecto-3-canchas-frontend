@@ -3,6 +3,8 @@ import PagesLayout from "../layout/PagesLayout";
 import HomeScreen from "../views/HomeScreen";
 import ReservaScreen from "../views/ReservaScreen";
 import TiendaScreen from "../views/TiendaScreen";
+import LoginScreen from "../views/LoginScreen";
+import RegisterScreen from "../views/RegisterScreen";
 
 const RoutesPrincipal = () => {
   return (
@@ -11,6 +13,8 @@ const RoutesPrincipal = () => {
         <Route index element={<HomeScreen />} />
         <Route path="reserva" element={<ReservaScreen />} />
         <Route path="tienda" element={<TiendaScreen />} />
+        <Route path="/login" element={<LoginScreen />} />
+        <Route path="/register" element={<RegisterScreen />} />
       </Route>
     </Routes>
   );

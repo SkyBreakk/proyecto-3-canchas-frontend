@@ -15,11 +15,11 @@ const HomeView = () => {
                 src="../src/assets/img/zona5pasto.png"
                 alt="Zona5 Logo"
                 className="img-fluid rounded mb-4 pointer"
-                onClick={() => navigate("/canchas")}
+                onClick={() => navigate("/reserva")}
               />
               <button
                 className="btn btn-success btn-lg w-100 fw-bold fs-4"
-                onClick={() => navigate("/canchas")}
+                onClick={() => navigate("/reserva")}
               >
                 Reservar Cancha
               </button>
@@ -35,10 +35,12 @@ const HomeView = () => {
                 <p className="card-text fs-5 text-light opacity-75 lh-base">
                   Tu nueva sede para el fútbol de todas las semanas. En Zona5 te
                   ofrecemos canchas de nivel profesional acompañadas de todos
-                  los servicios que necesitás para una experiencia completa: <br /> 🚗
-                  Estacionamiento propio. <br /> 🚿 Vestuarios amplios y modernos. <br /> 🍻
-                  Sector de Tercer Tiempo para relajar después del partido.
-                  <br /> Reservá tu turno online de forma rápida, segura y sin vueltas
+                  los servicios que necesitás para una experiencia completa:{" "}
+                  <br /> 🚗 Estacionamiento propio. <br /> 🚿 Vestuarios amplios
+                  y modernos. <br /> 🍻 Sector de Tercer Tiempo para relajar
+                  después del partido.
+                  <br /> Reservá tu turno online de forma rápida, segura y sin
+                  vueltas
                 </p>
               </div>
             </div>
@@ -81,31 +83,47 @@ const HomeView = () => {
           <div className="col-12 col-lg-10">
             <div className="card bg-dark text-white rounded-4 shadow border border-success border-opacity-25">
               <div className="card-body p-5 text-center">
-                <h2 className="card-title mb-4 fw-bold">🏆 Torneos y Eventos</h2>
+                <h2 className="card-title mb-4 fw-bold">
+                  🏆 Torneos y Eventos
+                </h2>
                 <p className="card-text fs-5 text-light opacity-75 mb-4">
-                  ¿Querés organizar un campeonato, un cumpleaños o un evento corporativo? 
-                  En Zona5 te damos el espacio y la logística para que sea un éxito.
+                  ¿Querés organizar un campeonato, un cumpleaños o un evento
+                  corporativo? En Zona5 te damos el espacio y la logística para
+                  que sea un éxito.
                 </p>
 
                 <div className="row justify-content-center text-start mt-4">
                   <div className="col-md-8">
                     <ul className="list-unstyled fs-5">
                       <li className="mb-3">
-                        ✅ <span className="ms-2 fw-bold text-success">Precios especiales:</span> Alquiler por bloque de horas para múltiples canchas.
+                        ✅{" "}
+                        <span className="ms-2 fw-bold text-success">
+                          Precios especiales:
+                        </span>{" "}
+                        Alquiler por bloque de horas para múltiples canchas.
                       </li>
                       <li className="mb-3">
-                        ✅ <span className="ms-2 fw-bold text-success">Tercer tiempo exclusivo:</span> Opciones de catering y sector reservado en nuestro bar.
+                        ✅{" "}
+                        <span className="ms-2 fw-bold text-success">
+                          Tercer tiempo exclusivo:
+                        </span>{" "}
+                        Opciones de catering y sector reservado en nuestro bar.
                       </li>
                       <li className="mb-3">
-                        ✅ <span className="ms-2 fw-bold text-success">Organización:</span> Te ayudamos con planillas, pecheras y pelotas para todo el evento.
+                        ✅{" "}
+                        <span className="ms-2 fw-bold text-success">
+                          Organización:
+                        </span>{" "}
+                        Te ayudamos con planillas, pecheras y pelotas para todo
+                        el evento.
                       </li>
                     </ul>
                   </div>
                 </div>
 
-                <button 
-                className="btn btn-success btn-lg w-75 fw-bold fs-4"
-                  onClick={() => navigate('/contacto')}
+                <button
+                  className="btn btn-success btn-lg w-75 fw-bold fs-4"
+                  onClick={() => navigate("/contacto")}
                 >
                   Consultar Fechas Disponibles
                 </button>

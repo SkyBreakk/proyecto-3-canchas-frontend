@@ -8,7 +8,7 @@ const HeaderApp = () => {
     <nav className="navbar navbar-expand-lg custom-navbar">
       <div className="container-lg">
         <NavLink className="navbar-brand" to="/">
-          <img src={logo} alt="ZONA 5" className="logo-img" />
+          <img src={logo} alt="ZONA 5" className="logo-header" />
         </NavLink>
 
         <button
@@ -44,9 +44,18 @@ const HeaderApp = () => {
 
           <div className="d-flex flex-column flex-lg-row gap-2 pb-3 pb-lg-0">
             <button className="btn btn-auth w-100 text-nowrap">
-              Iniciar Sesión
+              <NavLink to="/login" className="text-white text-decoration-none">
+                Iniciar Sesión
+              </NavLink>
             </button>
-            <button className="btn btn-auth w-100">Registrarse</button>
+            <button className="btn btn-auth w-100">
+              <NavLink
+                to="/register"
+                className="text-white text-decoration-none"
+              >
+                Registrarse
+              </NavLink>
+            </button>
           </div>
         </div>
       </div>

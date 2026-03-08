@@ -1,7 +1,7 @@
-.fondo {
-  background: #46721D;
+body {
+  background: #46721d;
 }
-.container-transparente{
+.container-transparente {
   background: rgba(0, 0, 0, 0.192);
   border-radius: 10px;
   backdrop-filter: blur(5px);
@@ -10,7 +10,7 @@
   min-height: 320px;
 }
 
-.logo-fondo{
+.logo-fondo {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -23,7 +23,7 @@
   pointer-events: none;
 }
 
-.form-section{
+.form-section {
   position: relative;
   z-index: 2;
 }
@@ -66,20 +66,22 @@
   width: 120px;
 }
 
-.input{
-    background-color: #216921;
-    border-radius: 10px;
-    border: 1px solid #25B225;
+.input {
+  background-color: #216921;
+  border-radius: 10px;
+  border: 1px solid #25b225;
 
-    transition: border-width 0.2s ease, border-color 0.2s ease;
+  transition:
+    border-width 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .input:hover,
 .input:focus {
-  border-width: 2px;              
-  border-color: #25B225;  
-  background-color: #216921 !important; 
-  color: white;      
+  border-width: 2px;
+  border-color: #25b225;
+  background-color: #216921 !important;
+  color: white;
 }
 
 /* mantener color cuando se escribe */
@@ -90,10 +92,9 @@
   color: white !important;
 }
 
-.texto-error{
+.texto-error {
   color: #ee6767;
 }
-
 
 /* quitar estilos blancos de bootstrap */
 .form-control:focus {
@@ -114,20 +115,23 @@ input:-webkit-autofill:focus {
   opacity: 1;
 }
 
-.boton-iniciar{
-    background-color: #0b380b;
-    color: white;
+.boton-iniciar {
+  background-color: #0b380b;
+  color: white;
 
-    transition: border-width 0.2s ease, border-color 0.2s ease;
+  transition:
+    border-width 0.2s ease,
+    border-color 0.2s ease;
 }
-.boton-iniciar:hover, .boton-iniciar:focus{
-    background-color: #0b380b !important;
-    border: 2px solid #25B225;
-    color: white;
+.boton-iniciar:hover,
+.boton-iniciar:focus {
+  background-color: #0b380b !important;
+  border: 2px solid #25b225;
+  color: white;
 }
 
-.text-registro{
-  color: #25B225 !important;
+.text-registro {
+  color: #25b225 !important;
   font-weight: bold;
   text-decoration: none;
 }
