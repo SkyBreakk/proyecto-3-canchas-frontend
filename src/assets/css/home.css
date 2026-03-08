@@ -1,0 +1,24 @@
+.home-container {
+  /* background-color: #2e7d32; */
+
+  background-image: url('../img/pasto.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;   
+  min-height: 100vh; 
+}
+.pointer{
+  cursor: pointer;
+}
+
+.fondo {
+  background: #46721D;
+}
+.container-transparente{
+  background: rgba(255, 255, 255, 0.048);
+  border-radius: 10px;
+  backdrop-filter: blur(5px);
+  position: relative;
+  overflow: hidden;
+  min-height: 320px;
+}

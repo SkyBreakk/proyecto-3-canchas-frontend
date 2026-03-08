@@ -10,7 +10,7 @@ export default defineConfig({
       },
     }),
   ],
-  server: {
-    port: 9500, // Sustituye por el puerto que desees
-  },
-});
+  server:{
+    port:9500
+  }
+})
