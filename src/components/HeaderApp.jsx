@@ -7,7 +7,7 @@ const HeaderApp = () => {
   return (
     <nav className="navbar navbar-expand-lg custom-navbar">
       <div className="container-lg">
-        <NavLink className="navbar-brand" href="/">
+        <NavLink className="navbar-brand" to="/">
           <img src={logo} alt="ZONA 5" className="logo-img" />
         </NavLink>
 
@@ -26,12 +26,12 @@ const HeaderApp = () => {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav mx-auto mb-2 mb-lg-0 gap-lg-4 text-center">
             <li className="nav-item">
-              <NavLink className="nav-link text-white fs-5" href="#reservar">
+              <NavLink className="nav-link text-white fs-5" to="/reserva">
                 Reservar
               </NavLink>
             </li>
             <li className="nav-item">
-              <NavLink className="nav-link text-white fs-5" href="#comprar">
+              <NavLink className="nav-link text-white fs-5" to="/tienda">
                 Comprar
               </NavLink>
             </li>

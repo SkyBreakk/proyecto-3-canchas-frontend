@@ -1,7 +1,7 @@
 /* ================ HEADER ================ */
 .custom-navbar {
   background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
-  margin: 5vh 0;
+  margin: 3vh 0;
   padding: 0 5%;
 }
 
@@ -44,7 +44,7 @@
 
 .footer-bg {
   background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
-  margin: 5vh 0;
+  margin: 3vh 0;
 }
 
 .footer-divider {

@@ -1,11 +1,11 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import logo from "../assets/img/zona5.png";
 import "../assets/css/header-footer.css";
 
 const FooterApp = () => {
   return (
-    <footer className="footer-bg text-white pt-4">
+    <div className="footer-bg text-white pt-4">
       <div className="container">
         <div className="row align-items-center justify-content-between text-center text-md-start">
           {/* SECCIÓN LOGO */}
@@ -35,13 +35,13 @@ const FooterApp = () => {
             <h5 className="fw-bold mb-3">Navegación</h5>
             <ul className="list-unstyled footer-links">
               <li>
-                <a href="#">Inicio</a>
+                <Link to="/">Inicio</Link>
               </li>
               <li>
-                <a href="#">Reservar</a>
+                <Link to="/reserva">Reservar</Link>
               </li>
               <li>
-                <a href="#">Comprar</a>
+                <Link to="/tienda">Comprar</Link>
               </li>
               <li>
                 <a href="#">Nosotros</a>
@@ -59,8 +59,8 @@ const FooterApp = () => {
               <p className="mb-1">Direccion del lugar</p>
               <p className="mb-1">3815898989</p>
               <p className="mb-1">zona5@gmail.com</p>
-              <p className="mb-1">Lunes a viernes</p>
-              <p className="mb-0">09:00 a 18:00</p>
+              <p className="mb-1">Todos los días</p>
+              <p className="mb-0">Cerrado de 1 a 11hs</p>
             </address>
           </div>
         </div>
@@ -73,7 +73,7 @@ const FooterApp = () => {
           </p>
         </div>
       </div>
-    </footer>
+    </div>
   );
 };
 
