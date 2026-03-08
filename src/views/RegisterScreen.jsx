@@ -57,7 +57,7 @@ function RegisterScreen() {
               />
 
               {errors.username && (
-                <p className="text-danger">{errors.username.message}</p>
+                <p className="texto-error fw-bold">{errors.username.message}</p>
               )}
             </div>
 
@@ -76,7 +76,7 @@ function RegisterScreen() {
               />
 
               {errors.email && (
-                <p className="text-danger">{errors.email.message}</p>
+                <p className="texto-error fw-bold">{errors.email.message}</p>
               )}
             </div>
 
@@ -95,7 +95,7 @@ function RegisterScreen() {
               />
 
               {errors.password && (
-                <p className="text-danger">{errors.password.message}</p>
+                <p className="texto-error fw-bold">{errors.password.message}</p>
               )}
             </div>
 

@@ -50,7 +50,7 @@ function LoginScreen() {
                     })}
                 />
                 {errors.email && (
-                    <p className="text-danger">{errors.email.message}</p>
+                    <p className="texto-error fw-bold">{errors.email.message}</p>
                 )}
                 </div>
 
@@ -64,7 +64,7 @@ function LoginScreen() {
                     })}
                 />
                 {errors.password && (
-                    <p className="text-danger">{errors.password.message}</p>
+                    <p className="texto-error fw-bold">{errors.password.message}</p>
                 )}
                 </div>
 
