@@ -1,0 +1,148 @@
+.item-card {
+  width: 160px;
+  flex-shrink: 0;
+  transition: 0.2s ease-in-out;
+  cursor: pointer;
+  border: 3px solid transparent;
+  border-radius: 12px;
+}
+
+.item-card:hover {
+  border-color: #7ed321;
+  box-shadow: 0 0 15px rgba(126, 211, 33, 0.4);
+}
+
+.img-container {
+  width: 100%;
+  height: 150px;
+  overflow: hidden;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.product-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.item-name {
+  font-size: 1.1rem;
+}
+
+.item-price {
+  font-size: 0.95rem;
+  color: #7ed321;
+  font-weight: 500;
+}
+
+.category-shelf {
+  padding: 20px 15px;
+  min-height: 220px;
+  background-color: rgba(0, 0, 0, 0.65);
+}
+
+.scroll-arrow {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 10;
+  padding: 10px;
+  transition: opacity 0.3s;
+}
+
+.scroll-arrow:hover {
+  opacity: 0.5;
+}
+
+.overflow-hidden {
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.overflow-hidden::-webkit-scrollbar {
+  display: none;
+}
+
+.modal-cancha-custom {
+  background-color: var(--bg-dark) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.modal-img-cancha {
+  width: 100%;
+  border-radius: 15px;
+  object-fit: cover;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.form-control-dark {
+  background-color: #2a2a2a !important;
+  border: 1px solid #3d3d3d !important;
+  color: white !important;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.form-control-dark:focus {
+  border-color: var(--accent-green) !important;
+  box-shadow: 0 0 0 0.25rem var(--accent-glow) !important;
+}
+
+.btn-alquilar {
+  background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%) !important;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 0;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+}
+
+.btn-alquilar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px var(--accent-glow);
+}
+
+.text-secondary-custom {
+  color: var(--text-secondary);
+}
+
+.text-secondary-custom {
+  color: #b3b3b3;
+}
+
+/* Efecto para el botón de carrito */
+.btn-outline-light:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+/* Ajuste para inputs de número en modo oscuro */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  filter: invert(1);
+}
+
+body {
+  background-image: url(../img/pasto.jpg);
+  background-size: 50%;
+  min-height: 100vh;
+}
+
+@media (max-width: 991.98px) {
+  body {
+    background-image: url(../img/pasto.jpg);
+    background-size: 100%;
+    min-height: 120vh;
+  }
+}
