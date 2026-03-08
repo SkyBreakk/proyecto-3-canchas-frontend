@@ -69,7 +69,7 @@ const HomeView = () => {
                   <li className="mb-2">
                     ⚽{" "}
                     <span className="ms-2">
-                      Pelota premium en todos tus partidos
+                      Camisetas de color para diferenciar equipos
                     </span>
                   </li>
                 </ul>
