@@ -35,6 +35,14 @@
   padding-left: 40px;
   color: white;
 }
+.username-icon {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='white' viewBox='0 0 448 512'><path d='M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm89.6 32h-11.8c-22.2 10.3-46.9 16-77.8 16s-55.6-5.7-77.8-16h-11.8C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6C448 348.2 387.8 288 313.6 288z'/></svg>");
+  background-repeat: no-repeat;
+  background-size: 18px;
+  background-position: 10px center;
+  padding-left: 40px;
+  color: white;
+}
 
 .correo-icon {
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='white' viewBox='0 0 512 512'><path d='M464 64H48C21.49 64 0 85.49 0 112v288c0 26.5 21.49 48 48 48h416c26.5 0 48-21.5 48-48V112c0-26.51-21.5-48-48-48zM464 176L256 313 48 176v-48l208 137L464 128v48z'/></svg>");
@@ -74,6 +82,27 @@
   color: white;      
 }
 
+/* mantener color cuando se escribe */
+.input,
+.input:focus,
+.input:active {
+  background-color: #216921 !important;
+  color: white !important;
+}
+
+/* quitar estilos blancos de bootstrap */
+.form-control:focus {
+  background-color: #216921 !important;
+  color: white !important;
+  box-shadow: none !important;
+}
+
+/* cuando el navegador autocompleta */
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px #216921 inset !important;
+  -webkit-text-fill-color: white !important;
+}
 
 .form-control::placeholder {
   color: rgba(255, 255, 255, 0.397) !important;
