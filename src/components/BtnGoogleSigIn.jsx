@@ -1,10 +1,39 @@
+import { useNavigate } from "react-router-dom";
 import { loginWithGoogle } from "../helpers/authGoogle";
 
 const BtnGoogleSigIn = () => {
+
+  const navigate = useNavigate();
+
+  const handleGoogleLogin = async (e) => {
+    e.preventDefault();
+
+    const response = await loginWithGoogle();
+
+    if (!response.ok) {
+      alert("Error al iniciar con Google");
+      return;
+    }
+
+    const email = response.email;
+
+    console.log("Email del usuario:", email);
+
+    const res = await fetch(
+      `http://localhost:4500/api/auth/user/${email}`
+    );
+
+    if (res.ok) {
+      navigate("/");
+    } else {
+      alert("El usuario no está registrado");
+    }
+  };
   return (
     <div className="d-grid mt-3">
       <button
-        onClick={loginWithGoogle}
+        type="button"
+        onClick={handleGoogleLogin} 
         className="btn btn-light border rounded d-flex align-items-center justify-content-center gap-2 py-1"
       >
         <svg
