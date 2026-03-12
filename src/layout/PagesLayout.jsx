@@ -1,13 +1,19 @@
 import { Outlet } from "react-router-dom";
+import HeaderApp from "../components/HeaderApp";
+import FooterApp from "../components/FooterApp";
 
 const PagesLayout = () => {
   return (
     <>
-      <header></header>
+      <header>
+        <HeaderApp />
+      </header>
       <main>
         <Outlet />
       </main>
-      <footer></footer>
+      <footer>
+        <FooterApp />
+      </footer>
     </>
   );
 };

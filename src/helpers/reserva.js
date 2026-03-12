@@ -60,7 +60,22 @@ const deleteReserva = async (reservaID) => {
     }
 }
 
+const checkDisponibilidad = async (params, canchaID) => {
+  try {
+    const resp = await fetch(`${url}/check/${canchaID}`, {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(params),
+    });
+    return await resp.json();
+  } catch (error) {
+    console.error("Error checking availability", error);
+    return { ok: false };
+  }
+};
+
 export {
     getReservasDisponibles,
-    deleteReserva
+    deleteReserva,
+  checkDisponibilidad
 }

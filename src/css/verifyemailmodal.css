@@ -1,0 +1,36 @@
+/* fondo del modal */
+.custom-modal-overlay{
+  position: fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background: rgba(0,0,0,0.7);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:1050;
+}
+
+/* contenido del modal */
+.custom-modal-content{
+  background:#237723f3;
+;
+  border-radius:12px;
+}
+
+/* botón */
+.custom-btn{
+  background:#216921;
+  border:2px solid #25B225;
+  color:white;
+  font-weight:600;
+  transition: all 0.2s ease;
+}
+
+/* hover */
+.custom-btn:hover{
+  background:#216921;
+  border:3px solid #25B225;
+  color:white;
+}

@@ -1,0 +1,116 @@
+/* ================ HEADER ================ */
+.custom-navbar {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
+  margin: 3vh 0;
+  padding: 0 5%;
+}
+
+.logo-header {
+  height: 80px;
+}
+
+.btn-auth {
+  background-color: rgba(10, 30, 10, 0.6);
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: 0.3s;
+  & NavLink {
+    text-decoration: none;
+    color: white;
+  }
+}
+
+.btn-auth:hover {
+  background-color: rgba(20, 50, 20, 0.9);
+  color: #39ff14;
+}
+
+.navbar-toggler {
+  background-color: rgba(10, 30, 10, 0.6);
+  border: 1px solid rgba(57, 255, 20, 0.3);
+  padding: 0.5rem;
+  transition: 0.3s;
+}
+
+.navbar-toggler:focus {
+  box-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
+  outline: none;
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(57, 255, 20, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* ================ FOOTER ================ */
+
+.footer-bg {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
+  margin: 3vh 0;
+}
+
+.footer-divider {
+  width: 3px;
+  background-color: #fff;
+  height: 250px;
+  padding: 0;
+  opacity: 0.7;
+  align-self: center;
+}
+
+.footer-logo {
+  max-width: 200px;
+  height: auto;
+}
+
+.border-start {
+  width: 2px;
+  background-color: white;
+  height: 100%;
+  opacity: 1;
+}
+
+.footer-links li {
+  margin-bottom: 8px;
+}
+
+.footer-links a {
+  color: white;
+  text-decoration: none;
+  font-size: 1.1rem;
+  transition: color 0.3s;
+}
+
+.active-link {
+  border-bottom: 3px solid #32cd32;
+  padding-bottom: 2px;
+}
+
+.footer-links a:hover {
+  color: #32cd32;
+}
+
+.social-icons a {
+  color: #32cd32;
+  font-size: 1.5rem;
+  border: 2px solid #32cd32;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.social-icons a:hover {
+  background-color: #32cd32;
+  color: #000;
+}
+
+.footer-contact p {
+  font-size: 1rem;
+  margin-bottom: 0.2rem;
+}
