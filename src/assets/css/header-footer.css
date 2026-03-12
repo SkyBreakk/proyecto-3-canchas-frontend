@@ -5,7 +5,7 @@
   padding: 0 5%;
 }
 
-.logo-img {
+.logo-header {
   height: 80px;
 }
 
@@ -17,6 +17,10 @@
   border-radius: 8px;
   font-weight: 500;
   transition: 0.3s;
+  & NavLink {
+    text-decoration: none;
+    color: white;
+  }
 }
 
 .btn-auth:hover {
