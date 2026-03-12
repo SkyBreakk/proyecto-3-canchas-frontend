@@ -1,0 +1,83 @@
+@import "./root.css";
+
+.background-reservaAdminScreen {
+    display: flex;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+    min-height: 100vh;
+    max-width: 100%;
+    overflow-x: hidden;
+    /*background-color: var(--primary-grass);*/
+    background-image: url(../img/pasto.jpg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+.reservaRow-reservaAdminScreen {
+    background-color: var(--secondary-steel);
+    font-size: 16px;
+}
+
+@media (width < 768px) {
+    .reservaRow-reservaAdminScreen {
+        font-size: 12px;
+    }
+}
+
+.btnDelete-reservaDeleteModal {
+    color: var(--bg-night-stadium);
+    background-color: var(--status-error);
+}
+
+.btnDelete-reservaDeleteModal:hover {
+    color: var(--status-error);
+    border-color: var(--status-error);
+}
+
+.background-reservaDeleteModal {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 99;
+    background-color: rgba(0, 0, 0, 0.45);
+}
+
+.window-reservaDeleteModal {
+    background-color: var(--primary-grass);
+    animation: animation-reservaDeleteModal 0.25s ease;
+}
+
+@keyframes animation-reservaDeleteModal {
+    from {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.acceptBtn-deleteReservaModal {
+    padding: 5px;
+    border-radius: 10px;
+    border-color: transparent;
+    background-color: var(--primary-dark);
+    color: var(--bg-stadium);
+}
+
+.cancelBtn-deleteReservaModal {
+    padding: 5px;
+    border-radius: 10px;
+    border-color: transparent;
+    background-color: var(--status-error);
+    color: var(--bg-stadium);
+}

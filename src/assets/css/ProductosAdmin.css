@@ -1,0 +1,227 @@
+@import "./root.css";
+
+.background-productoAdminScreen {
+    display: flex;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+    min-height: 100vh;
+    max-width: 100%;
+    overflow-x: hidden;
+    /*background-color: var(--primary-grass);*/
+    background-image: url(../img/pasto.jpg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+.addBtnProducto-productoAdminScreen {
+    background-color: var(--primary-dark);
+    color: var(--bg-stadium);
+}
+
+.containerTable-productoAdminScreen>div {
+    min-width: 800px;
+}
+
+.containerTable-productoAdminScreen {
+    width: 100%;
+    overflow-x: hidden;
+}
+
+@media (width < 768px) {
+    .containerTable-productoAdminScreen {
+        overflow-x: auto;
+        overflow-y: hidden;
+        scrollbar-color: var(--primary-light) var(--bg-stadium);
+        scrollbar-width: thin;
+    }
+}
+
+.productoRow-productoAdminScreen {
+    background-color: var(--secondary-steel);
+    font-size: 16px;
+}
+
+@media (width < 768px) {
+    .productoRow-productoAdminScreen {
+        font-size: 12px;
+    }
+}
+
+.background-ProductoAddModal {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 99;
+    background-color: rgba(0, 0, 0, 0.45);
+}
+
+.window-productoAddModal {
+    background-color: var(--primary-grass);
+    animation: animation-productoAddModal 0.25s ease;
+}
+
+@keyframes animation-productoAddModal {
+    from {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.accept-productoAddModal {
+    padding: 5px;
+    border-radius: 10px;
+    background-color: var(--primary-dark);
+    color: var(--bg-stadium);
+    border-color: transparent;
+}
+
+.cancel-productoAddModal {
+    padding: 5px;
+    border-radius: 10px;
+    background-color: var(--status-error);
+    color: var(--bg-stadium);
+    border-color: transparent;
+}
+
+.background-productoDeleteModal {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 99;
+    background-color: rgba(0, 0, 0, 0.45);
+}
+
+.window-productoDeleteModal {
+    background-color: var(--primary-grass);
+    animation: animation-productoDeleteModal 0.25s ease;
+}
+
+@keyframes animation-productoDeleteModal {
+    from {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.acceptBtn-productoDeleteModal {
+    padding: 5px;
+    border-radius: 10px;
+    border-color: transparent;
+    background-color: var(--primary-dark);
+    color: var(--bg-stadium);
+}
+
+.cancelBtn-productoDeleteModal {
+    padding: 5px;
+    border-radius: 10px;
+    border-color: transparent;
+    background-color: var(--status-error);
+    color: var(--bg-stadium);
+}
+
+.background-productoEditModal {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 99;
+    background-color: rgba(0, 0, 0, 0.45);
+}
+
+.window-productoEditModal {
+    background-color: var(--primary-dark);
+    animation: animation-productoEditModal 0.25s ease;
+    max-width: 900px;
+    max-height: 800px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-color: var(--primary-light) var(--bg-stadium);
+    scrollbar-width: thin;
+}
+
+@keyframes animation-productoEditModal {
+    from {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.imagen-productoEditModal {
+    max-height: 400px;
+    max-width: 600px;
+}
+
+.imagen-productoEditModal img {
+    width: 100%;
+}
+
+.btnSaveEdit-productoEditModal {
+    padding: 10px;
+    border-radius: 10px;
+    border: transparent;
+    background-color: var(--primary-grass);
+    color: var(--bg-stadium);
+}
+
+.btnCancelEdit-productoEditModal {
+    padding: 10px;
+    border-radius: 10px;
+    border: transparent;
+    background-color: var(--status-error);
+    color: var(--bg-stadium);
+}
+
+.imagen-productoAdminScreen img {
+    max-height: 50px;
+}
+
+.btnEditProducto {
+    color: var(--bg-night-stadium);
+    background-color: var(--accent-action);
+}
+
+.btnEditProducto:hover {
+    color: var(--accent-action);
+    border-color: var(--accent-action);
+}
+
+.btnDeleteProducto {
+    color: var(--bg-night-stadium);
+    background-color: var(--status-error);
+}
+
+.btnDeleteProducto:hover {
+    color: var(--status-error);
+    border-color: var(--status-error);
+}

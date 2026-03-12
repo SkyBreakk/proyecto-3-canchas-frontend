@@ -10,7 +10,7 @@ const HomeView = () => {
       <div className="container">
         <div className="row justify-content-center mb-5">
           <div className="col-12 col-md-8 col-lg-6">
-            <div className="bg-dark text-center rounded-4 p-4 shadow">
+            <div className="home-bg text-center rounded-4 p-4 shadow">
               <img
                 src="../src/assets/img/zona5pasto.png"
                 alt="Zona5 Logo"
@@ -28,8 +28,8 @@ const HomeView = () => {
         </div>
 
         <div className="row justify-content-center mb-5">
-          <div className="col-12 col-lg-10">
-            <div className="card bg-dark text-white rounded-4 shadow border-0">
+          <div className="col-12 col-lg-10 ">
+            <div className="home-bg text-white rounded-4 shadow border-0">
               <div className="card-body p-5 text-center">
                 <h2 className="card-title mb-4 fw-bold">Sobre Zona5</h2>
                 <p className="card-text fs-5 text-light opacity-75 lh-base">
@@ -49,7 +49,7 @@ const HomeView = () => {
 
         <div className="row justify-content-center pb-5">
           <div className="col-12 col-lg-10">
-            <div className="card bg-dark text-white rounded-4 shadow border-0">
+            <div className="home-bg text-white rounded-4 shadow border-0">
               <div className="card-body p-5 text-center">
                 <h2 className="card-title mb-4 fw-bold">Membresías</h2>
                 <p className="card-text fs-5 text-light opacity-75 mb-4">
@@ -81,7 +81,7 @@ const HomeView = () => {
         </div>
         <div className="row justify-content-center pb-5">
           <div className="col-12 col-lg-10">
-            <div className="card bg-dark text-white rounded-4 shadow border border-success border-opacity-25">
+            <div className="home-bg text-white rounded-4 shadow border border-success border-opacity-25">
               <div className="card-body p-5 text-center">
                 <h2 className="card-title mb-4 fw-bold">
                   🏆 Torneos y Eventos
