@@ -2,29 +2,35 @@ import { initializeApp } from "firebase/app";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyD1F56FU1rYYRt8NAg6GxJESAziXn8Unq4",
-  authDomain: "auth-ac5fe.firebaseapp.com",
-  projectId: "auth-ac5fe",
-  storageBucket: "auth-ac5fe.firebasestorage.app",
-  messagingSenderId: "641093711229",
-  appId: "1:641093711229:web:28e440b7e453e2f15a0814",
-  measurementId: "G-C9QVF5GSE4",
+  apiKey: "AIzaSyAztlBXTvLfGjPEud-VvRN3_IZBz79Opso",
+  authDomain: "auth-ac5fe-d5512.firebaseapp.com",
+  projectId: "auth-ac5fe-d5512",
+  storageBucket: "auth-ac5fe-d5512.firebasestorage.app",
+  messagingSenderId: "831121148453",
+  appId: "1:831121148453:web:a9a1f8da54d48b1d2f4dcc",
+  measurementId: "G-XX1EW0MYPK"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
-export const loginWithGoogle = () => {
-  signInWithPopup(auth, provider)
-    .then((result) => {
-      // Aquí obtienes los datos del usuario
-      const user = result.user;
-      console.log("Bienvenido:", user.displayName);
-      //   document.getElementById('userProfile').innerHTML = `Hola, ${user.displayName}`;
-    })
-    .catch((error) => {
-      console.error("Error al iniciar sesión:", error.message);
-    });
+export const loginWithGoogle = async () => {
+  try {
+    const result = await signInWithPopup(auth, provider);
+
+    const user = result.user;
+
+    return {
+      ok: true,
+      email: user.email,
+      name: user.displayName,
+    };
+
+  } catch (error) {
+    return {
+      ok: false,
+      message: error.message,
+    };
+  }
 };
