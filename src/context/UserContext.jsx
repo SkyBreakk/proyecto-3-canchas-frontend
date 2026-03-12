@@ -1,13 +1,11 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
+import { LogOut } from "../helpers/auth";
 
 const UserContext = createContext(null);
 
 const UserProvider = ({ children }) => {
-  const [user, setUser] = useState({
-    username: "",
-    email: "",
-    role: "",
-  });
+  const [user, setUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
 
   const loadUserData = async () => {
     try {
@@ -27,16 +25,26 @@ const UserProvider = ({ children }) => {
     } catch (error) {
       console.error("Error al cargar datos de usuario:", error);
       setUser(null);
+    } finally {
+      setAuthLoading(false);
     }
   };
 
+  useEffect(() => {
+    loadUserData();
+  }, []);
+
   const clearUserData = () => {
     setUser(null);
+
+    LogOut();
   };
   //funcion para cargar datos de usuario desde el backend
 
   return (
-    <UserContext.Provider value={{ user, loadUserData, clearUserData }}>
+    <UserContext.Provider
+      value={{ user, authLoading, loadUserData, clearUserData }}
+    >
       {children}
     </UserContext.Provider>
   );

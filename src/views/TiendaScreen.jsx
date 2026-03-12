@@ -20,11 +20,6 @@ const TiendaScreen = () => {
       .finally(() => setLoading(false));
   }, []);
 
-  useEffect(() => {
-    console.log(categorias);
-    console.log(productos);
-  }, [loading]);
-
   const scrollRefs = useRef({});
   const scroll = (catId, direction) => {
     const container = scrollRefs.current[catId];

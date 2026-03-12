@@ -25,9 +25,8 @@ export const registerUser = async (data) => {
     });
 
     const result = await response.json();
-    
-    if (!response.ok) {
 
+    if (!response.ok) {
       const errorMessage =
         result.errors?.email?.msg ||
         result.errors?.username?.msg ||
@@ -44,7 +43,6 @@ export const registerUser = async (data) => {
       message: result.message,
       data: result.data,
     };
-
   } catch (error) {
     return {
       ok: false,
@@ -55,13 +53,16 @@ export const registerUser = async (data) => {
 
 export const verifyEmail = async (data) => {
   try {
-    const response = await fetch("http://localhost:4500/api/auth/verify-email", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await fetch(
+      "http://localhost:4500/api/auth/verify-email",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
       },
-      body: JSON.stringify(data),
-    });
+    );
 
     const result = await response.json();
 
@@ -69,7 +70,6 @@ export const verifyEmail = async (data) => {
       ok: response.ok,
       message: result.message,
     };
-
   } catch (error) {
     return {
       ok: false,
@@ -78,14 +78,14 @@ export const verifyEmail = async (data) => {
   }
 };
 
-// const LogOut = async () => {
-//   const response = await fetch(url + "logout", {
-//     method: "POST",
-//     credentials: "include",
-//   });
-//   const data = await response.json();
-//   return data;
-// };
+const LogOut = async () => {
+  const response = await fetch(url + "logout", {
+    method: "POST",
+    credentials: "include",
+  });
+  const data = await response.json();
+  return data;
+};
 
 // const getPerfil = async () => {
 //   const response = await fetch(url + "profile");
@@ -94,4 +94,4 @@ export const verifyEmail = async (data) => {
 // };
 
 // export { logIn, getPerfil, LogOut };
-export { logIn};
+export { logIn, LogOut };
