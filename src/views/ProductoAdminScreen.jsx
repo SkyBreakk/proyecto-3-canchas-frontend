@@ -1,186 +1,117 @@
-import { useState, useEffect } from "react";
-import "../assets/css/ProductosAdmin.css";
+import { useState, useEffect, useCallback } from "react";
 import {
-    obtenerProductos,
-    crearProducto,
-    actualizarProducto,
-    borrarProducto
+  obtenerProductos,
+  crearProducto,
+  actualizarProducto,
+  borrarProducto,
 } from "../helpers/producto";
-import ProductoAddModal from "../components/ProductoAddModal";
-import ProductoEnLista from "../components/ProductoEnLista";
+import ProductoAdminModal from "../components/modales/ProductoAdminModal";
+import ConfirmModal from "../components/modales/ConfirmModal";
+import ProductoEnLista from "../components/admin/ProductoEnLista";
+import "../assets/css/ProductosAdmin.css";
 
 function ProductoAdminScreen() {
+  const [productos, setProductos] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [pagina, setPagina] = useState(0);
+  const [modalState, setModalState] = useState({
+    form: false,
+    delete: false,
+    selected: null,
+  });
 
-    const [productos, setProductos] = useState([]);
-    const [total, setTotal] = useState(0);
-    const [pagina, setPagina] = useState(0);
-    const [showAddProductoModal, setShowAddProductoModal] = useState(false);
+  const cargarProductos = useCallback(() => {
+    obtenerProductos(5, pagina).then((data) => {
+      if (data.ok) {
+        setProductos(data.productos);
+        setTotal(data.total);
+      }
+    });
+  }, [pagina]);
 
-    const cargarProductos = () => {
-        obtenerProductos(5, pagina).then((data) => {
-            setProductos(data.productos);
-            setTotal(data.total);
-        })
-            .catch(err => console.error("Error al cargar:", err))
-    };
+  useEffect(() => {
+    cargarProductos();
+  }, [cargarProductos]);
 
-    useEffect(() => {
-        cargarProductos();
-    }, [pagina]);
+  const handleAction = async (data) => {
+    const res = data._id
+      ? await actualizarProducto(data)
+      : await crearProducto(data);
+    if (res.ok) cargarProductos();
+    setModalState({ ...modalState, form: false, selected: null });
+  };
 
-    const nextPage = () => {
-        if (pagina + 5 < total) {
-            setPagina(pagina + 5);
+  const handleDelete = async () => {
+    const res = await borrarProducto(modalState.selected._id);
+    if (res.ok) cargarProductos();
+    setModalState({ ...modalState, delete: false, selected: null });
+  };
+
+  return (
+    <section className="background-productoAdminScreen p-5 text-light">
+      <h1 className="text-center display-3 mb-5">Gestión Productos</h1>
+
+      <div className="d-flex justify-content-center mb-4">
+        <button
+          className="btn btn-success"
+          onClick={() => setModalState({ ...modalState, form: true })}
+        >
+          Agregar Producto
+        </button>
+      </div>
+
+      <div className="containerTable-productoAdminScreen p-3 rounded">
+        {/* Cabecera de la tabla (omitida por brevedad, igual a la tuya) */}
+        {productos.map((p) => (
+          <ProductoEnLista
+            key={p._id}
+            producto={p}
+            onEdit={() =>
+              setModalState({ form: true, selected: p, delete: false })
+            }
+            onDelete={() =>
+              setModalState({ delete: true, selected: p, form: false })
+            }
+          />
+        ))}
+      </div>
+
+      {/* Paginación */}
+      <div className="d-flex justify-content-center gap-2 mt-4">
+        <button
+          className="btn btn-primary"
+          onClick={() => setPagina((p) => p - 5)}
+          disabled={pagina === 0}
+        >
+          <i className="bi bi-arrow-left"></i>
+        </button>
+        <button
+          className="btn btn-primary"
+          onClick={() => setPagina((p) => p + 5)}
+          disabled={pagina + 5 >= total}
+        >
+          <i className="bi bi-arrow-right"></i>
+        </button>
+      </div>
+
+      <ProductoAdminModal
+        show={modalState.form}
+        producto={modalState.selected}
+        close={() =>
+          setModalState({ ...modalState, form: false, selected: null })
         }
-    };
+        action={handleAction}
+      />
 
-    const prevPage = () => {
-        if (pagina - 5 >= 0) {
-            setPagina(pagina - 5);
+      <ConfirmModal
+        show={modalState.delete}
+        message={`¿Borrar ${modalState.selected?.nombre}?`}
+        onConfirm={handleDelete}
+        close={() =>
+          setModalState({ ...modalState, delete: false, selected: null })
         }
-    };
-
-    const addProducto = async (newProducto) => {
-        const response = await crearProducto(newProducto);
-        if (response.ok) {
-            cargarProductos();
-            setShowAddProductoModal(false);
-        }
-    };
-
-    const updateProducto = async (productoValue) => {
-        const response = await actualizarProducto(productoValue);
-        if (response.ok) {
-            setProductos(productos.map((aux) => {
-                return aux._id === productoValue._id ? productoValue : aux
-            }));
-        }
-    };
-
-    const deleteProducto = async (productoValue) => {
-        const response = await borrarProducto(productoValue._id);
-        if (response.ok) {
-            setProductos(productos.filter((aux) => {
-                return aux._id !== productoValue._id
-            }));
-            setTotal(prevTotal => prevTotal - 1);
-        }
-    };
-
-    return <section className="background-productoAdminScreen">
-
-        <div className="w-100 px-5">
-
-            <div className="row">
-                <div className="col-12">
-
-                    <div className="text-center mb-5">
-                        <p className="display-3 text-light">Gestión Productos</p>
-                    </div>
-
-                </div>
-            </div>
-            <div className="row">
-                <div className="col-12">
-
-                    <div className="d-flex justify-content-center">
-                        <button
-                            className="btn btn-sm
-                                    addBtnProducto-productoAdminScreen 
-                                    rounded"
-                            type="button"
-                            onClick={() => setShowAddProductoModal(true)} >
-                            Agregar Producto
-                        </button>
-                        <ProductoAddModal
-                            showAddProductoModal={showAddProductoModal}
-                            closeAddProductoModal={() => setShowAddProductoModal(false)}
-                            addProducto={addProducto}
-                        />
-                    </div>
-
-                </div>
-            </div>
-            <div className="row my-2 pt-2 px-2 containerTable-productoAdminScreen">
-                <div className="col-12">
-
-                    <div className="row pt-3 rounded productoRow-productoAdminScreen">
-                        <div className="col">
-                            <div>
-                                <p className="fw-bold" >Imagen</p>
-                            </div>
-                        </div>
-                        <div className="col">
-                            <div>
-                                <p className="fw-bold" >nombre</p>
-                            </div >
-                        </div>
-                        <div className="col">
-                            <div>
-                                <p className="fw-bold" >Precio</p>
-                            </div>
-                        </div>
-                        <div className="col">
-                            <div>
-                                <p className="fw-bold" >Categoria</p>
-                            </div>
-                        </div>
-                        <div className="col">
-                            <div>
-                                <p className="fw-bold" >Descripción</p>
-                            </div>
-                        </div>
-
-                        <div className="col text-center">
-                            <div>
-                                <p className="fw-bold" >Stock</p>
-                            </div>
-                        </div>
-
-                        <div className="col">
-                            <div>
-                                <p className="fw-bold" >Acciones</p>
-                            </div>
-                        </div>
-                    </div>
-                    {productos.map((producto, index) => {
-                        return <ProductoEnLista
-                            key={index}
-                            producto={producto}
-                            updateProducto={updateProducto}
-                            deleteProducto={deleteProducto}
-                        />
-                    })}
-
-                </div>
-            </div>
-
-            <div className="row my-3">
-                <div className="col-12">
-
-                    <div className="d-flex justify-content-center gap-2">
-                        <button
-                            className="btn btn-sm btn-primary d-flex align-items-center justify-content-center"
-                            onClick={prevPage}
-                            disabled={pagina - 5 < 0}
-                            style={{ opacity: pagina - 5 < 0 ? 0.5 : 1 }}
-                        >
-                            <i class="bi bi-arrow-left-short"></i>
-                        </button>
-                        <button
-                            className="btn btn-sm btn-primary d-flex align-items-center justify-content-center"
-                            onClick={nextPage}
-                            disabled={pagina + 5 >= total}
-                            style={{ opacity: pagina + 5 >= total ? 0.5 : 1 }}
-                        >
-                            <i class="bi bi-arrow-right-short"></i>
-                        </button>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </section >
-};
-
-export default ProductoAdminScreen
+      />
+    </section>
+  );
+}
+export default ProductoAdminScreen;

@@ -1,227 +1,86 @@
 @import "./root.css";
 
+/* Contenedor Principal con Overlay para legibilidad */
 .background-productoAdminScreen {
-    display: flex;
-    justify-content: center;
-    padding: 0;
-    margin: 0;
-    min-height: 100vh;
-    max-width: 100%;
-    overflow-x: hidden;
-    /*background-color: var(--primary-grass);*/
-    background-image: url(../img/pasto.jpg);
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
+  min-height: 100vh;
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url(../img/pasto.jpg);
+  background-attachment: fixed;
+  background-position: center;
+  background-size: cover;
+  padding-top: 50px;
+  color: #fff;
 }
 
-.addBtnProducto-productoAdminScreen {
-    background-color: var(--primary-dark);
-    color: var(--bg-stadium);
+/* Estilo Neon para ZONA 5 */
+.neon-text {
+  color: var(--verde-neon, #39ff14);
+  text-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
 }
 
-.containerTable-productoAdminScreen>div {
-    min-width: 800px;
-}
-
+/* Tabla Estilo Stadium */
 .containerTable-productoAdminScreen {
-    width: 100%;
-    overflow-x: hidden;
-}
-
-@media (width < 768px) {
-    .containerTable-productoAdminScreen {
-        overflow-x: auto;
-        overflow-y: hidden;
-        scrollbar-color: var(--primary-light) var(--bg-stadium);
-        scrollbar-width: thin;
-    }
+  background: rgba(20, 20, 20, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
 }
 
 .productoRow-productoAdminScreen {
-    background-color: var(--secondary-steel);
-    font-size: 16px;
+  transition: all 0.3s ease;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-@media (width < 768px) {
-    .productoRow-productoAdminScreen {
-        font-size: 12px;
-    }
+.productoRow-productoAdminScreen:hover {
+  background: rgba(57, 255, 20, 0.05);
 }
 
-.background-ProductoAddModal {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 99;
-    background-color: rgba(0, 0, 0, 0.45);
+/* Modales con estructura Bootstrap */
+.modal-custom-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
 }
 
-.window-productoAddModal {
-    background-color: var(--primary-grass);
-    animation: animation-productoAddModal 0.25s ease;
+.modal-content-zona5 {
+  background-color: var(--bg-night-stadium, #111);
+  border: 1px solid var(--verde-neon, #39ff14);
+  box-shadow: 0 0 20px rgba(57, 255, 20, 0.2);
+  color: white;
 }
 
-@keyframes animation-productoAddModal {
-    from {
-        transform: scale(0.95);
-        opacity: 0;
-    }
-
-    to {
-        transform: scale(1);
-        opacity: 1;
-    }
+.modal-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.modal-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.accept-productoAddModal {
-    padding: 5px;
-    border-radius: 10px;
-    background-color: var(--primary-dark);
-    color: var(--bg-stadium);
-    border-color: transparent;
+/* Botones */
+.btn-neon {
+  background-color: transparent;
+  border: 1px solid var(--verde-neon, #39ff14);
+  color: var(--verde-neon, #39ff14);
+  transition: 0.3s;
 }
 
-.cancel-productoAddModal {
-    padding: 5px;
-    border-radius: 10px;
-    background-color: var(--status-error);
-    color: var(--bg-stadium);
-    border-color: transparent;
+.btn-neon:hover {
+  background-color: var(--verde-neon, #39ff14);
+  color: #000;
+  box-shadow: 0 0 15px var(--verde-neon, #39ff14);
 }
 
-.background-productoDeleteModal {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 99;
-    background-color: rgba(0, 0, 0, 0.45);
-}
-
-.window-productoDeleteModal {
-    background-color: var(--primary-grass);
-    animation: animation-productoDeleteModal 0.25s ease;
-}
-
-@keyframes animation-productoDeleteModal {
-    from {
-        transform: scale(0.95);
-        opacity: 0;
-    }
-
-    to {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
-
-.acceptBtn-productoDeleteModal {
-    padding: 5px;
-    border-radius: 10px;
-    border-color: transparent;
-    background-color: var(--primary-dark);
-    color: var(--bg-stadium);
-}
-
-.cancelBtn-productoDeleteModal {
-    padding: 5px;
-    border-radius: 10px;
-    border-color: transparent;
-    background-color: var(--status-error);
-    color: var(--bg-stadium);
-}
-
-.background-productoEditModal {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 99;
-    background-color: rgba(0, 0, 0, 0.45);
-}
-
-.window-productoEditModal {
-    background-color: var(--primary-dark);
-    animation: animation-productoEditModal 0.25s ease;
-    max-width: 900px;
-    max-height: 800px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    scrollbar-color: var(--primary-light) var(--bg-stadium);
-    scrollbar-width: thin;
-}
-
-@keyframes animation-productoEditModal {
-    from {
-        transform: scale(0.95);
-        opacity: 0;
-    }
-
-    to {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
-
-.imagen-productoEditModal {
-    max-height: 400px;
-    max-width: 600px;
-}
-
-.imagen-productoEditModal img {
-    width: 100%;
-}
-
-.btnSaveEdit-productoEditModal {
-    padding: 10px;
-    border-radius: 10px;
-    border: transparent;
-    background-color: var(--primary-grass);
-    color: var(--bg-stadium);
-}
-
-.btnCancelEdit-productoEditModal {
-    padding: 10px;
-    border-radius: 10px;
-    border: transparent;
-    background-color: var(--status-error);
-    color: var(--bg-stadium);
-}
-
-.imagen-productoAdminScreen img {
-    max-height: 50px;
-}
-
-.btnEditProducto {
-    color: var(--bg-night-stadium);
-    background-color: var(--accent-action);
-}
-
-.btnEditProducto:hover {
-    color: var(--accent-action);
-    border-color: var(--accent-action);
-}
-
-.btnDeleteProducto {
-    color: var(--bg-night-stadium);
-    background-color: var(--status-error);
-}
-
-.btnDeleteProducto:hover {
-    color: var(--status-error);
-    border-color: var(--status-error);
+.btn-delete-zona5 {
+  background-color: #ff4444;
+  border: none;
+  color: white;
 }

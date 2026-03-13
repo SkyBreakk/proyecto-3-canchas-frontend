@@ -1,118 +1,33 @@
 const url = "http://localhost:4500/api/product";
 
-const obtenerProductos = async (limite, inicio) => {
-    try {
-        const response = await fetch(`${url}?limite=${limite}&desde=${inicio}`, {
-            method: "GET",
-            headers: {
-                "Content-type": "application/json",
-                'Cache-Control': 'no-cache'
-            }
-        });
-        const resultado = await response.json();
+const apiFetch = async (endpoint, method = "GET", body = null) => {
+  try {
+    const config = {
+      method,
+      headers: { "Content-type": "application/json" },
+      credentials: "include",
+    };
+    if (body) config.body = JSON.stringify(body);
 
-        if (!response.ok) {
-            throw new Error(resultado.message || `Error:${response.status}`);
-        }
-        return {
-            ok: true,
-            total: resultado.total,
-            productos: resultado.productos
-        }
-    } catch (error) {
-        console.log(error);
-        return {
-            ok: false,
-            message: "Error en solicitar los productos al servidor",
-            productos: [],
-            total: 0
-        }
-    }
+    const response = await fetch(`${url}${endpoint}`, config);
+    const resultado = await response.json();
+
+    if (!response.ok)
+      throw new Error(resultado.message || `Error: ${response.status}`);
+    return { ok: true, ...resultado };
+  } catch (error) {
+    console.error(error);
+    return { ok: false, message: error.message };
+  }
 };
 
-const crearProducto = async (newProducto) => {
-    try {
-        const response = fetch(`${url}/register`, {
-            method: "POST",
-            credentials: "include",
-            headers: { "Content-type": "application/json" },
-            body: JSON.stringify(newProducto)
-        });
+export const obtenerProductos = (limite, inicio) =>
+  apiFetch(`?limite=${limite}&desde=${inicio}`);
 
-        const resultado = await response.json();
+export const crearProducto = (newProducto) =>
+  apiFetch("/", "POST", newProducto);
 
-        if (!response.ok) {
-            throw new Error(resultado.message || `Error: ${response.status}`);
-        }
-        return {
-            ok: true,
-            producto: resultado.producto
-        }
-    } catch (error) {
-        console.log(error);
-        return {
-            ok: false,
-            message: error.message || "Error en la creación de producto"
-        }
-    }
-};
+export const actualizarProducto = (producto) =>
+  apiFetch(`/${producto._id}`, "PUT", producto);
 
-const actualizarProducto = async (productValue) => {
-    try {
-        const response = await fetch(`${url}/update/${productValue._id}`, {
-            method: "PUT",
-            credentials: "include",
-            headers: { "Content-type": "application/json" },
-            body: JSON.stringify(productValue)
-        });
-
-        const resultado = await response.json();
-
-        if (!response.ok) {
-            throw new Error(resultado.message || `Error:${response.status}`);
-        }
-        return {
-            ok: true,
-            producto: resultado.producto
-        }
-    } catch (error) {
-        console.log(error);
-        return {
-            ok: false,
-            message: error.message || "Error en actualizar producto"
-        }
-    }
-};
-
-const borrarProducto = async (productoId) => {
-    try {
-        const response = await fetch(`${url}/${productoId}`, {
-            method: "DELETE",
-            credentials: "include",
-            headers: { "Content-type": "application/json" }
-        });
-
-        const resultado = await response.json();
-
-        if (!response.ok) {
-            throw new Error(resultado.message || `Error: ${response.status}`);
-        }
-        return {
-            ok: true,
-            producto: resultado.producto
-        }
-    } catch (error) {
-        console.log(error);
-        return {
-            ok: false,
-            message: error.message || "Error en borrado de producto"
-        }
-    }
-};
-
-export {
-    obtenerProductos,
-    crearProducto,
-    actualizarProducto,
-    borrarProducto,
-}
+export const borrarProducto = (id) => apiFetch(`/${id}`, "DELETE");
