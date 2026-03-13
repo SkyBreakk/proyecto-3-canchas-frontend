@@ -1,4 +1,4 @@
-const url = "http://localhost:4500/api/product";
+const url = `${import.meta.env.VITE_API_URL}/api/product`;
 
 const obtenerProductos = async (limite, inicio) => {
     try {

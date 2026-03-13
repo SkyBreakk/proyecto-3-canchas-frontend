@@ -77,7 +77,7 @@ function ProductoEditModal({ showEditProductoModal, closeEditProductoModal, modi
 
                         <div className="mt-2">
                             <label className="form-label text-light">Categoria</label>
-                            <input readOnly className="form-control" {...register("categoria")}
+                            <input className="form-control" {...register("categoria")}
                                 type="text" />
                         </div>
 

@@ -1,4 +1,4 @@
-const url = "http://localhost:4500/api/category"
+const url = `${import.meta.env.VITE_API_URL}/api/category`;
 
 const traerCategoriasPaginado = async (limite, inicio) => {
     try {
