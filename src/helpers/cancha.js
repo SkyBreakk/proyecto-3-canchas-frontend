@@ -57,7 +57,7 @@ const registerCancha = async (cancha) => {
 
 const updateCancha = async (newCancha) => {
     try {
-        const response = await fetch(`${url}/${newCancha._id}`, {
+        const response = await fetch(`${url}/update/${newCancha._id}`, {
             method: "PUT",
             headers: { "Content-type": "application/json" },
             credentials: "include",

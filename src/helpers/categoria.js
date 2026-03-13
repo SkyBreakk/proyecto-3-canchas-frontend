@@ -2,7 +2,7 @@ const url = "http://localhost:4500/api/category"
 
 const traerCategoriasPaginado = async (limite, inicio) => {
     try {
-        const response = await fetch(`${url}?limite=${limite}&desde=${inicio}`, {
+        const response = await fetch(`${url}/page?limite=${limite}&desde=${inicio}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -28,7 +28,7 @@ const traerCategoriasPaginado = async (limite, inicio) => {
 
 const crearCategoria = async (newCategoria) => {
     try {
-        const response = await fetch(`${url}/register`, {
+        const response = await fetch(`${url}/`, {
             method: "POST",
             credentials: "include",
             headers: {
@@ -59,7 +59,7 @@ const crearCategoria = async (newCategoria) => {
 
 const actualizarCategoria = async (newCategoria) => {
     try {
-        const response = await fetch(`${url}/update/${newCategoria._id}`, {
+        const response = await fetch(`${url}/${newCategoria._id}`, {
             method: "PUT",
             headers: { "Content-type": "application/json" },
             credentials: "include",
@@ -87,7 +87,7 @@ const actualizarCategoria = async (newCategoria) => {
 
 const eliminarCategoria = async (categoriaID) => {
     try {
-        const response = await fetch(`${url}/update/${categoriaID}`, {
+        const response = await fetch(`${url}/${categoriaID}`, {
             method: "DELETE",
             credentials: "include",
             headers: { "Content-type": "application/json" }

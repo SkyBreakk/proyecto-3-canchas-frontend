@@ -32,7 +32,7 @@ const obtenerProductos = async (limite, inicio) => {
 
 const crearProducto = async (newProducto) => {
     try {
-        const response = fetch(`${url}/register`, {
+        const response = fetch(`${url}/`, {
             method: "POST",
             credentials: "include",
             headers: { "Content-type": "application/json" },
@@ -59,7 +59,7 @@ const crearProducto = async (newProducto) => {
 
 const actualizarProducto = async (productValue) => {
     try {
-        const response = await fetch(`${url}/update/${productValue._id}`, {
+        const response = await fetch(`${url}/${productValue._id}`, {
             method: "PUT",
             credentials: "include",
             headers: { "Content-type": "application/json" },
