@@ -5,12 +5,10 @@ import { CartProvider } from "./context/CartContext.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.js";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import { initMercadoPago } from "@mercadopago/sdk-react";
+initMercadoPago(import.meta.env.VITE_MP_PUBLIC_KEY);
 
 import App from "./App.jsx";
-
-import { initMercadoPago } from "@mercadopago/sdk-react";
-
-initMercadoPago(import.meta.env.VITE_MP_PUBLIC_KEY);
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
