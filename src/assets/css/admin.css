@@ -1,7 +1,7 @@
 @import "./root.css";
 
 /* Contenedor Principal con Overlay para legibilidad */
-.background-productoAdminScreen {
+.background-adminScreen {
   min-height: 100vh;
   background-image:
     linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
@@ -11,6 +11,8 @@
   background-size: cover;
   padding-top: 50px;
   color: #fff;
+  display: flex;
+  justify-content: center;
 }
 
 /* Estilo Neon para ZONA 5 */
@@ -20,7 +22,7 @@
 }
 
 /* Tabla Estilo Stadium */
-.containerTable-productoAdminScreen {
+.containerTable-adminScreen {
   background: rgba(20, 20, 20, 0.8);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -28,12 +30,12 @@
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
 }
 
-.productoRow-productoAdminScreen {
+.itemRow-adminScreen {
   transition: all 0.3s ease;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.productoRow-productoAdminScreen:hover {
+.itemRow-adminScreen:hover {
   background: rgba(57, 255, 20, 0.05);
 }
 
@@ -83,4 +85,31 @@
   background-color: #ff4444;
   border: none;
   color: white;
+}
+
+/* Ajuste del contenedor para móviles */
+@media (max-width: 768px) {
+  .containerTable-adminScreen {
+    padding: 15px !important;
+    margin: 10px;
+    border-radius: 10px;
+  }
+
+  .display-4 {
+    font-size: 1.8rem !important;
+  }
+
+  /* Ocultamos los encabezados de tabla en móvil porque no alinean bien */
+  .header-grid {
+    display: none !important;
+  }
+
+  /* Cada fila se convierte en una "tarjeta" */
+  .itemRow-adminScreen {
+    margin-bottom: 15px;
+    padding: 15px !important;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(57, 255, 20, 0.1);
+    border-radius: 10px;
+  }
 }

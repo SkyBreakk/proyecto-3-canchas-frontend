@@ -9,7 +9,7 @@ const apiFetch = async (endpoint, method = "GET", body = null) => {
     };
     if (body) config.body = JSON.stringify(body);
 
-    const response = await fetch(`${url}${endpoint}`, config);
+    const response = await fetch(`${url}/${endpoint}`, config);
     const resultado = await response.json();
 
     if (!response.ok)
@@ -28,6 +28,6 @@ export const crearProducto = (newProducto) =>
   apiFetch("/", "POST", newProducto);
 
 export const actualizarProducto = (producto) =>
-  apiFetch(`/${producto._id}`, "PUT", producto);
+  apiFetch(`${producto._id}`, "PUT", producto);
 
-export const borrarProducto = (id) => apiFetch(`/${id}`, "DELETE");
+export const borrarProducto = (id) => apiFetch(`${id}`, "DELETE");

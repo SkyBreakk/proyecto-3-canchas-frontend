@@ -1,7 +1,13 @@
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
-function ProductoFormModal({ show, close, action, producto = null }) {
+function ProductoAdminModal({
+  show,
+  close,
+  action,
+  producto = null,
+  categorias = [],
+}) {
   const {
     register,
     handleSubmit,
@@ -10,27 +16,36 @@ function ProductoFormModal({ show, close, action, producto = null }) {
   } = useForm();
 
   useEffect(() => {
-    if (show)
+    if (show) {
+      // Al resetear, nos aseguramos de pasar solo el ID si categoria viene como objeto
+      const categoriaId = producto?.categoria?._id || producto?.categoria || "";
+
       reset(
-        producto || {
-          nombre: "",
-          precio: "",
-          categoria: "",
-          descripcion: "",
-          stock: "",
-          img: "",
-        },
+        producto
+          ? { ...producto, categoria: categoriaId }
+          : {
+              nombre: "",
+              precio: "",
+              categoria: "",
+              descripcion: "",
+              stock: "",
+              img: "",
+            },
       );
+    }
   }, [show, producto, reset]);
 
   if (!show) return null;
 
   return (
-    <div className="modal-custom-overlay">
-      <div className="modal-dialog modal-lg w-100">
-        <div className="modal-content modal-content-zona5">
-          <div className="modal-header">
-            <h5 className="modal-title neon-text">
+    <div className="modal-custom-overlay" onClick={close}>
+      <div
+        className="modal-dialog modal-lg w-100 modal-animacion"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="modal-content modal-cancha-custom p-2">
+          <div className="modal-header border-0">
+            <h5 className="modal-title fw-bold neon-text">
               {producto ? "EDITAR PRODUCTO" : "NUEVO PRODUCTO"}
             </h5>
             <button
@@ -39,6 +54,7 @@ function ProductoFormModal({ show, close, action, producto = null }) {
               onClick={close}
             ></button>
           </div>
+
           <form
             onSubmit={handleSubmit((data) => {
               action(producto ? { ...producto, ...data } : data);
@@ -46,59 +62,109 @@ function ProductoFormModal({ show, close, action, producto = null }) {
             })}
           >
             <div className="modal-body row g-3">
-              <div className="col-md-6 text-center">
-                {producto?.img && (
+              {/* Sección de Imagen */}
+              <div className="col-md-5 text-center">
+                <div className="position-relative">
                   <img
-                    src={producto.img}
-                    className="img-fluid rounded mb-2 border border-secondary"
+                    src={
+                      producto?.img ||
+                      "https://via.placeholder.com/300x200?text=Sin+Imagen"
+                    }
+                    className="modal-img-cancha mb-3"
                     alt="preview"
-                    style={{ maxHeight: "200px" }}
                   />
-                )}
-                <label className="form-label d-block text-start">
+                </div>
+                <label className="form-label small text-secondary-custom d-block text-start">
                   URL de Imagen
                 </label>
                 <input
-                  className="form-control bg-dark text-light border-secondary"
+                  className="form-control form-control-dark"
                   {...register("img")}
+                  placeholder="https://..."
                 />
               </div>
-              <div className="col-md-6">
-                <label className="form-label">Nombre</label>
-                <input
-                  className="form-control bg-dark text-light border-secondary"
-                  {...register("nombre", { required: true })}
-                />
-                <label className="form-label mt-2">Precio</label>
-                <input
-                  className="form-control bg-dark text-light border-secondary"
-                  {...register("precio")}
-                />
-                <label className="form-label mt-2">Stock</label>
-                <input
-                  className="form-control bg-dark text-light border-secondary"
-                  {...register("stock")}
-                />
-              </div>
-              <div className="col-12">
-                <label className="form-label">Descripción</label>
-                <textarea
-                  className="form-control bg-dark text-light border-secondary"
-                  rows="2"
-                  {...register("descripcion")}
-                ></textarea>
+
+              {/* Sección de Datos */}
+              <div className="col-md-7">
+                <div className="mb-3">
+                  <label className="form-label small text-secondary-custom">
+                    Nombre
+                  </label>
+                  <input
+                    className="form-control form-control-dark"
+                    {...register("nombre", {
+                      required: "El nombre es obligatorio",
+                    })}
+                  />
+                </div>
+
+                <div className="row">
+                  <div className="col-6 mb-3">
+                    <label className="form-label small text-secondary-custom">
+                      Precio
+                    </label>
+                    <input
+                      type="number"
+                      className="form-control form-control-dark"
+                      {...register("precio")}
+                    />
+                  </div>
+                  <div className="col-6 mb-3">
+                    <label className="form-label small text-secondary-custom">
+                      Stock
+                    </label>
+                    <input
+                      type="number"
+                      className="form-control form-control-dark"
+                      {...register("stock")}
+                    />
+                  </div>
+                </div>
+
+                {/* SELECTOR DE CATEGORÍA */}
+                <div className="mb-3">
+                  <label className="form-label small text-secondary-custom">
+                    Categoría
+                  </label>
+                  <select
+                    className={`form-select form-control-dark ${errors.categoria ? "is-invalid" : ""}`}
+                    {...register("categoria", {
+                      required: "Selecciona una categoría",
+                    })}
+                  >
+                    <option value="">Seleccione una categoría...</option>
+                    {categorias.map((cat) => (
+                      <option key={cat._id} value={cat._id}>
+                        {cat.nombre}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.categoria && (
+                    <div className="invalid-feedback">
+                      {errors.categoria.message}
+                    </div>
+                  )}
+                </div>
+
+                <div className="mb-0">
+                  <label className="form-label small text-secondary-custom">
+                    Descripción
+                  </label>
+                  <textarea
+                    className="form-control form-control-dark"
+                    rows="3"
+                    {...register("descripcion")}
+                  ></textarea>
+                </div>
               </div>
             </div>
-            <div className="modal-footer">
-              <button
-                type="button"
-                className="btn btn-outline-secondary"
-                onClick={close}
-              >
-                Cerrar
+
+            <div className="modal-footer border-0">
+              <button type="button" className="btn text-light" onClick={close}>
+                CANCELAR
               </button>
-              <button type="submit" className="btn btn-neon px-4">
-                GUARDAR
+              <button type="submit" className="btn btn-alquilar-admin px-5">
+                {producto ? "ACTUALIZAR" : "GUARDAR"}
               </button>
             </div>
           </form>
@@ -107,4 +173,5 @@ function ProductoFormModal({ show, close, action, producto = null }) {
     </div>
   );
 }
-export default ProductoFormModal;
+
+export default ProductoAdminModal;
