@@ -5,12 +5,7 @@ import ReservaScreen from "../views/ReservaScreen";
 import TiendaScreen from "../views/TiendaScreen";
 import LoginScreen from "../views/LoginScreen";
 import RegisterScreen from "../views/RegisterScreen";
-
-import CanchasAdminScreen from "../views/CanchasAdminScreen";
-import ProductoAdminScreen from "../views/ProductoAdminScreen";
-import ReservaAdminScreen from "../views/ReservaAdminScreen";
-import UserAdminScreen from "../views/UserAdminScreen";
-import CategoriaAdminScreen from "../views/CategoriaAdminScreen";
+import AdminScreen from "../views/AdminScreen";
 
 const RoutesPrincipal = () => {
   return (
@@ -21,12 +16,8 @@ const RoutesPrincipal = () => {
         <Route path="tienda" element={<TiendaScreen />} />
         <Route path="/login" element={<LoginScreen />} />
         <Route path="/register" element={<RegisterScreen />} />
-          
-        <Route path="/admin/cancha" element={<CanchasAdminScreen />} />
-        <Route path="/admin/producto" element={<ProductoAdminScreen />} />
-        <Route path="/admin/reserva" element={<ReservaAdminScreen />} />
-        <Route path="/admin/user" element={<UserAdminScreen />} />
-        <Route path="/admin/categoria" element={<CategoriaAdminScreen />} />
+
+        <Route path="/admin/:seccion?" element={<AdminScreen />} />
       </Route>
     </Routes>
   );
