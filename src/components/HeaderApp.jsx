@@ -44,7 +44,7 @@ const HeaderApp = () => {
             <li className="nav-item">
               <NavLink
                 className="nav-link text-white fs-5"
-                onClick={() => console.log(cart.items)}
+                to="/nosotros" // Agregué el path aquí para que sea un link real
               >
                 Nosotros
               </NavLink>
@@ -52,10 +52,19 @@ const HeaderApp = () => {
           </ul>
 
           <div className="d-flex align-items-center justify-content-center flex-column flex-lg-row gap-3 pb-3 pb-lg-0">
-            {!authLoading & !cartLoading && (
+            {!authLoading && !cartLoading && (
               <>
                 {user ? (
                   <div className="d-flex align-items-center gap-3">
+                    {user.role === "admin" && (
+                      <NavLink
+                        to="/admin"
+                        className="btn btn-outline-warning btn-sm me-2"
+                      >
+                        <i className="bi bi-shield-lock me-1"></i> Panel Admin
+                      </NavLink>
+                    )}
+
                     <NavLink
                       className="text-white position-relative"
                       data-bs-toggle="modal"
@@ -70,7 +79,7 @@ const HeaderApp = () => {
                     </NavLink>
 
                     <span className="text-white fw-bold ms-2">
-                      Hola, <span className="text-neon">{user.username}</span>
+                      Hola, <span className="user-neon">{user.username}</span>
                     </span>
 
                     <button

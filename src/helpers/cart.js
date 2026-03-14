@@ -1,6 +1,5 @@
 const API_URL = "http://localhost:4500/api/cart";
 
-// Helper para manejar las cabeceras de autenticación
 const getHeaders = () => ({
   "Content-Type": "application/json",
 });
@@ -12,7 +11,7 @@ export const cartService = {
       credentials: "include",
     });
     const data = await res.json();
-    return data.cart || data; // Maneja la estructura {ok: true, cart} o solo cart
+    return data.cart || data;
   },
 
   addToCart: async (productoId, cantidad) => {

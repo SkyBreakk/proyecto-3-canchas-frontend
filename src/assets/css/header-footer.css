@@ -9,6 +9,10 @@
   height: 80px;
 }
 
+.user-neon {
+  color: var(--verde-neon, #39ff14);
+}
+
 .btn-auth {
   background-color: rgba(10, 30, 10, 0.6);
   color: white;

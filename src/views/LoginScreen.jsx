@@ -7,6 +7,7 @@ import zona5 from "../assets/img/logo.png";
 import "../css/login.css";
 import AlertApp from "../components/AlertApp";
 import BtnGoogleSigIn from "../components/BtnGoogleSigIn";
+
 function LoginScreen() {
   const { loadUserData } = useContext(UserContext);
   const navigate = useNavigate();
@@ -80,13 +81,14 @@ function LoginScreen() {
                 {!response?.ok && response && (
                     <AlertApp message={response?.message} />
                 )}
+                
                 <div className="text-center text-white my-3">
                     <small>o continuar con</small>
-                    </div>
-
-                    <div className="text-center">
+                </div>
+                <div className="text-center">
                     <BtnGoogleSigIn />
                 </div>
+
                 <p className="text-center text-white my-3">
                 ¿No tienes cuenta?{" "}
                 <a href="/register" className="text-registro">

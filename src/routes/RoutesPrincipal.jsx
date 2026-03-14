@@ -5,6 +5,7 @@ import ReservaScreen from "../views/ReservaScreen";
 import TiendaScreen from "../views/TiendaScreen";
 import LoginScreen from "../views/LoginScreen";
 import RegisterScreen from "../views/RegisterScreen";
+import AdminScreen from "../views/AdminScreen";
 
 const RoutesPrincipal = () => {
   return (
@@ -15,6 +16,8 @@ const RoutesPrincipal = () => {
         <Route path="tienda" element={<TiendaScreen />} />
         <Route path="/login" element={<LoginScreen />} />
         <Route path="/register" element={<RegisterScreen />} />
+
+        <Route path="/admin/:seccion?" element={<AdminScreen />} />
       </Route>
     </Routes>
   );

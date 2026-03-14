@@ -36,10 +36,8 @@ const UserProvider = ({ children }) => {
 
   const clearUserData = () => {
     setUser(null);
-
     LogOut();
   };
-  //funcion para cargar datos de usuario desde el backend
 
   return (
     <UserContext.Provider
