@@ -43,9 +43,22 @@ export const CartProvider = ({ children }) => {
     setCart(updatedCart);
   };
 
-  const updateQuantity = async (productoId, cantidad) => {
+  /* const updateQuantity = async (productoId, cantidad) => {
     const updatedCart = await cartService.updateItem(productoId, cantidad);
     setCart(updatedCart);
+  }; */
+
+  const updateQuantity = async (productoId, cantidad) => {
+    if (cantidad <= 0) {
+      return removeItem(productoId);
+    }
+
+    try {
+      const updatedCart = await cartService.updateItem(productoId, cantidad);
+      if (updatedCart) setCart(updatedCart);
+    } catch (error) {
+      console.error("Error actualizando cantidad", error);
+    }
   };
 
   const removeItem = async (productoId) => {
