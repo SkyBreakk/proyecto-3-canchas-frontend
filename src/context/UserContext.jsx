@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 
 const UserContext = createContext(null);
 
@@ -29,6 +29,10 @@ const UserProvider = ({ children }) => {
       setUser(null);
     }
   };
+
+  useEffect(() => {
+    loadUserData();
+  }, []);
 
   const clearUserData = () => {
     setUser(null);
