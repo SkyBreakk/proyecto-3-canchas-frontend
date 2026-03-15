@@ -29,7 +29,7 @@ const CartScreen = () => {
           {cartItems.length > 0 && (
             <button
               onClick={clearCart}
-              className="btn btn-outline-danger fw-bold rounded-3"
+              className="btn btn-danger fw-bold rounded-3"
             >
               Vaciar carrito
             </button>
