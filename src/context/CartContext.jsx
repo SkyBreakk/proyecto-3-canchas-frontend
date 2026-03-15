@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { cartService } from "../helpers/cart";
+import { UserContext } from "./UserContext";
 
 const CartContext = createContext();
 
@@ -8,6 +9,7 @@ export const CartProvider = ({ children }) => {
   const [cartLoading, setCartLoading] = useState(true);
   const totalItems =
     cart.items.reduce((acc, item) => acc + item.cantidad, 0) || 0;
+  const { user, authLoading } = useContext(UserContext);
 
   const fetchCart = async () => {
     try {
@@ -26,8 +28,15 @@ export const CartProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    fetchCart();
-  }, []);
+    if (!authLoading) {
+      if (user) {
+        fetchCart();
+      } else {
+        setCart({ items: [], total: 0 });
+        setCartLoading(false);
+      }
+    }
+  }, [user, authLoading]);
 
   const addItem = async (productoId, cantidad) => {
     const updatedCart = await cartService.addToCart(productoId, cantidad);
@@ -67,5 +76,4 @@ export const CartProvider = ({ children }) => {
   );
 };
 
-// Hook personalizado para usar el carrito fácilmente
 export const useCart = () => useContext(CartContext);
