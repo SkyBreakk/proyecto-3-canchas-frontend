@@ -1,83 +1,87 @@
-import { useEffect, createContext, useState } from "react";
-import {
-  getCart,
-  vaciarCarritoApi,
-  actualizarCantidadApi,
-  eliminarItemApi,
-} from "../helpers/cart";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { cartService } from "../helpers/cart";
+import { UserContext } from "./UserContext";
 
-const CartContext = createContext(null);
+const CartContext = createContext();
 
-const CartProvider = ({ children }) => {
-  const [cartItems, setCartItems] = useState([]);
-  const [total, setTotal] = useState(null);
+export const CartProvider = ({ children }) => {
+  const [cart, setCart] = useState({ items: [], total: 0 });
+  const [cartLoading, setCartLoading] = useState(true);
+  const totalItems =
+    cart.items.reduce((acc, item) => acc + item.cantidad, 0) || 0;
+  const { user, authLoading } = useContext(UserContext);
+
+  const fetchCart = async () => {
+    try {
+      const data = await cartService.getCart();
+      if (data && data.items) {
+        setCart(data);
+      } else {
+        setCart({ items: [], total: 0 });
+      }
+    } catch (error) {
+      console.warn("Usuario no autenticado o error de conexión");
+      setCart({ items: [], total: 0 });
+    } finally {
+      setCartLoading(false);
+    }
+  };
 
   useEffect(() => {
-    getCart()
-      .then((data) => {
-        if (data && data.cart && data.cart.items) {
-          setCartItems(data.cart.items);
-          setTotal(data.cart.total || 0);
-        } else {
-          setCartItems([]);
-          setTotal(0);
-        }
-      })
-      .catch((error) => {
-        console.log("Error al traer el carrito:", error);
-        setCartItems([]);
-        setTotal(0);
-      });
-  }, []);
-
-  const addToCart = (item) => {
-    setCartItems((prevItems) => [...prevItems, item]);
-  };
-
-  const removeFromCart = async (itemId) => {
-    const data = await eliminarItemApi(itemId);
-    if (data) {
-      setCartItems(data.items || []);
-      setTotal(data.total || 0);
-    }
-  };
-
-  const restarCantidad = async (itemId) => {
-    const item = cartItems.find(
-      (i) => (i.producto._id || i.producto.id) === itemId,
-    );
-    if (!item) return;
-
-    if (item.cantidad > 1) {
-      const nuevaCantidad = item.cantidad - 1;
-      const data = await actualizarCantidadApi(itemId, nuevaCantidad);
-
-      if (data) {
-        setCartItems(data.items || []);
-        setTotal(data.total || 0);
+    if (!authLoading) {
+      if (user) {
+        fetchCart();
+      } else {
+        setCart({ items: [], total: 0 });
+        setCartLoading(false);
       }
-    } else {
-      await removeFromCart(itemId);
     }
+  }, [user, authLoading]);
+
+  const addItem = async (productoId, cantidad) => {
+    const updatedCart = await cartService.addToCart(productoId, cantidad);
+    setCart(updatedCart);
+  };
+
+  /* const updateQuantity = async (productoId, cantidad) => {
+    const updatedCart = await cartService.updateItem(productoId, cantidad);
+    setCart(updatedCart);
+  }; */
+
+  const updateQuantity = async (productoId, cantidad) => {
+    if (cantidad <= 0) {
+      return removeItem(productoId);
+    }
+
+    try {
+      const updatedCart = await cartService.updateItem(productoId, cantidad);
+      if (updatedCart) setCart(updatedCart);
+    } catch (error) {
+      console.error("Error actualizando cantidad", error);
+    }
+  };
+
+  const removeItem = async (productoId) => {
+    const updatedCart = await cartService.removeItem(productoId);
+    setCart(updatedCart);
   };
 
   const clearCart = async () => {
-    const data = await vaciarCarritoApi();
-    if (data) {
-      setCartItems([]);
-      setTotal(0);
-    }
+    await cartService.clearCart();
+    setCart({ items: [], total: 0 });
   };
 
   return (
     <CartContext.Provider
       value={{
-        cartItems,
-        total,
-        addToCart,
-        removeFromCart,
-        restarCantidad,
+        cart,
+        cartLoading,
+        totalItems,
+        addItem,
+        updateQuantity,
+        removeItem,
         clearCart,
+        fetchCart,
       }}
     >
       {children}
@@ -85,4 +89,4 @@ const CartProvider = ({ children }) => {
   );
 };
 
-export { CartContext, CartProvider };
+export const useCart = () => useContext(CartContext);

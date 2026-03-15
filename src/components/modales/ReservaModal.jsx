@@ -81,7 +81,10 @@ const CanchaModal = ({ cancha }) => {
       aria-labelledby="modalCanchaLabel"
     >
       <div className="modal-dialog modal-lg modal-dialog-centered">
-        <div className="modal-content modal-cancha-custom text-white">
+        <div
+          className="modal-content modal-cancha-custom text-white"
+          style={{ maxHeight: "80vh", overflowY: "auto" }}
+        >
           {!cancha ? (
             <div className="modal-body text-center p-5">
               <div className="spinner-border text-primary" role="status"></div>

@@ -1,14 +1,13 @@
-import React, { useContext } from "react";
-import { CartContext } from "../context/CartContext";
+import { useCart } from "../context/CartContext";
 import PaymentBtnApp from "../components/PaymentBtnApp";
 import "../assets/css/cart.css";
 import { Link } from "react-router-dom";
 
 const CartScreen = () => {
-  const { cartItems, total, clearCart, restarCantidad } =
-    useContext(CartContext);
+  const { cart, cartLoading, totalItems, clearCart, updateQuantity } =
+    useCart();
 
-  if (total === null || cartItems === undefined) {
+  if (cartLoading) {
     return (
       <main className="carrito-container py-5 d-flex justify-content-center align-items-center">
         <h2 className="text-white">Cargando tu carrito...</h2>
@@ -17,7 +16,7 @@ const CartScreen = () => {
   }
 
   const costoEnvio = 20000;
-  const totalFinal = cartItems.length > 0 ? Number(total) + costoEnvio : 0;
+  const totalFinal = totalItems > 0 ? Number(cart.total) + costoEnvio : 0;
 
   return (
     <main className="carrito-container py-5">
@@ -26,7 +25,7 @@ const CartScreen = () => {
           <h1 className="text-white fw-bold m-0 display-4">
             Carrito de compras
           </h1>
-          {cartItems.length > 0 && (
+          {totalItems > 0 && (
             <button
               onClick={clearCart}
               className="btn btn-danger fw-bold rounded-3"
@@ -38,12 +37,12 @@ const CartScreen = () => {
 
         <div className="row g-4">
           <div className="col-12 col-lg-7">
-            {cartItems.length === 0 ? (
+            {cart.items.length === 0 ? (
               <div className="bg-zona5-dark rounded-4 p-5 text-center shadow">
                 <h3 className="text-white">Tu carrito está vacío</h3>
               </div>
             ) : (
-              cartItems.map((item, index) => {
+              cart.items.map((item, index) => {
                 const itemId = item.producto._id || item.producto.id;
 
                 return (
@@ -78,7 +77,9 @@ const CartScreen = () => {
                         </h4>
 
                         <button
-                          onClick={() => restarCantidad(itemId)}
+                          onClick={() =>
+                            updateQuantity(itemId, item.cantidad - 1)
+                          }
                           className="btn btn-danger rounded-3 d-flex justify-content-center align-items-center p-0"
                           style={{
                             width: "32px",
@@ -116,7 +117,7 @@ const CartScreen = () => {
 
               <div className="d-flex justify-content-between mb-3 fs-5">
                 <span>Subtotal</span>
-                <span>${total.toLocaleString("es-AR")}</span>
+                <span>${cart.total.toLocaleString("es-AR")}</span>
               </div>
 
               <div className="d-flex justify-content-between mb-4 fs-5">
@@ -131,7 +132,7 @@ const CartScreen = () => {
                 <span>${totalFinal.toLocaleString("es-AR")}</span>
               </div>
 
-              {cartItems.length > 0 ? (
+              {cart.items.length > 0 ? (
                 <div className="w-100">
                   <PaymentBtnApp total={totalFinal} />
                 </div>

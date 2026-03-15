@@ -9,8 +9,6 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import "font-awesome/css/font-awesome.css";
 initMercadoPago(import.meta.env.VITE_MP_PUBLIC_KEY);
 
-
-
 import App from "./App.jsx";
 
 createRoot(document.getElementById("root")).render(
