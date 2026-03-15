@@ -62,7 +62,6 @@ function CategoriaAdmin() {
         </button>
       </div>
 
-      {/* Tabla de Categorías Inline */}
       <div className="row fw-bold border-bottom pb-2 mb-2 neon-text">
         <div className="col-6">Nombre</div>
         <div className="col-6 text-center">Acciones</div>
@@ -97,7 +96,6 @@ function CategoriaAdmin() {
         </div>
       ))}
 
-      {/* Paginación */}
       <div className="d-flex justify-content-center gap-3 mt-4">
         <button
           className="btn btn-neon btn-sm"

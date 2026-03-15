@@ -67,7 +67,6 @@ function ProductoAdmin() {
         </button>
       </div>
 
-      {/* Cabecera: se oculta en móviles con d-none d-md-flex */}
       <div className="row fw-bold border-bottom pb-2 mb-2 neon-text px-3 text-center d-none d-md-flex header-grid">
         <div className="col-md-2">Img</div>
         <div className="col-md-3 text-start">Producto</div>
@@ -81,7 +80,6 @@ function ProductoAdmin() {
           key={p._id}
           className="row itemRow-adminScreen py-3 align-items-center mx-0 px-2 text-center text-md-start"
         >
-          {/* Imagen: centrada en móvil, pequeña en PC */}
           <div className="col-12 col-md-2 mb-3 mb-md-0 d-flex justify-content-center">
             <img
               src={p.img}
@@ -91,7 +89,6 @@ function ProductoAdmin() {
             />
           </div>
 
-          {/* Info Principal */}
           <div className="col-12 col-md-3 mb-2 mb-md-0">
             <span className="fw-bold d-block text-uppercase fs-5 fs-md-6">
               {p.nombre}
@@ -101,13 +98,11 @@ function ProductoAdmin() {
             </small>
           </div>
 
-          {/* Precio: con etiqueta solo en móvil */}
           <div className="col-6 col-md-2 mb-3 mb-md-0 text-md-center">
             <small className="d-block d-md-none text-muted">Precio</small>
             <span className="neon-text fw-bold fs-5">${p.precio}</span>
           </div>
 
-          {/* Stock: con etiqueta solo en móvil */}
           <div className="col-6 col-md-3 mb-3 mb-md-0 text-md-center">
             <small className="d-block d-md-none text-muted mb-1">
               Disponibilidad
@@ -119,7 +114,6 @@ function ProductoAdmin() {
             </span>
           </div>
 
-          {/* Acciones: botones más grandes para dedos en móviles */}
           <div className="col-12 col-md-2 mt-2 mt-md-0 text-center text-md-end">
             <div className="btn-group w-100 w-md-auto">
               <button

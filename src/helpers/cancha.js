@@ -16,7 +16,6 @@ export const apiCancha = {
 
   update: (data) =>
     fetch(`${url}/update/${data._id}`, {
-      // Corregido: agregado /update/
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       credentials: "include",

@@ -120,7 +120,6 @@ const ProductoModal = ({ producto }) => {
                         </div>
                       </div>
 
-                      {/* Botones de Acción */}
                       <div className="d-grid gap-2">
                         <button
                           type="submit"

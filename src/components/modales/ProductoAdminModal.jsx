@@ -17,7 +17,6 @@ function ProductoAdminModal({
 
   useEffect(() => {
     if (show) {
-      // Al resetear, nos aseguramos de pasar solo el ID si categoria viene como objeto
       const categoriaId = producto?.categoria?._id || producto?.categoria || "";
 
       reset(
@@ -62,7 +61,6 @@ function ProductoAdminModal({
             })}
           >
             <div className="modal-body row g-3">
-              {/* Sección de Imagen */}
               <div className="col-md-5 text-center">
                 <div className="position-relative">
                   <img
@@ -84,7 +82,6 @@ function ProductoAdminModal({
                 />
               </div>
 
-              {/* Sección de Datos */}
               <div className="col-md-7">
                 <div className="mb-3">
                   <label className="form-label small text-secondary-custom">
@@ -121,7 +118,6 @@ function ProductoAdminModal({
                   </div>
                 </div>
 
-                {/* SELECTOR DE CATEGORÍA */}
                 <div className="mb-3">
                   <label className="form-label small text-secondary-custom">
                     Categoría

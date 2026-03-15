@@ -8,7 +8,6 @@ const FooterApp = () => {
     <div className="footer-bg text-white pt-4">
       <div className="container">
         <div className="row align-items-center justify-content-between text-center text-md-start">
-          {/* SECCIÓN LOGO */}
           <div className="col-md-3 mb-4 mb-md-0 d-flex flex-column align-items-center">
             <div className="logo-container mb-2">
               <img src={logo} alt="ZONA5 Logo" className="footer-logo" />
@@ -27,10 +26,8 @@ const FooterApp = () => {
             </div>
           </div>
 
-          {/* DIVISOR 1 */}
           <div className="footer-divider d-none d-md-block"></div>
 
-          {/* SECCIÓN NAVEGACIÓN */}
           <div className="col-md-3 mb-4 mb-md-0 d-flex flex-column align-items-center align-items-md-start">
             <h5 className="fw-bold mb-3">Navegación</h5>
             <ul className="list-unstyled footer-links">
@@ -49,10 +46,8 @@ const FooterApp = () => {
             </ul>
           </div>
 
-          {/* DIVISOR 2 */}
           <div className="footer-divider d-none d-md-block"></div>
 
-          {/* SECCIÓN CONTACTO */}
           <div className="col-md-3 d-flex flex-column align-items-center align-items-md-start">
             <h5 className="fw-bold mb-3">Contacto</h5>
             <address className="footer-contact">

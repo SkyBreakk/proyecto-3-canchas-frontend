@@ -45,7 +45,6 @@ function UserAdmin() {
         Gestión de Usuarios
       </h1>
 
-      {/* Cabecera Estilo Categorías */}
       <div className="row fw-bold border-bottom pb-2 mb-2 neon-text px-3">
         <div className="col-3 d-none d-md-block">Usuario</div>
         <div className="col-7 col-md-3">Email</div>
@@ -81,7 +80,6 @@ function UserAdmin() {
         </div>
       ))}
 
-      {/* Paginación Unificada */}
       <div className="d-flex justify-content-center align-items-center gap-3 mt-4">
         <button
           className="btn btn-sm btn-neon"

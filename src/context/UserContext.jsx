@@ -12,7 +12,7 @@ const UserProvider = ({ children }) => {
   const loadUserData = async () => {
     try {
       const response = await fetch("http://localhost:4500/api/auth/profile", {
-        credentials: "include", // para enviar cookies
+        credentials: "include",
       });
       if (response.ok) {
         const { data } = await response.json();
@@ -22,7 +22,7 @@ const UserProvider = ({ children }) => {
           role: data.role,
         });
       } else {
-        setUser(null); // Si no se pudo cargar, se considera no autenticado
+        setUser(null);
       }
     } catch (error) {
       console.error("Error al cargar datos de usuario:", error);
@@ -37,7 +37,6 @@ const UserProvider = ({ children }) => {
   const clearUserData = () => {
     setUser(null);
   };
-  //funcion para cargar datos de usuario desde el backend
 
   return (
     <UserContext.Provider value={{ user, loadUserData, clearUserData }}>
