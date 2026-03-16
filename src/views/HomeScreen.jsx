@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../assets/css/home.css";
+import ContactoModal from "../components/modales/ContactoModal";
 
 const HomeView = () => {
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
   return (
@@ -120,10 +122,9 @@ const HomeView = () => {
                     </ul>
                   </div>
                 </div>
-
                 <button
                   className="btn btn-success btn-lg w-75 fw-bold fs-4"
-                  onClick={() => navigate("/contacto")}
+                  onClick={() => setShowModal(true)}
                 >
                   Consultar Fechas Disponibles
                 </button>
@@ -132,6 +133,7 @@ const HomeView = () => {
           </div>
         </div>
       </div>
+      <ContactoModal show={showModal} handleClose={() => setShowModal(false)} />
     </main>
   );
 };

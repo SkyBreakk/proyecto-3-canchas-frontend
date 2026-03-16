@@ -32,3 +32,26 @@ export const checkDisponibilidad = async (params, canchaID) => {
     return { ok: false };
   }
 };
+
+export const contactoReserva = async (data) => {
+  try {
+    const response = await fetch(`${url}/contacto`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.message || "Error en la servidor");
+    }
+
+    return result;
+  } catch (error) {
+    console.error("Error en el helper contactoReserva:", error);
+    throw error;
+  }
+};
