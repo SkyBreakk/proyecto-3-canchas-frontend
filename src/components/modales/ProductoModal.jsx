@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
+import { useCart } from "../../context/CartContext";
 
 const ProductoModal = ({ producto }) => {
+  const { addItem } = useCart();
   const {
     register,
     handleSubmit,
@@ -13,9 +15,15 @@ const ProductoModal = ({ producto }) => {
 
   const cantidadSeleccionada = watch("cantidad");
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data, accion) => {
     const pedido = { producto: producto, cantidad: parseInt(data.cantidad) };
-    console.log("Procesando:", pedido);
+
+    if (accion === "carrito") {
+      addItem(producto._id, pedido.cantidad);
+      // Aquí podrías mostrar un mensaje de "Producto añadido"
+    } else if (accion === "comprar") {
+      console.log("Procesando:", pedido);
+    }
   };
 
   return (
@@ -26,7 +34,10 @@ const ProductoModal = ({ producto }) => {
       aria-hidden="true"
     >
       <div className="modal-dialog modal-lg modal-dialog-centered">
-        <div className="modal-content modal-cancha-custom text-white">
+        <div
+          className="modal-content modal-cancha-custom text-white"
+          style={{ maxHeight: "80vh", overflowY: "auto" }}
+        >
           {!producto ? (
             <div className="modal-body text-center p-5">
               <div className="spinner-border text-primary" role="status"></div>
@@ -121,18 +132,27 @@ const ProductoModal = ({ producto }) => {
                       </div>
 
                       <div className="d-grid gap-2">
+                        {/* Botón Comprar Ahora */}
                         <button
-                          type="submit"
+                          type="button" // Usamos type button para disparar el submit manualmente con contexto
                           className="btn btn-alquilar text-white"
                           disabled={producto?.stock <= 0}
+                          onClick={handleSubmit((data) =>
+                            onSubmit(data, "comprar"),
+                          )}
                         >
                           Comprar Ahora
                         </button>
+
+                        {/* Botón Añadir al Carrito */}
                         <button
-                          type="submit"
+                          type="button"
                           className="btn btn-outline-light border-2 py-2 fw-bold"
                           style={{ borderRadius: "12px" }}
                           disabled={producto?.stock <= 0}
+                          onClick={handleSubmit((data) =>
+                            onSubmit(data, "carrito"),
+                          )}
                         >
                           <i className="bi bi-cart-plus me-2"></i> Añadir al
                           Carrito
