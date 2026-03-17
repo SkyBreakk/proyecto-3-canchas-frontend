@@ -59,7 +59,10 @@ const ReservaModal = ({ show, handleClose }) => {
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="modal-body">
               <div className="mb-3">
-                <label className="form-label small text-secondary-custom">
+                <label
+                  className="form-label small text-secondary-custom"
+                  htmlFor="contact-name"
+                >
                   Nombre
                 </label>
                 <input
@@ -69,11 +72,18 @@ const ReservaModal = ({ show, handleClose }) => {
                   {...register("nombre", {
                     required: "El nombre es necesario",
                   })}
+                  id="contact-name"
                 />
+                {errors.nombre && (
+                  <p className="texto-error fw-bold">{errors.nombre.message}</p>
+                )}
               </div>
 
               <div className="mb-3">
-                <label className="form-label small text-secondary-custom">
+                <label
+                  className="form-label small text-secondary-custom"
+                  htmlFor="contact-email"
+                >
                   Email de contacto
                 </label>
                 <input
@@ -84,21 +94,36 @@ const ReservaModal = ({ show, handleClose }) => {
                     required: "El correo es obligatorio",
                     pattern: { value: /^\S+@\S+$/i, message: "Email inválido" },
                   })}
+                  id="contact-email"
                 />
+                {errors.contacto && (
+                  <p className="texto-error fw-bold">
+                    {errors.contacto.message}
+                  </p>
+                )}
               </div>
 
               <div className="mb-3">
-                <label className="form-label small text-secondary-custom">
+                <label
+                  className="form-label small text-secondary-custom"
+                  htmlFor="contact-desc"
+                >
                   Mensaje
                 </label>
                 <textarea
-                  className="form-control form-control-dark"
+                  className={`form-control form-control-dark ${errors.descripcion ? "is-invalid" : ""}`}
                   rows="3"
                   {...register("descripcion", {
                     required: "Dinos qué necesitas",
                     minLength: 10,
                   })}
+                  id="contact-desc"
                 ></textarea>
+                {errors.descripcion && (
+                  <p className="texto-error fw-bold">
+                    {errors.descripcion.message}
+                  </p>
+                )}
               </div>
             </div>
 
