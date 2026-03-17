@@ -9,7 +9,7 @@ const PaymentBtnApp = ({ total }) => {
     if (!total || total <= 0) return;
 
     pagarMercadoPago({
-      title: "Reserva en Zona5",
+      titulo: "Reserva en Zona5",
       cantidad: 1,
       precio: total,
     })
