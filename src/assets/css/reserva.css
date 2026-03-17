@@ -53,7 +53,7 @@
 }
 
 .modal-cancha-custom {
-  background-color: var(--bg-dark) !important;
+  background-color: var(--bg-dark);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 20px;
   overflow: hidden;
@@ -68,20 +68,20 @@
 }
 
 .form-control-dark {
-  background-color: #2a2a2a !important;
-  border: 1px solid #3d3d3d !important;
-  color: white !important;
+  background-color: #2a2a2a;
+  border: 1px solid #3d3d3d;
+  color: white;
   border-radius: 10px;
   transition: all 0.3s ease;
 }
 
 .form-control-dark:focus {
-  border-color: var(--accent-green) !important;
-  box-shadow: 0 0 0 0.25rem var(--accent-glow) !important;
+  border-color: var(--accent-green);
+  box-shadow: 0 0 0 0.25rem var(--accent-glow);
 }
 
 .btn-alquilar {
-  background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%) !important;
+  background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
   border: none;
   border-radius: 12px;
   padding: 12px 0;

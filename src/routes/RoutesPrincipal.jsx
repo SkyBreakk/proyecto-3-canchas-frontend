@@ -7,6 +7,7 @@ import LoginScreen from "../views/LoginScreen";
 import RegisterScreen from "../views/RegisterScreen";
 import CartScreen from "../views/CartScreen";
 import AdminScreen from "../views/AdminScreen";
+import AdminRoute from "./AdminRoute";
 
 const RoutesPrincipal = () => {
   return (
@@ -19,7 +20,9 @@ const RoutesPrincipal = () => {
         <Route path="/register" element={<RegisterScreen />} />
         <Route path="/cart" element={<CartScreen />} />
 
-        <Route path="/admin/:seccion?" element={<AdminScreen />} />
+        <Route element={<AdminRoute />}>
+          <Route path="admin/:seccion?" element={<AdminScreen />} />
+        </Route>
       </Route>
     </Routes>
   );

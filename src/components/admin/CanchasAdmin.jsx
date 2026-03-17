@@ -65,7 +65,10 @@ function CanchaAdmin() {
         >
           <div className="col-4 d-none d-sm-block col-md-2">
             <img
-              src={cancha.img}
+              src={
+                cancha.img ||
+                "https://png.pngtree.com/png-vector/20230407/ourmid/pngtree-placeholder-line-icon-vector-png-image_6691835.png"
+              }
               alt={cancha.nombre}
               className="rounded"
               style={{ width: "60px", height: "40px", objectFit: "cover" }}
@@ -101,7 +104,7 @@ function CanchaAdmin() {
           <i className="bi bi-chevron-left"></i>
         </button>
         <span className="text-secondary small">
-          Mostrando {canchas.length} de {total}
+          Mostrando {pagina + 1} - {pagina + canchas.length} de {total}
         </span>
         <button
           className="btn btn-sm btn-neon"

@@ -89,7 +89,7 @@ function UserAdmin() {
           <i className="bi bi-chevron-left"></i>
         </button>
         <span className="text-secondary small">
-          Mostrando {users.length} de {total}
+          Mostrando {pagina + 1} - {pagina + users.length} de {total}
         </span>
         <button
           className="btn btn-sm btn-neon"

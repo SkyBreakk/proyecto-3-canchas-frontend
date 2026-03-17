@@ -104,7 +104,9 @@ function CategoriaAdmin() {
         >
           <i className="bi bi-arrow-left"></i>
         </button>
-        <span className="align-self-center">Página {pagina / 5 + 1}</span>
+        <span className="text-secondary small">
+          Mostrando {pagina + 1} - {pagina + categorias.length} de {total}
+        </span>
         <button
           className="btn btn-neon btn-sm"
           onClick={() => setPagina((p) => p + 5)}

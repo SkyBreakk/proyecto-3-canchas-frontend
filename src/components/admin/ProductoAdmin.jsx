@@ -82,10 +82,18 @@ function ProductoAdmin() {
         >
           <div className="col-12 col-md-2 mb-3 mb-md-0 d-flex justify-content-center">
             <img
-              src={p.img}
+              src={
+                p.img ||
+                "https://png.pngtree.com/png-vector/20230407/ourmid/pngtree-placeholder-line-icon-vector-png-image_6691835.png"
+              }
               alt={p.nombre}
               className="rounded border border-secondary"
-              style={{ width: "60px", height: "60px", objectFit: "cover" }}
+              style={{
+                width: "60px",
+                height: "60px",
+                objectFit: "cover",
+                backgroundColor: "white",
+              }}
             />
           </div>
 
@@ -100,7 +108,9 @@ function ProductoAdmin() {
 
           <div className="col-6 col-md-2 mb-3 mb-md-0 text-md-center">
             <small className="d-block d-md-none text-muted">Precio</small>
-            <span className="neon-text fw-bold fs-5">${p.precio}</span>
+            <span className="neon-text fw-bold fs-5">
+              ${p.precio.toLocaleString("es-AR")}
+            </span>
           </div>
 
           <div className="col-6 col-md-3 mb-3 mb-md-0 text-md-center">
@@ -137,7 +147,7 @@ function ProductoAdmin() {
 
       {/* Paginación adaptada */}
       <div className="d-flex flex-column flex-md-row justify-content-center align-items-center gap-3 mt-4">
-        <div className="btn-group">
+        <div className="btn-group gap-3">
           <button
             className="btn btn-neon"
             onClick={() => setPagina((p) => Math.max(0, p - 5))}
@@ -145,6 +155,9 @@ function ProductoAdmin() {
           >
             <i className="bi bi-chevron-left"></i>
           </button>
+          <span className="text-secondary small">
+            Mostrando {pagina + 1} - {pagina + productos.length} de {total}
+          </span>
           <button
             className="btn btn-neon"
             onClick={() => setPagina((p) => p + 5)}
@@ -153,9 +166,6 @@ function ProductoAdmin() {
             <i className="bi bi-chevron-right"></i>
           </button>
         </div>
-        <span className="text-secondary small">
-          Mostrando {productos.length} de {total}
-        </span>
       </div>
 
       {/* Modales */}

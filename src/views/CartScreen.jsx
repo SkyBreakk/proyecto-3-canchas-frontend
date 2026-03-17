@@ -60,7 +60,7 @@ const CartScreen = () => {
                       />
                     </div>
 
-                    <div className="bg-zona5-dark rounded-4 p-4 shadow-sm flex-grow-1 d-flex justify-content-between align-items-center">
+                    <div className="bg-zona5-dark rounded-4 p-4 shadow-sm grow d-flex justify-content-between align-items-center">
                       <div>
                         <h4 className="m-0 fw-bold">{item.producto.nombre}</h4>
                         <small className="text-light opacity-75 fs-6">

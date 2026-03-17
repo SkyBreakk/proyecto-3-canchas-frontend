@@ -1,28 +1,39 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useCart } from "../../context/CartContext";
+import { UserContext } from "../../context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 const ProductoModal = ({ producto }) => {
+  const { user } = useContext(UserContext);
   const { addItem } = useCart();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     watch,
+    reset,
     formState: { errors },
   } = useForm({
     defaultValues: { cantidad: 1 },
   });
 
+  useEffect(() => {
+    if (producto) {
+      reset({ cantidad: 1 });
+    }
+  }, [producto, reset]);
+
   const cantidadSeleccionada = watch("cantidad");
 
-  const onSubmit = async (data, accion) => {
-    const pedido = { producto: producto, cantidad: parseInt(data.cantidad) };
+  const onSubmit = (data, accion) => {
+    if (!producto) return;
+    const cantidad = parseInt(data.cantidad);
 
     if (accion === "carrito") {
-      addItem(producto._id, pedido.cantidad);
-      // Aquí podrías mostrar un mensaje de "Producto añadido"
-    } else if (accion === "comprar") {
-      console.log("Procesando:", pedido);
+      addItem(producto._id, cantidad);
+    } else {
+      console.log("Comprar ahora:", { producto, cantidad });
     }
   };
 
@@ -31,7 +42,8 @@ const ProductoModal = ({ producto }) => {
       className="modal fade"
       id="modalProducto"
       tabIndex="-1"
-      aria-hidden="true"
+      role="dialog"
+      aria-modal="true"
     >
       <div className="modal-dialog modal-lg modal-dialog-centered">
         <div
@@ -55,7 +67,10 @@ const ProductoModal = ({ producto }) => {
                 <div className="row">
                   <div className="col-lg-5 mb-4 mb-lg-0">
                     <img
-                      src={producto?.img}
+                      src={
+                        producto?.img ||
+                        "https://png.pngtree.com/png-vector/20230407/ourmid/pngtree-placeholder-line-icon-vector-png-image_6691835.png"
+                      }
                       className="modal-img-cancha shadow-lg"
                       alt={producto?.nombre}
                       style={{ height: "300px", objectFit: "cover" }}
@@ -79,7 +94,7 @@ const ProductoModal = ({ producto }) => {
                           Precio Unitario
                         </span>
                         <h3 className="fw-bold text-success mb-0">
-                          ${producto?.precio}
+                          ${(producto?.precio).toLocaleString("es-AR")}
                         </h3>
                       </div>
                       <div className="vr opacity-25"></div>
@@ -97,14 +112,20 @@ const ProductoModal = ({ producto }) => {
                       </div>
                     </div>
 
-                    <form onSubmit={handleSubmit(onSubmit)}>
+                    <form
+                      onSubmit={handleSubmit(onSubmit)}
+                      name="producto-form"
+                    >
                       <div
                         className="p-3 rounded-4 mb-4"
                         style={{ backgroundColor: "rgba(255,255,255,0.03)" }}
                       >
                         <div className="row align-items-end">
                           <div className="col-6">
-                            <label className="small mb-1 d-block opacity-75 text-uppercase fw-bold">
+                            <label
+                              className="small mb-1 d-block opacity-75 text-uppercase fw-bold"
+                              htmlFor="prod-quantity"
+                            >
                               Cantidad
                             </label>
                             <input
@@ -115,6 +136,7 @@ const ProductoModal = ({ producto }) => {
                                 max: producto?.stock,
                               })}
                               className="form-control form-control-dark"
+                              id="prod-quantity"
                             />
                           </div>
                           <div className="col-6 text-end">
@@ -132,31 +154,48 @@ const ProductoModal = ({ producto }) => {
                       </div>
 
                       <div className="d-grid gap-2">
-                        {/* Botón Comprar Ahora */}
-                        <button
-                          type="button" // Usamos type button para disparar el submit manualmente con contexto
-                          className="btn btn-alquilar text-white"
-                          disabled={producto?.stock <= 0}
-                          onClick={handleSubmit((data) =>
-                            onSubmit(data, "comprar"),
-                          )}
-                        >
-                          Comprar Ahora
-                        </button>
+                        {user ? (
+                          <>
+                            <button
+                              type="button"
+                              className="btn btn-alquilar text-white"
+                              disabled={producto?.stock <= 0}
+                              onClick={handleSubmit((data) =>
+                                onSubmit(data, "comprar"),
+                              )}
+                            >
+                              Comprar Ahora
+                            </button>
 
-                        {/* Botón Añadir al Carrito */}
-                        <button
-                          type="button"
-                          className="btn btn-outline-light border-2 py-2 fw-bold"
-                          style={{ borderRadius: "12px" }}
-                          disabled={producto?.stock <= 0}
-                          onClick={handleSubmit((data) =>
-                            onSubmit(data, "carrito"),
-                          )}
-                        >
-                          <i className="bi bi-cart-plus me-2"></i> Añadir al
-                          Carrito
-                        </button>
+                            <button
+                              type="button"
+                              className="btn btn-outline-light border-2 py-2 fw-bold"
+                              style={{ borderRadius: "12px" }}
+                              disabled={producto?.stock <= 0}
+                              onClick={handleSubmit((data) =>
+                                onSubmit(data, "carrito"),
+                              )}
+                            >
+                              <i className="bi bi-cart-plus me-2"></i> Añadir al
+                              Carrito
+                            </button>
+                          </>
+                        ) : (
+                          <div className="text-center p-3 rounded-3 border border-warning bg-warning bg-opacity-10">
+                            <p className="text-warning small mb-2">
+                              <i className="bi bi-exclamation-circle me-2"></i>
+                              Debes iniciar sesión para realizar compras.
+                            </p>
+                            <button
+                              type="button"
+                              className="btn btn-sm btn-outline-warning w-100"
+                              data-bs-dismiss="modal"
+                              onClick={() => navigate("/login")}
+                            >
+                              Ir al Login
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </form>
                   </div>

@@ -42,10 +42,7 @@ const HeaderApp = () => {
               </NavLink>
             </li>
             <li className="nav-item">
-              <NavLink
-                className="nav-link text-white fs-5"
-                to="/nosotros" // Agregué el path aquí para que sea un link real
-              >
+              <NavLink className="nav-link text-white fs-5" to="/nosotros">
                 Nosotros
               </NavLink>
             </li>

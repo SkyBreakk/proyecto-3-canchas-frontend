@@ -29,7 +29,10 @@ const CanchaAdminModal = ({ isOpen, onClose, onSubmit, cancha }) => {
           <div className="modal-body p-4">
             <div className="row">
               <div className="col-12 mb-3">
-                <label className="form-label text-light opacity-75 small uppercase">
+                <label
+                  htmlFor="cancha-name"
+                  className="form-label text-light opacity-75 small uppercase"
+                >
                   Nombre de la Cancha
                 </label>
                 <input
@@ -38,6 +41,7 @@ const CanchaAdminModal = ({ isOpen, onClose, onSubmit, cancha }) => {
                   })}
                   className="form-control bg-dark text-light border-secondary"
                   placeholder="Ej: Cancha 5 - Sintético"
+                  id="cancha-name"
                 />
                 {errors.nombre && (
                   <small className="text-danger fw-bold">
@@ -46,7 +50,10 @@ const CanchaAdminModal = ({ isOpen, onClose, onSubmit, cancha }) => {
                 )}
               </div>
               <div className="col-12 mb-3">
-                <label className="form-label text-light opacity-75 small">
+                <label
+                  htmlFor="cancha-desc"
+                  className="form-label text-light opacity-75 small"
+                >
                   Descripción
                 </label>
                 <textarea
@@ -54,10 +61,14 @@ const CanchaAdminModal = ({ isOpen, onClose, onSubmit, cancha }) => {
                   className="form-control bg-dark text-light border-secondary"
                   rows="2"
                   placeholder="Detalles de la cancha..."
+                  id="cancha-desc"
                 />
               </div>
               <div className="col-md-6 mb-3">
-                <label className="form-label text-light opacity-75 small">
+                <label
+                  htmlFor="cancha-price"
+                  className="form-label text-light opacity-75 small"
+                >
                   Precio por Hora
                 </label>
                 <input
@@ -69,16 +80,21 @@ const CanchaAdminModal = ({ isOpen, onClose, onSubmit, cancha }) => {
                     },
                   })}
                   className="form-control bg-dark text-light border-secondary"
+                  id="cancha-price"
                 />
               </div>
               <div className="col-md-6 mb-3">
-                <label className="form-label text-light opacity-75 small">
+                <label
+                  htmlFor="cancha-img"
+                  className="form-label text-light opacity-75 small"
+                >
                   URL Imagen
                 </label>
                 <input
                   {...register("img")}
                   className="form-control bg-dark text-light border-secondary"
                   placeholder="https://..."
+                  id="cancha-img"
                 />
               </div>
             </div>

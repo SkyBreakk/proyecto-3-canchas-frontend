@@ -23,11 +23,14 @@ function CategoriaAdminModal({ show, close, onSave, categoria }) {
         </h2>
         <form onSubmit={handleSubmit(onSave)}>
           <div className="mb-3">
-            <label className="form-label">Nombre de Categoría</label>
+            <label className="form-label" htmlFor="category-name">
+              Nombre de Categoría
+            </label>
             <input
               type="text"
               className={`form-control bg-dark text-light border-${errors.nombre ? "danger" : "secondary"}`}
               {...register("nombre", { required: "El nombre es obligatorio" })}
+              id="category-name"
             />
             {errors.nombre && (
               <small className="text-danger">{errors.nombre.message}</small>

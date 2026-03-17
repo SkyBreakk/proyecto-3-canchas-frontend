@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { getCanchas } from "../helpers/canchas";
-import "../assets/css/reserva.css";
+import { apiCancha } from "../helpers/cancha";
 import ReservaModal from "../components/modales/ReservaModal";
-
+import "../assets/css/reserva.css";
 const ReservaScreen = () => {
   const [canchas, setCanchas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [canchaSeleccionada, setCanchaSeleccionada] = useState(null);
 
   useEffect(() => {
-    getCanchas()
+    apiCancha
+      .get(100, 0)
       .then((data) => {
         setCanchas(
           data.canchas.sort((a, b) => a.nombre.localeCompare(b.nombre)),

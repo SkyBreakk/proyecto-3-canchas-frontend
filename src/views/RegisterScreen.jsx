@@ -8,7 +8,6 @@ import AlertApp from "../components/AlertApp";
 import VerifyEmailModal from "../components/VerifyEmailModal";
 
 function RegisterScreen() {
-
   const navigate = useNavigate();
 
   const [response, setResponse] = useState(null);
@@ -23,16 +22,14 @@ function RegisterScreen() {
   } = useForm();
 
   const onSubmit = async (data) => {
-
     const result = await registerUser(data);
 
     setResponse(result);
 
     if (result.ok) {
-      setUserEmail(data.email);     // guardamos el email
-      setShowVerifyModal(true);     // mostramos el modal
+      setUserEmail(data.email);
+      setShowVerifyModal(true);
     }
-
   };
 
   const password = watch("password");
@@ -40,9 +37,7 @@ function RegisterScreen() {
   return (
     <div className="fondo d-flex vh-100 align-items-center justify-content-center">
       <div className="container-transparente position-relative p-4">
-
         <div className="form-section text-white px-3 px-lg-5">
-
           <h1 className="text-center mb-4">Crear cuenta</h1>
 
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -51,6 +46,7 @@ function RegisterScreen() {
                 type="text"
                 className="form-control username-icon input text-white"
                 placeholder="Nombre de usuario"
+                autoComplete="username"
                 {...register("username", {
                   required: "El nombre de usuario es obligatorio",
                 })}
@@ -66,6 +62,7 @@ function RegisterScreen() {
                 type="email"
                 className="form-control correo-icon input text-white"
                 placeholder="Correo electrónico"
+                autoComplete="email"
                 {...register("email", {
                   required: "El correo es obligatorio",
                   pattern: {
@@ -119,7 +116,6 @@ function RegisterScreen() {
                 Inicia sesión
               </a>
             </p>
-
           </form>
 
           {showVerifyModal && (
@@ -128,11 +124,9 @@ function RegisterScreen() {
               onSuccess={() => navigate("/login")}
             />
           )}
-
         </div>
 
         <img src={zona5} alt="logo" className="logo-fondo img-fluid" />
-
       </div>
     </div>
   );

@@ -83,7 +83,7 @@ function ReservaAdmin() {
           <i className="bi bi-chevron-left"></i>
         </button>
         <span className="text-secondary small">
-          Mostrando {reservas.length} de {total}
+          Mostrando {pagina + 1} - {pagina + reservas.length} de {total}
         </span>
         <button
           className="btn btn-sm btn-neon"
