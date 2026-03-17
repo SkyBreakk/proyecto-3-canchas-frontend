@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { apiReserva } from "../../helpers/reserva";
 import ConfirmModal from "../modales/ConfirmModal";
+import { pagarMercadoPago } from "../../helpers/payment";
 
 const MisReservas = () => {
   const [reservas, setReservas] = useState([]);
@@ -8,6 +9,8 @@ const MisReservas = () => {
 
   const [showModal, setShowModal] = useState(false);
   const [reservaSeleccionada, setReservaSeleccionada] = useState(null);
+
+  const [pagandoId, setPagandoId] = useState(null);
 
   const cargarReservas = async () => {
     try {
@@ -33,18 +36,51 @@ const MisReservas = () => {
 
   const ejecutarCancelacion = async () => {
     if (!reservaSeleccionada) return;
-
     try {
       const res = await apiReserva.delete(reservaSeleccionada._id);
       if (res.ok) {
         setReservas(reservas.filter((r) => r._id !== reservaSeleccionada._id));
         setShowModal(false);
       } else {
-        alert("No se pudo cancelar la reserva en el servidor.");
+        alert("No se pudo cancelar la reserva.");
       }
     } catch (error) {
-      console.error("Error en la petición de borrado:", error);
-      alert("Error de conexión al intentar cancelar.");
+      console.error("Error en el borrado:", error);
+      alert("Error de conexión.");
+    }
+  };
+
+  const handlePagar = async (reserva) => {
+    setPagandoId(reserva._id);
+
+    try {
+      const totalPagar = (reserva.cancha?.precio || 0) * reserva.horas;
+
+      if (totalPagar === 0) {
+        alert("Error: No se pudo calcular el precio de la cancha.");
+        setPagandoId(null);
+        return;
+      }
+
+      const datosPago = {
+        titulo: `Reserva Completa - ${reserva.cancha?.nombre} (${reserva.horas} hs)`,
+        cantidad: 1,
+        precio: totalPagar,
+        reservaId: reserva._id,
+      };
+
+      const res = await pagarMercadoPago(datosPago);
+
+      if (res.ok && res.id) {
+        window.location.href = `https://www.mercadopago.com.ar/checkout/v1/redirect?pref_id=${res.id}`;
+      } else {
+        alert("No se pudo generar el link de pago.");
+        setPagandoId(null);
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Error al intentar conectar con Mercado Pago.");
+      setPagandoId(null);
     }
   };
 
@@ -71,9 +107,8 @@ const MisReservas = () => {
               <tr>
                 <th>Cancha</th>
                 <th>Fecha</th>
-                <th>Hora</th>
-                <th>Duración</th>
-                <th>Acción</th>
+                <th>Estado</th>
+                <th>Acciones</th>
               </tr>
             </thead>
             <tbody className="text-center">
@@ -82,22 +117,54 @@ const MisReservas = () => {
                 return (
                   <tr key={r._id} className="itemRow-adminScreen">
                     <td className="fw-bold">{r.cancha?.nombre}</td>
-                    <td>{fecha.toLocaleDateString()}</td>
                     <td>
+                      {fecha.toLocaleDateString()} -{" "}
                       {fecha.toLocaleTimeString([], {
                         hour: "2-digit",
                         minute: "2-digit",
                       })}{" "}
                       hs
                     </td>
-                    <td>{r.horas} hr(s)</td>
+
                     <td>
-                      <button
-                        className="btn btn-sm btn-outline-danger rounded-pill px-3"
-                        onClick={() => prepararCancelacion(r)}
-                      >
-                        <i className="bi bi-trash me-1"></i> Cancelar
-                      </button>
+                      {r.estadoPago === "Pagado" ? (
+                        <span className="badge bg-success">Pagado</span>
+                      ) : (
+                        <span className="badge bg-warning text-dark">
+                          Pendiente
+                        </span>
+                      )}
+                    </td>
+
+                    <td>
+                      <div className="d-flex justify-content-center gap-2 flex-wrap">
+                        {r.estadoPago === "Pendiente" && (
+                          <button
+                            className="btn btn-sm btn-info text-white rounded-pill px-3 fw-bold"
+                            style={{
+                              backgroundColor: "#009ee3",
+                              borderColor: "#009ee3",
+                            }}
+                            onClick={() => handlePagar(r)}
+                            disabled={pagandoId === r._id}
+                          >
+                            {pagandoId === r._id ? (
+                              <span className="spinner-border spinner-border-sm"></span>
+                            ) : (
+                              <>
+                                <i className="bi bi-credit-card me-1"></i> Pagar
+                              </>
+                            )}
+                          </button>
+                        )}
+
+                        <button
+                          className="btn btn-sm btn-outline-danger rounded-pill px-3"
+                          onClick={() => prepararCancelacion(r)}
+                        >
+                          <i className="bi bi-trash me-1"></i> Cancelar
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 );
