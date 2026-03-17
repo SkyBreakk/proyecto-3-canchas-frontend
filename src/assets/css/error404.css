@@ -1,0 +1,50 @@
+.error-container{
+  background-image: linear-gradient(
+      #0d210d80,
+      #0d210d86
+    ),
+    url("/fondoError404.jpeg");
+
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+}
+.zona5Cero{
+  width: 200px;
+  margin-top: 100px;
+}
+.numero{
+  margin-top: 100px;
+  font-family: 'Arial', sans-serif;
+  font-size: 12rem; 
+  font-weight: 700;
+  line-height: 1;
+  color: white;
+}
+
+.error-text{
+    color: rgb(238, 255, 0);
+    font-size: 3rem;
+    font-weight: 700;
+}
+.msj{
+    color: rgb(255, 255, 255);
+    font-size: 2rem;
+    font-weight: 700;
+}
+.btnInicio{
+    background-color: #185018;
+    color: white;
+    padding: 12px;
+    border-radius: 10%;
+    font-weight: 700;
+    transition: transform 0.9s ease;
+}
+.btnInicio:hover{
+    background-color: #216921;
+    color: white;
+    padding: 12px;
+    border-radius: 10%;
+    font-weight: 700;
+    transform: scale(1.08);
+}
