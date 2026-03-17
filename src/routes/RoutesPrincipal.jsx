@@ -9,6 +9,7 @@ import CartScreen from "../views/CartScreen";
 import AdminScreen from "../views/AdminScreen";
 import Perfil from "../components/perfil/Perfil";
 import Success from "../components/success";
+import Error404 from "../views/Error404Screen";
 
 const RoutesPrincipal = () => {
   return (
@@ -29,6 +30,7 @@ const RoutesPrincipal = () => {
 
         <Route path="/admin/:seccion?" element={<AdminScreen />} />
       </Route>
+      <Route path="*" element={<Error404 />} />
     </Routes>
   );
 };

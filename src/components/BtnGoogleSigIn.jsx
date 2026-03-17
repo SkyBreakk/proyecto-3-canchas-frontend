@@ -1,11 +1,15 @@
 import { useNavigate } from "react-router-dom";
 import { loginWithGoogle } from "../helpers/authGoogle";
+import { useContext } from "react";
+import { UserContext } from "../context/UserContext";
 
 const BtnGoogleSigIn = () => {
 
   const navigate = useNavigate();
+  const { loadUserData } = useContext(UserContext);
 
   const handleGoogleLogin = async (e) => {
+
     e.preventDefault();
 
     const response = await loginWithGoogle();
@@ -17,16 +21,24 @@ const BtnGoogleSigIn = () => {
 
     const email = response.email;
 
-    console.log("Email del usuario:", email);
+    const res = await fetch("http://localhost:4500/api/auth/google", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        email: email
+      })
+    });
 
-    const res = await fetch(
-      `http://localhost:4500/api/auth/user/${email}`
-    );
+    const data = await res.json();
 
-    if (res.ok) {
+    if (data.ok) {
+      await loadUserData(); 
       navigate("/");
-    } else {
-      alert("El usuario no está registrado");
+    }else {
+      alert(data.message);
     }
   };
   return (
