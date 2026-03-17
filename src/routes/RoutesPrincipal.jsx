@@ -7,6 +7,7 @@ import LoginScreen from "../views/LoginScreen";
 import RegisterScreen from "../views/RegisterScreen";
 import CartScreen from "../views/CartScreen";
 import AdminScreen from "../views/AdminScreen";
+import Perfil from "../components/perfil/Perfil";
 
 const RoutesPrincipal = () => {
   return (
@@ -18,7 +19,7 @@ const RoutesPrincipal = () => {
         <Route path="/login" element={<LoginScreen />} />
         <Route path="/register" element={<RegisterScreen />} />
         <Route path="/cart" element={<CartScreen />} />
-
+        <Route path="/perfil/:seccion" element={<Perfil />} />
         <Route path="/admin/:seccion?" element={<AdminScreen />} />
       </Route>
     </Routes>
