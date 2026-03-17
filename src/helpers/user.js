@@ -9,6 +9,17 @@ export const apiUser = {
     });
     return await res.json();
   },
+
+  updateProfile: async (datosAEnviar) => {
+    const res = await fetch(`${url}/update-profile`, {
+      method: "PUT",
+      credentials: "include",
+      headers: { "Content-type": "application/json" },
+      body: JSON.stringify(datosAEnviar),
+    });
+    return await res.json();
+  },
+
   delete: async (id) => {
     const res = await fetch(`${url}/${id}`, {
       method: "DELETE",

@@ -7,6 +7,9 @@ import LoginScreen from "../views/LoginScreen";
 import RegisterScreen from "../views/RegisterScreen";
 import CartScreen from "../views/CartScreen";
 import AdminScreen from "../views/AdminScreen";
+import Perfil from "../components/perfil/Perfil";
+import Success from "../components/success";
+import Error404 from "../views/Error404Screen";
 import AdminRoute from "./AdminRoute";
 
 const RoutesPrincipal = () => {
@@ -19,11 +22,21 @@ const RoutesPrincipal = () => {
         <Route path="/login" element={<LoginScreen />} />
         <Route path="/register" element={<RegisterScreen />} />
         <Route path="/cart" element={<CartScreen />} />
+        <Route path="/perfil/:seccion" element={<Perfil />} />
+
+        <Route path="/success" element={<Success />} />
+
+        <Route path="/failure" element={<h2>Hubo un error con el pago.</h2>} />
+        <Route
+          path="/pending"
+          element={<h2>Tu pago está pendiente de aprobación.</h2>}
+        />
 
         <Route element={<AdminRoute />}>
           <Route path="admin/:seccion?" element={<AdminScreen />} />
         </Route>
       </Route>
+      <Route path="*" element={<Error404 />} />
     </Routes>
   );
 };

@@ -1,18 +1,21 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { checkDisponibilidad } from "../../helpers/reserva";
-import { UserContext } from "../../context/UserContext";
 import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { checkDisponibilidad, apiReserva } from "../../helpers/reserva";
+import { UserContext } from "../../context/UserContext";
 
 const ReservaModal = ({ cancha }) => {
   const [disponible, setDisponible] = useState(null);
   const [cargando, setCargando] = useState(false);
+  const [reservaExitosa, setReservaExitosa] = useState(false);
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
     watch,
+    reset,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -60,21 +63,45 @@ const ReservaModal = ({ cancha }) => {
     return () => clearTimeout(timeout);
   }, [fechaStr, horaStr, horas, cancha?._id]);
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     if (!disponible) return alert("El horario no está disponible");
 
+    setCargando(true);
     const fechaFormateada = `${data.fechaStr}T${data.horaStr}:00`;
-    const precioNumerico = Number(cancha?.precio) || 8000;
-    const seniaCalculada = precioNumerico / 2;
 
     const reservaFinal = {
       cancha: cancha._id,
-      senia: seniaCalculada,
       fecha: fechaFormateada,
       horas: parseInt(data.horas),
+      senia: 0,
     };
 
-    console.log("Datos para enviar al backend:", reservaFinal);
+    try {
+      const respuesta = await apiReserva.post(reservaFinal);
+
+      if (respuesta.ok) {
+        console.log("¡Reserva guardada en BD!", respuesta);
+        setReservaExitosa(true);
+        reset();
+      } else {
+        console.error("Error del backend:", respuesta);
+        alert(
+          respuesta.msg ||
+            "Hubo un error al guardar la reserva en el servidor.",
+        );
+      }
+    } catch (error) {
+      console.error("Error al hacer la petición:", error);
+      alert(
+        "Hubo un error de conexión al procesar tu reserva. Intentá de nuevo.",
+      );
+    } finally {
+      setCargando(false);
+    }
+  };
+
+  const cerrarModal = () => {
+    setTimeout(() => setReservaExitosa(false), 500);
   };
 
   return (
@@ -83,6 +110,7 @@ const ReservaModal = ({ cancha }) => {
       id="modalCancha"
       tabIndex="-1"
       aria-labelledby="modalCanchaLabel"
+      onHiddenBsModal={cerrarModal}
     >
       <div className="modal-dialog modal-lg modal-dialog-centered">
         <div
@@ -92,6 +120,34 @@ const ReservaModal = ({ cancha }) => {
           {!cancha ? (
             <div className="modal-body text-center p-5">
               <div className="spinner-border text-primary" role="status"></div>
+            </div>
+          ) : reservaExitosa ? (
+            <div className="modal-body text-center p-5">
+              <i
+                className="bi bi-check-circle-fill text-success"
+                style={{ fontSize: "5rem" }}
+              ></i>
+              <h2 className="fw-bold text-success mt-3">
+                ¡Reserva Confirmada!
+              </h2>
+              <p className="fs-5 text-light mt-3">
+                Tu turno para la <strong>{cancha.nombre}</strong> el día{" "}
+                <strong>{fechaStr.split("-").reverse().join("/")}</strong> a las{" "}
+                <strong>{horaStr}</strong> fue guardado con éxito.
+              </p>
+              <div className="bg-dark p-3 rounded-3 mt-4 border border-secondary text-secondary-custom">
+                <i className="bi bi-info-circle me-2"></i>
+                Recordá que podés abonar en el local o pagar por adelantado
+                desde tu perfil.
+              </div>
+              <button
+                type="button"
+                className="btn btn-outline-success btn-lg w-100 mt-4 rounded-pill"
+                data-bs-dismiss="modal"
+                onClick={cerrarModal}
+              >
+                Entendido, cerrar
+              </button>
             </div>
           ) : (
             <>
@@ -133,7 +189,7 @@ const ReservaModal = ({ cancha }) => {
 
                     <div className="d-flex align-items-baseline gap-2 my-3">
                       <span className="text-secondary-custom">
-                        Precio Total:
+                        Precio a pagar en el local:
                       </span>
                       <h3 className="fw-bold text-success mb-0">
                         ${(cancha.precio * horas).toLocaleString("es-AR")}
@@ -141,8 +197,8 @@ const ReservaModal = ({ cancha }) => {
                     </div>
 
                     <div className="mb-3">
-                      {cargando ? (
-                        <span className="badge bg-info">Verificando...</span>
+                      {cargando && !reservaExitosa ? (
+                        <span className="badge bg-info">Procesando...</span>
                       ) : disponible === true ? (
                         <span className="badge bg-success">
                           ✓ Horario Disponible
@@ -171,18 +227,10 @@ const ReservaModal = ({ cancha }) => {
                             min={hoyStr}
                             {...register("fechaStr", {
                               required: "La fecha es obligatoria",
-                              validate: (val) =>
-                                val >= hoyStr ||
-                                "No puedes reservar en el pasado",
                             })}
                             className={`form-control form-control-dark ${errors.fechaStr ? "is-invalid" : ""}`}
                             id="date-input"
                           />
-                          {errors.fechaStr && (
-                            <span className="text-danger tiny-text">
-                              {errors.fechaStr.message}
-                            </span>
-                          )}
                         </div>
                         <div className="col-md-4 col-6">
                           <label
