@@ -1,4 +1,4 @@
-const url = "http://localhost:4500/api/category";
+const url = import.meta.env.VITE_API_URL + "/category";
 
 const apiCall = async (endpoint, method = "GET", body = null) => {
   try {

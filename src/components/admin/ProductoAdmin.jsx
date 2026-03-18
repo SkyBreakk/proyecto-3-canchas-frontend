@@ -8,6 +8,7 @@ import {
 import { traerCategoriasPaginado } from "../../helpers/categoria";
 import ProductoAdminModal from "../modales/ProductoAdminModal";
 import ConfirmModal from "../modales/ConfirmModal";
+import { useToast } from "../../context/ToastContext";
 
 function ProductoAdmin() {
   const [productos, setProductos] = useState([]);
@@ -19,6 +20,7 @@ function ProductoAdmin() {
     delete: false,
     selected: null,
   });
+  const { showToast } = useToast();
 
   const cargarProductos = useCallback(() => {
     obtenerProductos(5, pagina).then((data) => {
@@ -43,14 +45,24 @@ function ProductoAdmin() {
     const res = data._id
       ? await actualizarProducto(data)
       : await crearProducto(data);
-    if (res.ok) cargarProductos();
-    setModalState({ ...modalState, form: false, selected: null });
+    if (res.ok) {
+      cargarProductos();
+      setModalState({ ...modalState, form: false, selected: null });
+      showToast("El producto se guardó correctamente.", "success");
+    } else {
+      showToast("Se produjo un error.", "danger");
+    }
   };
 
   const handleDelete = async () => {
     const res = await borrarProducto(modalState.selected._id);
-    if (res.ok) cargarProductos();
-    setModalState({ ...modalState, delete: false, selected: null });
+    if (res.ok) {
+      cargarProductos();
+      setModalState({ ...modalState, delete: false, selected: null });
+      showToast("El producto se eliminó correctamente.", "success");
+    } else {
+      showToast("Se produjo un error.", "danger");
+    }
   };
 
   return (
@@ -67,7 +79,6 @@ function ProductoAdmin() {
         </button>
       </div>
 
-      {/* Cabecera: se oculta en móviles con d-none d-md-flex */}
       <div className="row fw-bold border-bottom pb-2 mb-2 neon-text px-3 text-center d-none d-md-flex header-grid">
         <div className="col-md-2">Img</div>
         <div className="col-md-3 text-start">Producto</div>
@@ -81,17 +92,23 @@ function ProductoAdmin() {
           key={p._id}
           className="row itemRow-adminScreen py-3 align-items-center mx-0 px-2 text-center text-md-start"
         >
-          {/* Imagen: centrada en móvil, pequeña en PC */}
           <div className="col-12 col-md-2 mb-3 mb-md-0 d-flex justify-content-center">
             <img
-              src={p.img}
+              src={
+                p.img ||
+                "https://png.pngtree.com/png-vector/20230407/ourmid/pngtree-placeholder-line-icon-vector-png-image_6691835.png"
+              }
               alt={p.nombre}
               className="rounded border border-secondary"
-              style={{ width: "60px", height: "60px", objectFit: "cover" }}
+              style={{
+                width: "60px",
+                height: "60px",
+                objectFit: "cover",
+                backgroundColor: "white",
+              }}
             />
           </div>
 
-          {/* Info Principal */}
           <div className="col-12 col-md-3 mb-2 mb-md-0">
             <span className="fw-bold d-block text-uppercase fs-5 fs-md-6">
               {p.nombre}
@@ -101,13 +118,13 @@ function ProductoAdmin() {
             </small>
           </div>
 
-          {/* Precio: con etiqueta solo en móvil */}
           <div className="col-6 col-md-2 mb-3 mb-md-0 text-md-center">
             <small className="d-block d-md-none text-muted">Precio</small>
-            <span className="neon-text fw-bold fs-5">${p.precio}</span>
+            <span className="neon-text fw-bold fs-5">
+              ${p.precio.toLocaleString("es-AR")}
+            </span>
           </div>
 
-          {/* Stock: con etiqueta solo en móvil */}
           <div className="col-6 col-md-3 mb-3 mb-md-0 text-md-center">
             <small className="d-block d-md-none text-muted mb-1">
               Disponibilidad
@@ -119,7 +136,6 @@ function ProductoAdmin() {
             </span>
           </div>
 
-          {/* Acciones: botones más grandes para dedos en móviles */}
           <div className="col-12 col-md-2 mt-2 mt-md-0 text-center text-md-end">
             <div className="btn-group w-100 w-md-auto">
               <button
@@ -141,9 +157,8 @@ function ProductoAdmin() {
         </div>
       ))}
 
-      {/* Paginación adaptada */}
       <div className="d-flex flex-column flex-md-row justify-content-center align-items-center gap-3 mt-4">
-        <div className="btn-group">
+        <div className="btn-group gap-3">
           <button
             className="btn btn-neon"
             onClick={() => setPagina((p) => Math.max(0, p - 5))}
@@ -151,6 +166,9 @@ function ProductoAdmin() {
           >
             <i className="bi bi-chevron-left"></i>
           </button>
+          <span className="text-secondary small">
+            Mostrando {pagina + 1} - {pagina + productos.length} de {total}
+          </span>
           <button
             className="btn btn-neon"
             onClick={() => setPagina((p) => p + 5)}
@@ -159,12 +177,8 @@ function ProductoAdmin() {
             <i className="bi bi-chevron-right"></i>
           </button>
         </div>
-        <span className="text-secondary small">
-          Mostrando {productos.length} de {total}
-        </span>
       </div>
 
-      {/* Modales */}
       <ProductoAdminModal
         show={modalState.form}
         producto={modalState.selected}

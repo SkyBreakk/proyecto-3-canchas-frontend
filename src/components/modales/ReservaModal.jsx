@@ -1,14 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { checkDisponibilidad } from "../../helpers/reserva";
+import { checkDisponibilidad, apiReserva } from "../../helpers/reserva";
+import { UserContext } from "../../context/UserContext";
 
-const CanchaModal = ({ cancha }) => {
+const ReservaModal = ({ cancha }) => {
   const [disponible, setDisponible] = useState(null);
   const [cargando, setCargando] = useState(false);
+  const [reservaExitosa, setReservaExitosa] = useState(false);
+  const { user } = useContext(UserContext);
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
     watch,
+    reset,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -56,21 +63,45 @@ const CanchaModal = ({ cancha }) => {
     return () => clearTimeout(timeout);
   }, [fechaStr, horaStr, horas, cancha?._id]);
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     if (!disponible) return alert("El horario no está disponible");
 
+    setCargando(true);
     const fechaFormateada = `${data.fechaStr}T${data.horaStr}:00`;
-    const precioNumerico = Number(cancha?.precio) || 8000;
-    const seniaCalculada = precioNumerico / 2;
 
     const reservaFinal = {
       cancha: cancha._id,
-      senia: seniaCalculada,
       fecha: fechaFormateada,
       horas: parseInt(data.horas),
+      senia: 0,
     };
 
-    console.log("Datos para enviar al backend:", reservaFinal);
+    try {
+      const respuesta = await apiReserva.post(reservaFinal);
+
+      if (respuesta.ok) {
+        console.log("¡Reserva guardada en BD!", respuesta);
+        setReservaExitosa(true);
+        reset();
+      } else {
+        console.error("Error del backend:", respuesta);
+        alert(
+          respuesta.msg ||
+            "Hubo un error al guardar la reserva en el servidor.",
+        );
+      }
+    } catch (error) {
+      console.error("Error al hacer la petición:", error);
+      alert(
+        "Hubo un error de conexión al procesar tu reserva. Intentá de nuevo.",
+      );
+    } finally {
+      setCargando(false);
+    }
+  };
+
+  const cerrarModal = () => {
+    setTimeout(() => setReservaExitosa(false), 500);
   };
 
   return (
@@ -88,6 +119,34 @@ const CanchaModal = ({ cancha }) => {
           {!cancha ? (
             <div className="modal-body text-center p-5">
               <div className="spinner-border text-primary" role="status"></div>
+            </div>
+          ) : reservaExitosa ? (
+            <div className="modal-body text-center p-5">
+              <i
+                className="bi bi-check-circle-fill text-success"
+                style={{ fontSize: "5rem" }}
+              ></i>
+              <h2 className="fw-bold text-success mt-3">
+                ¡Reserva Confirmada!
+              </h2>
+              <p className="fs-5 text-light mt-3">
+                Tu turno para la <strong>{cancha.nombre}</strong> el día{" "}
+                <strong>{fechaStr.split("-").reverse().join("/")}</strong> a las{" "}
+                <strong>{horaStr}</strong> fue guardado con éxito.
+              </p>
+              <div className="bg-dark p-3 rounded-3 mt-4 border border-secondary text-secondary-custom">
+                <i className="bi bi-info-circle me-2"></i>
+                Recordá que podés abonar en el local o pagar por adelantado
+                desde tu perfil.
+              </div>
+              <button
+                type="button"
+                className="btn btn-outline-success btn-lg w-100 mt-4 rounded-pill"
+                data-bs-dismiss="modal"
+                onClick={cerrarModal}
+              >
+                Entendido, cerrar
+              </button>
             </div>
           ) : (
             <>
@@ -117,28 +176,28 @@ const CanchaModal = ({ cancha }) => {
                         ? "Cesped Sintético"
                         : cancha.descripcion?.includes("Futbol 11")
                           ? "Cesped Premium"
-                          : "Pista Dura"}
+                          : "Cesped Deluxe"}
                     </span>
                     <p className="text-secondary-custom small lh-sm">
                       {cancha.descripcion?.includes("Futbol 5")
                         ? "Césped sintético de última generación con drenaje rápido, ideal para partidos de Futbol de alta intensidad."
                         : cancha.descripcion?.includes("Futbol 11")
                           ? "Césped natural nivel profesional con iluminación LED simétrica para partidos nocturnos."
-                          : "Pista Dura con superficie antideslizante y de rebote uniforme al aire libre para la mejor experiencia de Tenis"}
+                          : "Césped natural nivel profesional con iluminación LED simétrica para partidos nocturnos."}
                     </p>
 
                     <div className="d-flex align-items-baseline gap-2 my-3">
                       <span className="text-secondary-custom">
-                        Precio Total:
+                        Precio a pagar en el local:
                       </span>
                       <h3 className="fw-bold text-success mb-0">
-                        ${cancha.precio * horas || "10.000"}
+                        ${(cancha.precio * horas).toLocaleString("es-AR")}
                       </h3>
                     </div>
 
                     <div className="mb-3">
-                      {cargando ? (
-                        <span className="badge bg-info">Verificando...</span>
+                      {cargando && !reservaExitosa ? (
+                        <span className="badge bg-info">Procesando...</span>
                       ) : disponible === true ? (
                         <span className="badge bg-success">
                           ✓ Horario Disponible
@@ -156,7 +215,10 @@ const CanchaModal = ({ cancha }) => {
                         style={{ backgroundColor: "rgba(255,255,255,0.03)" }}
                       >
                         <div className="col-md-4 col-6">
-                          <label className="small mb-1 d-block opacity-75">
+                          <label
+                            className="small mb-1 d-block opacity-75"
+                            htmlFor="date-input"
+                          >
                             FECHA
                           </label>
                           <input
@@ -164,35 +226,36 @@ const CanchaModal = ({ cancha }) => {
                             min={hoyStr}
                             {...register("fechaStr", {
                               required: "La fecha es obligatoria",
-                              validate: (val) =>
-                                val >= hoyStr ||
-                                "No puedes reservar en el pasado",
                             })}
                             className={`form-control form-control-dark ${errors.fechaStr ? "is-invalid" : ""}`}
+                            id="date-input"
                           />
-                          {errors.fechaStr && (
-                            <span className="text-danger tiny-text">
-                              {errors.fechaStr.message}
-                            </span>
-                          )}
                         </div>
                         <div className="col-md-4 col-6">
-                          <label className="small mb-1 d-block opacity-75">
+                          <label
+                            className="small mb-1 d-block opacity-75"
+                            htmlFor="hour-input"
+                          >
                             HORA
                           </label>
                           <input
                             type="time"
                             {...register("horaStr")}
                             className="form-control form-control-dark"
+                            id="hour-input"
                           />
                         </div>
                         <div className="col-md-4 col-12">
-                          <label className="small mb-1 d-block opacity-75">
+                          <label
+                            className="small mb-1 d-block opacity-75"
+                            htmlFor="duration-input"
+                          >
                             DURACIÓN
                           </label>
                           <select
                             {...register("horas")}
                             className="form-select form-control-dark"
+                            id="duration-input"
                           >
                             <option value="1">1 Hora</option>
                             <option value="2">2 Horas</option>
@@ -202,15 +265,37 @@ const CanchaModal = ({ cancha }) => {
                       </div>
 
                       <div className="mt-4">
-                        <button
-                          type="submit"
-                          disabled={!disponible || cargando}
-                          className={`btn w-100 py-3 shadow ${disponible ? "btn-alquilar text-white" : "btn-secondary"}`}
-                        >
-                          {disponible
-                            ? "Confirmar Reserva"
-                            : "Horario No Disponible"}
-                        </button>
+                        {user ? (
+                          <button
+                            type="submit"
+                            disabled={!disponible || cargando}
+                            className={`btn w-100 py-3 shadow ${
+                              disponible
+                                ? "btn-alquilar text-white"
+                                : "btn-secondary"
+                            }`}
+                          >
+                            {disponible
+                              ? "Confirmar Reserva"
+                              : "Horario No Disponible"}
+                          </button>
+                        ) : (
+                          <div className="p-3 rounded-4 border border-warning bg-warning bg-opacity-10 text-center">
+                            <p className="text-warning small mb-2">
+                              <i className="bi bi-info-circle me-2"></i>
+                              Inicia sesión para poder reservar esta cancha
+                            </p>
+                            <button
+                              type="button"
+                              className="btn btn-outline-warning btn-sm w-100 shadow-sm"
+                              style={{ borderRadius: "8px" }}
+                              data-bs-dismiss="modal"
+                              onClick={() => navigate("/login")}
+                            >
+                              Ir a login
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </form>
                   </div>
@@ -224,4 +309,4 @@ const CanchaModal = ({ cancha }) => {
   );
 };
 
-export default CanchaModal;
+export default ReservaModal;

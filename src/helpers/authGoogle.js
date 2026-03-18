@@ -2,13 +2,13 @@ import { initializeApp } from "firebase/app";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAztlBXTvLfGjPEud-VvRN3_IZBz79Opso",
-  authDomain: "auth-ac5fe-d5512.firebaseapp.com",
-  projectId: "auth-ac5fe-d5512",
-  storageBucket: "auth-ac5fe-d5512.firebasestorage.app",
-  messagingSenderId: "831121148453",
-  appId: "1:831121148453:web:a9a1f8da54d48b1d2f4dcc",
-  measurementId: "G-XX1EW0MYPK"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
 const app = initializeApp(firebaseConfig);
@@ -26,7 +26,6 @@ export const loginWithGoogle = async () => {
       email: user.email,
       name: user.displayName,
     };
-
   } catch (error) {
     return {
       ok: false,

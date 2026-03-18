@@ -1,31 +1,52 @@
+import { useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import PaymentBtnApp from "../components/PaymentBtnApp";
+import { obtenerProductoPorId } from "../helpers/producto";
 import "../assets/css/cart.css";
-import { Link } from "react-router-dom";
 
 const CartScreen = () => {
+  const { productoId } = useParams();
   const { cart, cartLoading, totalItems, clearCart, updateQuantity } =
     useCart();
+  const [compraDirecta, setCompraDirecta] = useState(null);
+  const [productLoading, setProductLoading] = useState(!!productoId);
 
-  if (cartLoading) {
+  useEffect(() => {
+    if (productoId) {
+      setProductLoading(true);
+      obtenerProductoPorId(productoId)
+        .then((res) => {
+          if (res.ok) setCompraDirecta(res.producto);
+        })
+        .finally(() => setProductLoading(false));
+    }
+  }, [productoId]);
+
+  if (cartLoading || productLoading) {
     return (
       <main className="carrito-container py-5 d-flex justify-content-center align-items-center">
-        <h2 className="text-white">Cargando tu carrito...</h2>
+        <div className="spinner-border text-white me-3"></div>
+        <h2 className="text-white m-0">Cargando...</h2>
       </main>
     );
   }
 
   const costoEnvio = 20000;
-  const totalFinal = totalItems > 0 ? Number(cart.total) + costoEnvio : 0;
+  const esCompraDirecta = !!productoId && compraDirecta;
+  const subtotal = esCompraDirecta
+    ? compraDirecta.precio
+    : Number(cart.total || 0);
+  const totalFinal = subtotal > 0 ? subtotal + costoEnvio : 0;
 
   return (
     <main className="carrito-container py-5">
       <div className="container">
         <div className="d-flex justify-content-between align-items-center mb-5">
           <h1 className="text-white fw-bold m-0 display-4">
-            Carrito de compras
+            {esCompraDirecta ? "Finalizar Compra" : "Carrito de compras"}
           </h1>
-          {totalItems > 0 && (
+          {!esCompraDirecta && totalItems > 0 && (
             <button
               onClick={clearCart}
               className="btn btn-danger fw-bold rounded-3"
@@ -37,14 +58,40 @@ const CartScreen = () => {
 
         <div className="row g-4">
           <div className="col-12 col-lg-7">
-            {cart.items.length === 0 ? (
+            {esCompraDirecta ? (
+              <div className="d-flex align-items-center mb-3 gap-3">
+                <div className="bg-white rounded-4 p-2 shadow-sm d-flex justify-content-center align-items-center">
+                  <img
+                    src={
+                      compraDirecta.img ||
+                      "https://png.pngtree.com/png-vector/20230407/ourmid/pngtree-placeholder-line-icon-vector-png-image_6691835.png"
+                    }
+                    alt={compraDirecta.nombre}
+                    className="producto-img-container rounded-3"
+                  />
+                </div>
+                <div className="bg-zona5-dark rounded-4 p-4 shadow-sm flex-grow-1 d-flex justify-content-between align-items-center">
+                  <div>
+                    <h4 className="m-0 fw-bold">{compraDirecta.nombre}</h4>
+                    <small className="text-light opacity-75 fs-6">
+                      Compra directa (1 unidad)
+                    </small>
+                  </div>
+                  <h4 className="m-0 fw-bold text-success">
+                    ${compraDirecta.precio.toLocaleString("es-AR")}
+                  </h4>
+                </div>
+              </div>
+            ) : cart.items.length === 0 ? (
               <div className="bg-zona5-dark rounded-4 p-5 text-center shadow">
                 <h3 className="text-white">Tu carrito está vacío</h3>
+                <Link to="/tienda" className="btn btn-outline-light mt-3">
+                  Ir a la tienda
+                </Link>
               </div>
             ) : (
               cart.items.map((item, index) => {
                 const itemId = item.producto._id || item.producto.id;
-
                 return (
                   <div
                     key={index}
@@ -59,7 +106,6 @@ const CartScreen = () => {
                         className="producto-img-container rounded-3"
                       />
                     </div>
-
                     <div className="bg-zona5-dark rounded-4 p-4 shadow-sm flex-grow-1 d-flex justify-content-between align-items-center">
                       <div>
                         <h4 className="m-0 fw-bold">{item.producto.nombre}</h4>
@@ -67,7 +113,6 @@ const CartScreen = () => {
                           Cantidad: {item.cantidad}
                         </small>
                       </div>
-
                       <div className="d-flex align-items-center gap-3">
                         <h4 className="m-0 fw-bold">
                           $
@@ -75,30 +120,14 @@ const CartScreen = () => {
                             item.producto.precio * item.cantidad
                           ).toLocaleString("es-AR")}
                         </h4>
-
                         <button
                           onClick={() =>
                             updateQuantity(itemId, item.cantidad - 1)
                           }
-                          className="btn btn-danger rounded-3 d-flex justify-content-center align-items-center p-0"
-                          style={{
-                            width: "32px",
-                            height: "32px",
-                            fontSize: "1.2rem",
-                            lineHeight: "1",
-                          }}
-                          title="Quitar uno"
+                          className="btn btn-danger rounded-3 p-0 d-flex justify-content-center align-items-center"
+                          style={{ width: "32px", height: "32px" }}
                         >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            x="0px"
-                            y="0px"
-                            width="100"
-                            height="100"
-                            viewBox="0 0 24 24"
-                          >
-                            <path d="M 10 2 L 9 3 L 4 3 L 4 5 L 5 5 L 5 20 C 5 20.522222 5.1913289 21.05461 5.5683594 21.431641 C 5.9453899 21.808671 6.4777778 22 7 22 L 17 22 C 17.522222 22 18.05461 21.808671 18.431641 21.431641 C 18.808671 21.05461 19 20.522222 19 20 L 19 5 L 20 5 L 20 3 L 15 3 L 14 2 L 10 2 z M 7 5 L 17 5 L 17 20 L 7 20 L 7 5 z M 9 7 L 9 18 L 11 18 L 11 7 L 9 7 z M 13 7 L 13 18 L 15 18 L 15 7 L 13 7 z"></path>
-                          </svg>
+                          <i className="bi bi-trash"></i>
                         </button>
                       </div>
                     </div>
@@ -113,28 +142,32 @@ const CartScreen = () => {
               className="bg-zona5-dark rounded-4 p-4 shadow sticky-top"
               style={{ top: "100px" }}
             >
-              <h2 className="fw-bold mb-4">Resumen de cuenta</h2>
-
+              <h2 className="fw-bold mb-4">Resumen</h2>
               <div className="d-flex justify-content-between mb-3 fs-5">
                 <span>Subtotal</span>
-                <span>${cart.total.toLocaleString("es-AR")}</span>
+                <span>${subtotal.toLocaleString("es-AR")}</span>
               </div>
-
               <div className="d-flex justify-content-between mb-4 fs-5">
                 <span>Envío</span>
                 <span>${costoEnvio.toLocaleString("es-AR")}</span>
               </div>
-
               <hr className="border-white opacity-25" />
-
-              <div className="d-flex justify-content-between mt-4 mb-5 fw-bold fs-3">
+              <div className="d-flex justify-content-between mt-4 mb-5 fw-bold fs-3 text-success">
                 <span>Total</span>
                 <span>${totalFinal.toLocaleString("es-AR")}</span>
               </div>
 
-              {cart.items.length > 0 ? (
+              {subtotal > 0 ? (
                 <div className="w-100">
                   <PaymentBtnApp total={totalFinal} />
+                  {esCompraDirecta && (
+                    <Link
+                      to="/tienda"
+                      className="btn btn-link w-100 text-white mt-2 opacity-50"
+                    >
+                      O prefiere ver el carrito completo
+                    </Link>
+                  )}
                 </div>
               ) : (
                 <button className="btn btn-secondary btn-lg w-100 fw-bold fs-4 rounded-3 shadow">

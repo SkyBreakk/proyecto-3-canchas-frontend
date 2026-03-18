@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import { apiReserva } from "../../helpers/reserva";
 import ConfirmModal from "../modales/ConfirmModal";
+import { useToast } from "../../context/ToastContext";
 
 function ReservaAdmin() {
   const [reservas, setReservas] = useState([]);
   const [total, setTotal] = useState(0);
   const [pagina, setPagina] = useState(0);
   const [deleteModal, setDeleteModal] = useState({ show: false, id: null });
+  const { showToast } = useToast();
 
   const cargarReservas = () => {
     apiReserva.get(5, pagina).then((data) => {
@@ -23,6 +25,37 @@ function ReservaAdmin() {
       setReservas(reservas.filter((r) => r._id !== deleteModal.id));
       setTotal((prev) => prev - 1);
       setDeleteModal({ show: false, id: null });
+      showToast("La reserva se eliminó correctamente.", "success");
+    } else {
+      showToast("Se produjo un error.", "danger");
+    }
+  };
+
+  const handlePago = async (id, estadoActual) => {
+    const nuevoEstado = estadoActual === "Pendiente" ? "Pagado" : "Pendiente";
+    const nuevoMetodo = nuevoEstado === "Pagado" ? "Efectivo" : "A confirmar";
+
+    try {
+      const res = await apiReserva.updatePago(id, {
+        estadoPago: nuevoEstado,
+        metodoPago: nuevoMetodo,
+      });
+
+      if (res.ok) {
+        setReservas(
+          reservas.map((r) =>
+            r._id === id
+              ? { ...r, estadoPago: nuevoEstado, metodoPago: nuevoMetodo }
+              : r,
+          ),
+        );
+        showToast("La reserva se actualizó correctamente.", "success");
+      } else {
+        showToast("Error al actualizar el pago.", "danger");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Error de conexión");
     }
   };
 
@@ -32,43 +65,66 @@ function ReservaAdmin() {
         Gestión de Reservas
       </h1>
 
-      <div className="row fw-bold border-bottom pb-2 mb-2 neon-text px-3 text-center d-none d-md-flex header-grid">
-        <div className="col-md-2">Usuario</div>
-        <div className="col-md-3">Cancha</div>
-        <div className="col-md-2">Seña</div>
-        <div className="col-md-3">Fecha/Hora</div>
-        <div className="col-md-2">Acciones</div>
+      <div className="row fw-bold border-bottom pb-2 mb-2 neon-text px-3 text-center d-none d-lg-flex header-grid">
+        <div className="col-lg-2">Usuario</div>
+        <div className="col-lg-2">Cancha</div>
+        <div className="col-lg-1">Seña</div>
+        <div className="col-lg-3">Fecha/Hora</div>
+        <div className="col-lg-4 text-center">Estado y Acciones</div>
       </div>
 
       {reservas.map((res) => (
         <div
           key={res._id}
-          className="row itemRow-adminScreen py-3 align-items-center mx-0 px-2 text-center text-md-start"
+          className="row itemRow-adminScreen py-3 align-items-center mx-0 px-2 text-center text-lg-start border-bottom border-secondary border-opacity-25"
         >
-          <div className="col-12 col-md-2 mb-3 mb-md-0 text-center fw-bold">
+          <div className="col-12 col-lg-2 mb-2 mb-lg-0 text-center fw-bold">
             {res.usuario?.username || "N/A"}
           </div>
-          <div className="col-12 col-md-3 mb-2 mb-md-0 text-center">
+          <div className="col-12 col-lg-2 mb-2 mb-lg-0 text-center">
             {res.cancha?.nombre || "Eliminada"}
           </div>
-          <div className="col-6 col-md-2 mb-3 mb-md-0 text-md-center neon-text fw-bold">
+          <div className="col-6 col-lg-1 mb-2 mb-lg-0 text-lg-center neon-text fw-bold">
             ${res.senia}
           </div>
-          <div className="col-6 col-md-3 mb-3 mb-md-0 text-md-center small opacity-75">
+          <div className="col-6 col-lg-3 mb-2 mb-lg-0 text-lg-center small opacity-75">
             {new Date(res.fecha).toLocaleString("es-AR", {
               day: "2-digit",
               month: "2-digit",
               hour: "2-digit",
               minute: "2-digit",
             })}
+            <br />
+            <span className="badge bg-dark border border-secondary mt-1 text-secondary">
+              {res.horas} hrs
+            </span>
           </div>
-          <div className="col-12 col-md-2 mt-2 mt-md-0 text-center text-md-end">
+
+          <div className="col-12 col-lg-4 mt-3 mt-lg-0 d-flex flex-column flex-sm-row justify-content-center align-items-center gap-2">
             <button
-              className="btn btn-outline-danger py-2 py-md-1 d-flex w-100 w-md-auto justify-content-center"
+              onClick={() => handlePago(res._id, res.estadoPago)}
+              className={`btn btn-sm w-100 ${
+                res.estadoPago === "Pagado"
+                  ? "btn-success"
+                  : "btn-outline-warning"
+              }`}
+            >
+              {res.estadoPago === "Pagado" ? (
+                <>
+                  <i className="bi bi-check-circle-fill me-1"></i> Pagado
+                </>
+              ) : (
+                <>
+                  <i className="bi bi-clock-history me-1"></i> Pendiente
+                </>
+              )}
+            </button>
+
+            <button
+              className="btn btn-sm btn-outline-danger w-100"
               onClick={() => setDeleteModal({ show: true, id: res._id })}
             >
-              <i className="bi bi-trash3 me-2 me-md-0"></i>
-              <span className="d-inline">Borrar</span>
+              <i className="bi bi-trash3 me-1"></i> Borrar
             </button>
           </div>
         </div>
@@ -83,7 +139,7 @@ function ReservaAdmin() {
           <i className="bi bi-chevron-left"></i>
         </button>
         <span className="text-secondary small">
-          Mostrando {reservas.length} de {total}
+          Mostrando {pagina + 1} - {pagina + reservas.length} de {total}
         </span>
         <button
           className="btn btn-sm btn-neon"

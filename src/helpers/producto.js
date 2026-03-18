@@ -1,4 +1,4 @@
-const url = "http://localhost:4500/api/product";
+const url = import.meta.env.VITE_API_URL + "/product";
 
 const apiFetch = async (endpoint, method = "GET", body = null) => {
   try {
@@ -20,6 +20,8 @@ const apiFetch = async (endpoint, method = "GET", body = null) => {
     return { ok: false, message: error.message };
   }
 };
+
+export const obtenerProductoPorId = (id) => apiFetch(`${id}`);
 
 export const obtenerProductos = (limite, inicio) =>
   apiFetch(`?limite=${limite}&desde=${inicio}`);

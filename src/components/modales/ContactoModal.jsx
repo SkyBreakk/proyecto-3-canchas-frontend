@@ -1,0 +1,150 @@
+import React, { useContext, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { contactoReserva } from "../../helpers/reserva";
+import { UserContext } from "../../context/UserContext";
+import { useToast } from "../../context/ToastContext";
+
+const ReservaModal = ({ show, handleClose }) => {
+  const [loading, setLoading] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    reset,
+    formState: { errors },
+  } = useForm();
+  const { user } = useContext(UserContext);
+  const { showToast } = useToast();
+
+  useEffect(() => {
+    if (user) {
+      setValue("nombre", user.username || "");
+      setValue("contacto", user.email || "");
+    }
+  }, [user, setValue]);
+
+  const onSubmit = async (data) => {
+    setLoading(true);
+    try {
+      await contactoReserva(data);
+      reset();
+      handleClose();
+      showToast("Se mandó el mensaje correctamente", "success");
+    } catch (error) {
+      console.error(`Hubo un problema: ${error.message}`);
+      showToast("Hubo un error al comunicarse.", "danger");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (!show) return null;
+
+  return (
+    <div
+      className="modal d-block"
+      tabIndex="-1"
+      style={{ backgroundColor: "rgba(0,0,0,0.8)", zIndex: 1050 }}
+    >
+      <div className="modal-dialog modal-dialog-centered">
+        <div className="modal-content modal-cancha-custom text-white border-0">
+          <div className="modal-header border-bottom border-secondary">
+            <h5 className="modal-title fw-bold text-success">
+              SOLICITAR RESERVA
+            </h5>
+            <button
+              type="button"
+              className="btn-close btn-close-white"
+              onClick={handleClose}
+              disabled={loading}
+            ></button>
+          </div>
+
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="modal-body">
+              <div className="mb-3">
+                <label
+                  className="form-label small text-secondary-custom"
+                  htmlFor="contact-name"
+                >
+                  Nombre
+                </label>
+                <input
+                  type="text"
+                  className={`form-control form-control-dark ${errors.nombre ? "is-invalid" : ""}`}
+                  placeholder="Ej: Lionel Messi"
+                  {...register("nombre", {
+                    required: "El nombre es necesario",
+                  })}
+                  id="contact-name"
+                />
+                {errors.nombre && (
+                  <p className="texto-error fw-bold">{errors.nombre.message}</p>
+                )}
+              </div>
+
+              <div className="mb-3">
+                <label
+                  className="form-label small text-secondary-custom"
+                  htmlFor="contact-email"
+                >
+                  Email de contacto
+                </label>
+                <input
+                  type="email"
+                  className={`form-control form-control-dark ${errors.contacto ? "is-invalid" : ""}`}
+                  placeholder="correo@ejemplo.com"
+                  {...register("contacto", {
+                    required: "El correo es obligatorio",
+                    pattern: { value: /^\S+@\S+$/i, message: "Email inválido" },
+                  })}
+                  id="contact-email"
+                />
+                {errors.contacto && (
+                  <p className="texto-error fw-bold">
+                    {errors.contacto.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="mb-3">
+                <label
+                  className="form-label small text-secondary-custom"
+                  htmlFor="contact-desc"
+                >
+                  Mensaje
+                </label>
+                <textarea
+                  className={`form-control form-control-dark ${errors.descripcion ? "is-invalid" : ""}`}
+                  rows="3"
+                  {...register("descripcion", {
+                    required: "Dinos qué necesitas",
+                    minLength: 10,
+                  })}
+                  id="contact-desc"
+                ></textarea>
+                {errors.descripcion && (
+                  <p className="texto-error fw-bold">
+                    {errors.descripcion.message}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            <div className="modal-footer border-0">
+              <button
+                type="submit"
+                className="btn btn-alquilar w-100"
+                disabled={loading}
+              >
+                {loading ? "Enviando..." : "Enviar Solicitud"}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ReservaModal;

@@ -42,10 +42,7 @@ const HeaderApp = () => {
               </NavLink>
             </li>
             <li className="nav-item">
-              <NavLink
-                className="nav-link text-white fs-5"
-                to="/nosotros" // Agregué el path aquí para que sea un link real
-              >
+              <NavLink className="nav-link text-white fs-5" to="/nosotros">
                 Nosotros
               </NavLink>
             </li>
@@ -78,9 +75,15 @@ const HeaderApp = () => {
                       )}
                     </NavLink>
 
-                    <span className="text-white fw-bold ms-2">
-                      Hola, <span className="user-neon">{user.username}</span>
-                    </span>
+                    <NavLink
+                      to="/perfil/reservas"
+                      className="btn btn-outline-light border-0 d-flex align-items-center gap-2 px-3 py-1 rounded-pill profile-btn-header"
+                    >
+                      <i className="bi bi-person-circle fs-5"></i>
+                      <span className="fw-bold">
+                        Hola, <span className="user-neon">{user.username}</span>
+                      </span>
+                    </NavLink>
 
                     <button
                       className="btn btn-outline-danger btn-sm ms-2"

@@ -10,7 +10,6 @@ const DashboardAdmin = () => {
   const { seccion } = useParams();
   const navigate = useNavigate();
 
-  // Diccionario de componentes
   const views = {
     cancha: <CanchasAdmin />,
     reserva: <ReservaAdmin />,
@@ -22,7 +21,6 @@ const DashboardAdmin = () => {
   return (
     <section className="background-adminScreen p-4">
       <div className="container containerTable-adminScreen p-4">
-        {/* Selector de Modos (Botones) */}
         <div className="d-flex flex-wrap justify-content-center gap-2 mb-5">
           {Object.keys(views).map((key) => (
             <button
@@ -36,7 +34,6 @@ const DashboardAdmin = () => {
           ))}
         </div>
 
-        {/* Renderizado Dinámico */}
         <div className="fade-in">
           {views[seccion] || (
             <div className="text-center p-5">

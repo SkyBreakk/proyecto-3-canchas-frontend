@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../assets/css/home.css";
+import ContactoModal from "../components/modales/ContactoModal";
+import zona5pasto from "../assets/img/zona5pasto.png";
 
 const HomeView = () => {
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
   return (
@@ -12,7 +15,7 @@ const HomeView = () => {
           <div className="col-12 col-md-8 col-lg-6">
             <div className="home-bg text-center rounded-4 p-4 shadow">
               <img
-                src="../src/assets/img/zona5pasto.png"
+                src={zona5pasto}
                 alt="Zona5 Logo"
                 className="img-fluid rounded mb-4 pointer"
                 onClick={() => navigate("/reserva")}
@@ -120,10 +123,9 @@ const HomeView = () => {
                     </ul>
                   </div>
                 </div>
-
                 <button
                   className="btn btn-success btn-lg w-75 fw-bold fs-4"
-                  onClick={() => navigate("/contacto")}
+                  onClick={() => setShowModal(true)}
                 >
                   Consultar Fechas Disponibles
                 </button>
@@ -132,6 +134,7 @@ const HomeView = () => {
           </div>
         </div>
       </div>
+      <ContactoModal show={showModal} handleClose={() => setShowModal(false)} />
     </main>
   );
 };
