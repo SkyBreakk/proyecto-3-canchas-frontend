@@ -8,7 +8,7 @@ import RegisterScreen from "../views/RegisterScreen";
 import CartScreen from "../views/CartScreen";
 import AdminScreen from "../views/AdminScreen";
 import Perfil from "../components/perfil/Perfil";
-import Success from "../components/success";
+import Success from "../components/Success";
 import Error404Screen from "../views/Error404Screen";
 import AdminRoute from "./AdminRoute";
 import UserRoute from "./UserRoute";
