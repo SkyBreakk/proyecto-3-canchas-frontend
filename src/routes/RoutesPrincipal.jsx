@@ -7,6 +7,7 @@ import LoginScreen from "../views/LoginScreen";
 import RegisterScreen from "../views/RegisterScreen";
 import CartScreen from "../views/CartScreen";
 import AdminScreen from "../views/AdminScreen";
+import AboutScreen from "../views/AboutScreen";
 import Perfil from "../components/perfil/Perfil";
 import Success from "../components/Success";
 import Error404Screen from "../views/Error404Screen";
@@ -21,7 +22,8 @@ const RoutesPrincipal = () => {
         <Route index element={<HomeScreen />} />
         <Route path="reserva" element={<ReservaScreen />} />
         <Route path="tienda" element={<TiendaScreen />} />
-
+        <Route path="/nosotros" element={<AboutScreen/>}/>
+          
         <Route element={<GuestRoute />}>
           <Route path="login" element={<LoginScreen />} />
           <Route path="register" element={<RegisterScreen />} />
