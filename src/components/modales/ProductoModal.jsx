@@ -45,7 +45,6 @@ const ProductoModal = ({ producto }) => {
 
     if (accion === "carrito") {
       addItem(producto._id, cantidad);
-      forceCloseModal();
     } else if (accion === "comprar") {
       forceCloseModal();
       navigate(`/cart/${producto._id}?qty=${cantidad}`);
@@ -198,6 +197,7 @@ const ProductoModal = ({ producto }) => {
                             <button
                               type="button"
                               className="btn btn-outline-light border-2 py-2 fw-bold"
+                              data-bs-dismiss="modal"
                               style={{ borderRadius: "12px" }}
                               disabled={
                                 producto?.stock <= 0 ||
