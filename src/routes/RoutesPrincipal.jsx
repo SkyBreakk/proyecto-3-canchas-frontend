@@ -8,6 +8,7 @@ import RegisterScreen from "../views/RegisterScreen";
 import CartScreen from "../views/CartScreen";
 import AdminScreen from "../views/AdminScreen";
 import Error404 from "../views/Error404Screen";
+import AboutScreen from "../views/AboutScreen";
 
 const RoutesPrincipal = () => {
   return (
@@ -19,7 +20,7 @@ const RoutesPrincipal = () => {
         <Route path="/login" element={<LoginScreen />} />
         <Route path="/register" element={<RegisterScreen />} />
         <Route path="/cart" element={<CartScreen />} />
-
+        <Route path="/nosotros" element={<AboutScreen/>}/>
         <Route path="/admin/:seccion?" element={<AdminScreen />} />
       </Route>
       <Route path="*" element={<Error404 />} />

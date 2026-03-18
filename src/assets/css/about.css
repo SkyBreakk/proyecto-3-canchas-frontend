@@ -1,0 +1,86 @@
+.about-container {
+  background-color: #0000006c;
+  min-height: 100vh;
+  padding-bottom: 50px;
+}
+
+.about-principal {
+  padding: 60px 20px;
+  background: url("/src/assets/img/aboutfondo.jfif")
+    center/cover;
+  position: relative;
+}
+
+.about-principal::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.808);
+}
+
+.about-principal * {
+  position: relative;
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+.title span {
+  color: #5BB545;
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  margin-top: 10px;
+}
+
+.descripcion {
+  margin-top: 20px;
+  font-size: 1rem;
+}
+
+.resaltar {
+  color: #5BB545;
+  font-weight: bold;
+}
+
+.equipo-title {
+  color: #5BB545;
+  font-weight: bold;
+}
+
+.integrante-card {
+  background: #216921;
+  border: none;
+  color: white;
+  border-radius: 15px;
+  transition: transform 0.9s;
+
+  height: 100%;        
+  display: flex;
+  flex-direction: column;
+}
+
+.integrante-card:hover {
+  transform: scale(1.05);
+}
+
+.integrante-card img {
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+}
+
+.username {
+  font-size: 0.9rem;
+  color: #ffffff;
+}
+.cta {
+  color: white;
+  margin-top: 40px;
+}
+
+.cita h4 {
+  color: #5BB545;
+}
