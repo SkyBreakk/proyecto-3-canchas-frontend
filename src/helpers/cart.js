@@ -1,5 +1,4 @@
-const API_URL = "http://localhost:4500/api/cart";
-const url = "http://localhost:4500/api/cart";
+const url = import.meta.env.VITE_API_URL + "/cart";
 
 const getHeaders = () => ({
   "Content-Type": "application/json",
@@ -7,7 +6,7 @@ const getHeaders = () => ({
 
 export const cartService = {
   getCart: async () => {
-    const res = await fetch(API_URL, {
+    const res = await fetch(url, {
       headers: getHeaders(),
       credentials: "include",
     });
@@ -16,7 +15,7 @@ export const cartService = {
   },
 
   addToCart: async (productoId, cantidad) => {
-    const res = await fetch(`${API_URL}/add`, {
+    const res = await fetch(`${url}/add`, {
       method: "POST",
       headers: getHeaders(),
       body: JSON.stringify({ productoId, cantidad }),
@@ -26,7 +25,7 @@ export const cartService = {
   },
 
   updateItem: async (productoId, cantidad) => {
-    const res = await fetch(`${API_URL}/${productoId}`, {
+    const res = await fetch(`${url}/${productoId}`, {
       method: "PUT",
       headers: getHeaders(),
       body: JSON.stringify({ cantidad }),
@@ -36,7 +35,7 @@ export const cartService = {
   },
 
   removeItem: async (productoId) => {
-    const res = await fetch(`${API_URL}/${productoId}`, {
+    const res = await fetch(`${url}/${productoId}`, {
       method: "DELETE",
       headers: getHeaders(),
       credentials: "include",
@@ -45,7 +44,7 @@ export const cartService = {
   },
 
   clearCart: async () => {
-    const res = await fetch(API_URL, {
+    const res = await fetch(url, {
       method: "DELETE",
       headers: getHeaders(),
       credentials: "include",

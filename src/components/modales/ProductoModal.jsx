@@ -33,7 +33,6 @@ const ProductoModal = ({ producto }) => {
     if (accion === "carrito") {
       addItem(producto._id, cantidad);
     } else {
-      console.log("Comprar ahora:", { producto, cantidad });
     }
   };
 
@@ -160,9 +159,8 @@ const ProductoModal = ({ producto }) => {
                               type="button"
                               className="btn btn-alquilar text-white"
                               disabled={producto?.stock <= 0}
-                              onClick={handleSubmit((data) =>
-                                onSubmit(data, "comprar"),
-                              )}
+                              data-bs-dismiss="modal"
+                              onClick={() => navigate(`/cart/${producto._id}`)}
                             >
                               Comprar Ahora
                             </button>

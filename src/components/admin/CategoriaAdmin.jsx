@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import * as api from "../../helpers/categoria";
 import CategoriaAdminModal from "../modales/CategoriaAdminModal";
 import ConfirmModal from "../modales/ConfirmModal";
+import { useToast } from "../../context/ToastContext";
 
 function CategoriaAdmin() {
   const [categorias, setCategorias] = useState([]);
@@ -13,6 +14,7 @@ function CategoriaAdmin() {
     id: null,
     nombre: "",
   });
+  const { showToast } = useToast();
 
   const cargarCategorias = async () => {
     const res = await api.traerCategoriasPaginado(5, pagina);
@@ -35,8 +37,9 @@ function CategoriaAdmin() {
     if (res.ok) {
       cargarCategorias();
       setModalForm({ show: false, data: null });
+      showToast("La categoría se guardó correctamente.", "success");
     } else {
-      alert(res.message);
+      showToast("Se produjo un error.", "danger");
     }
   };
 
@@ -45,6 +48,9 @@ function CategoriaAdmin() {
     if (res.ok) {
       cargarCategorias();
       setModalDelete({ show: false, id: null });
+      showToast("La categoría se borró correctamente.", "success");
+    } else {
+      showToast("Se produjo un error.", "danger");
     }
   };
 

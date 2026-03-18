@@ -2,12 +2,14 @@ import { useState, useEffect } from "react";
 import { apiCancha } from "../../helpers/cancha";
 import CanchaAdminModal from "../modales/CanchaAdminModal";
 import ConfirmModal from "../modales/ConfirmModal";
+import { useToast } from "../../context/ToastContext";
 
 function CanchaAdmin() {
   const [canchas, setCanchas] = useState([]);
   const [total, setTotal] = useState(0);
   const [pagina, setPagina] = useState(0);
   const [modalState, setModalState] = useState({ type: null, data: null });
+  const { showToast } = useToast();
 
   const cargarCanchas = () => {
     apiCancha.get(5, pagina).then((data) => {
@@ -26,6 +28,9 @@ function CanchaAdmin() {
     if (res.ok) {
       cargarCanchas();
       setModalState({ type: null, data: null });
+      showToast("La cancha se guardó correctamente.", "success");
+    } else {
+      showToast("Se produjo un error.", "danger");
     }
   };
 
@@ -34,6 +39,9 @@ function CanchaAdmin() {
     if (res.ok) {
       cargarCanchas();
       setModalState({ type: null, data: null });
+      showToast("La cancha se eliminó correctamente.", "success");
+    } else {
+      showToast("Se produjo un error.", "danger");
     }
   };
 

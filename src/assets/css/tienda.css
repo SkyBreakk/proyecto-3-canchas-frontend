@@ -87,7 +87,9 @@
 }
 
 .overflow-hidden {
-  overflow-x: auto;
+  overflow-x: auto !important;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
 }
 .overflow-hidden::-webkit-scrollbar {
@@ -103,6 +105,7 @@
 }
 
 .modal-img-cancha {
+  background-color: white;
   width: 100%;
   border-radius: 15px;
   object-fit: cover;
@@ -153,7 +156,6 @@
   color: white;
 }
 
-/* Ajuste para inputs de número en modo oscuro */
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
   filter: invert(1);

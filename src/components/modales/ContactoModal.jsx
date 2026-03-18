@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { contactoReserva } from "../../helpers/reserva"; // Importamos el helper
+import { contactoReserva } from "../../helpers/reserva";
 import { UserContext } from "../../context/UserContext";
+import { useToast } from "../../context/ToastContext";
 
 const ReservaModal = ({ show, handleClose }) => {
   const [loading, setLoading] = useState(false);
@@ -13,6 +14,7 @@ const ReservaModal = ({ show, handleClose }) => {
     formState: { errors },
   } = useForm();
   const { user } = useContext(UserContext);
+  const { showToast } = useToast();
 
   useEffect(() => {
     if (user) {
@@ -27,8 +29,10 @@ const ReservaModal = ({ show, handleClose }) => {
       await contactoReserva(data);
       reset();
       handleClose();
+      showToast("Se mandó el mensaje correctamente", "success");
     } catch (error) {
       console.error(`Hubo un problema: ${error.message}`);
+      showToast("Hubo un error al comunicarse.", "danger");
     } finally {
       setLoading(false);
     }

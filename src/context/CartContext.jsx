@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { cartService } from "../helpers/cart";
 import { UserContext } from "./UserContext";
+import { useToast } from "./ToastContext";
 
 const CartContext = createContext();
 
@@ -10,6 +11,7 @@ export const CartProvider = ({ children }) => {
   const totalItems =
     cart.items.reduce((acc, item) => acc + item.cantidad, 0) || 0;
   const { user, authLoading } = useContext(UserContext);
+  const { showToast } = useToast();
 
   const fetchCart = async () => {
     try {
@@ -39,10 +41,16 @@ export const CartProvider = ({ children }) => {
   }, [user, authLoading]);
 
   const addItem = async (productoId, cantidad) => {
-    const updatedCart = await cartService.addToCart(productoId, cantidad);
-    setCart(updatedCart);
-  };
+    try {
+      const updatedCart = await cartService.addToCart(productoId, cantidad);
+      setCart(updatedCart);
 
+      showToast("Producto añadido al carrito", "success");
+    } catch (error) {
+      console.error("Error al añadir producto", error);
+      showToast("No se pudo añadir el producto", "danger");
+    }
+  };
   const updateQuantity = async (productoId, cantidad) => {
     if (cantidad <= 0) {
       return removeItem(productoId);
@@ -62,8 +70,15 @@ export const CartProvider = ({ children }) => {
   };
 
   const clearCart = async () => {
-    await cartService.clearCart();
-    setCart({ items: [], total: 0 });
+    try {
+      await cartService.clearCart();
+      setCart({ items: [], total: 0 });
+
+      showToast("El carrito se ha vaciado", "success");
+    } catch (error) {
+      console.error("Error al vaciar el carrito", error);
+      showToast("Hubo un problema al vaciar el carrito", "danger");
+    }
   };
 
   return (

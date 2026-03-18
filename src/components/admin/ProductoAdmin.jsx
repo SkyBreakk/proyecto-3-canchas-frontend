@@ -8,6 +8,7 @@ import {
 import { traerCategoriasPaginado } from "../../helpers/categoria";
 import ProductoAdminModal from "../modales/ProductoAdminModal";
 import ConfirmModal from "../modales/ConfirmModal";
+import { useToast } from "../../context/ToastContext";
 
 function ProductoAdmin() {
   const [productos, setProductos] = useState([]);
@@ -19,6 +20,7 @@ function ProductoAdmin() {
     delete: false,
     selected: null,
   });
+  const { showToast } = useToast();
 
   const cargarProductos = useCallback(() => {
     obtenerProductos(5, pagina).then((data) => {
@@ -43,14 +45,24 @@ function ProductoAdmin() {
     const res = data._id
       ? await actualizarProducto(data)
       : await crearProducto(data);
-    if (res.ok) cargarProductos();
-    setModalState({ ...modalState, form: false, selected: null });
+    if (res.ok) {
+      cargarProductos();
+      setModalState({ ...modalState, form: false, selected: null });
+      showToast("El producto se guardó correctamente.", "success");
+    } else {
+      showToast("Se produjo un error.", "danger");
+    }
   };
 
   const handleDelete = async () => {
     const res = await borrarProducto(modalState.selected._id);
-    if (res.ok) cargarProductos();
-    setModalState({ ...modalState, delete: false, selected: null });
+    if (res.ok) {
+      cargarProductos();
+      setModalState({ ...modalState, delete: false, selected: null });
+      showToast("El producto se eliminó correctamente.", "success");
+    } else {
+      showToast("Se produjo un error.", "danger");
+    }
   };
 
   return (
@@ -145,7 +157,6 @@ function ProductoAdmin() {
         </div>
       ))}
 
-      {/* Paginación adaptada */}
       <div className="d-flex flex-column flex-md-row justify-content-center align-items-center gap-3 mt-4">
         <div className="btn-group gap-3">
           <button
@@ -168,7 +179,6 @@ function ProductoAdmin() {
         </div>
       </div>
 
-      {/* Modales */}
       <ProductoAdminModal
         show={modalState.form}
         producto={modalState.selected}

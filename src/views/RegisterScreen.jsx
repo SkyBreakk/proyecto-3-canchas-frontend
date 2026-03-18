@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { registerUser } from "../helpers/auth";
 import zona5 from "../assets/img/logo.png";
-import "../css/login.css";
+import "../assets/css/login.css";
 import AlertApp from "../components/AlertApp";
 import VerifyEmailModal from "../components/VerifyEmailModal";
 

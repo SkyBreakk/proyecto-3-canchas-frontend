@@ -4,14 +4,16 @@ import { useForm } from "react-hook-form";
 import { logIn } from "../helpers/auth";
 import { UserContext } from "../context/UserContext.jsx";
 import zona5 from "../assets/img/logo.png";
-import "../css/login.css";
+import "../assets/css/login.css";
 import AlertApp from "../components/AlertApp";
 import BtnGoogleSigIn from "../components/BtnGoogleSigIn";
+import { useToast } from "../context/ToastContext.jsx";
 
 function LoginScreen() {
   const { loadUserData } = useContext(UserContext);
-  const navigate = useNavigate();
   const [response, setResponse] = useState(null);
+  const navigate = useNavigate();
+  const { showToast } = useToast();
 
   const {
     register,
@@ -24,8 +26,11 @@ function LoginScreen() {
     const response = await logIn(data.email, data.password);
     setResponse(response);
     if (response.ok) {
+      showToast("Iniciado Sesión Exitosamente.", "success");
       await loadUserData();
       navigate("/");
+    } else {
+      showToast("Hubo un error al iniciar sesión", "danger");
     }
   };
 

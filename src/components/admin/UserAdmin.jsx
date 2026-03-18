@@ -36,6 +36,9 @@ function UserAdmin() {
       setUsers(users.filter((u) => u._id !== deleteModal.user._id));
       setTotal((prev) => prev - 1);
       setDeleteModal({ show: false, user: null });
+      showToast("El usuario fue borrado correctamente.", "success");
+    } else {
+      showToast("Se produjo un error al intentar borrar.", "danger");
     }
   };
 

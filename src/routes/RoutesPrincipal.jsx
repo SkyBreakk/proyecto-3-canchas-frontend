@@ -11,6 +11,8 @@ import Perfil from "../components/perfil/Perfil";
 import Success from "../components/success";
 import Error404 from "../views/Error404Screen";
 import AdminRoute from "./AdminRoute";
+import UserRoute from "./UserRoute";
+import GuestRoute from "./GuestRoute";
 
 const RoutesPrincipal = () => {
   return (
@@ -19,18 +21,22 @@ const RoutesPrincipal = () => {
         <Route index element={<HomeScreen />} />
         <Route path="reserva" element={<ReservaScreen />} />
         <Route path="tienda" element={<TiendaScreen />} />
-        <Route path="/login" element={<LoginScreen />} />
-        <Route path="/register" element={<RegisterScreen />} />
-        <Route path="/cart" element={<CartScreen />} />
-        <Route path="/perfil/:seccion" element={<Perfil />} />
 
-        <Route path="/success" element={<Success />} />
+        <Route element={<GuestRoute />}>
+          <Route path="login" element={<LoginScreen />} />
+          <Route path="register" element={<RegisterScreen />} />
+        </Route>
 
-        <Route path="/failure" element={<h2>Hubo un error con el pago.</h2>} />
-        <Route
-          path="/pending"
-          element={<h2>Tu pago está pendiente de aprobación.</h2>}
-        />
+        <Route element={<UserRoute />}>
+          <Route path="perfil/:seccion" element={<Perfil />} />
+          <Route path="cart/:productoId?" element={<CartScreen />} />
+          <Route path="success" element={<Success />} />
+          <Route path="failure" element={<h2>Hubo un error con el pago.</h2>} />
+          <Route
+            path="pending"
+            element={<h2>Tu pago está pendiente de aprobación.</h2>}
+          />
+        </Route>
 
         <Route element={<AdminRoute />}>
           <Route path="admin/:seccion?" element={<AdminScreen />} />

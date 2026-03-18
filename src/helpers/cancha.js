@@ -1,4 +1,4 @@
-const url = "http://localhost:4500/api/cancha";
+const url = import.meta.env.VITE_API_URL + "/cancha";
 
 export const apiCancha = {
   get: (limit, offset) =>

@@ -110,7 +110,6 @@ const ReservaModal = ({ cancha }) => {
       id="modalCancha"
       tabIndex="-1"
       aria-labelledby="modalCanchaLabel"
-      onHiddenBsModal={cerrarModal}
     >
       <div className="modal-dialog modal-lg modal-dialog-centered">
         <div

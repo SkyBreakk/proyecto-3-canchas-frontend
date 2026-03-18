@@ -41,8 +41,9 @@ const MisReservas = () => {
       if (res.ok) {
         setReservas(reservas.filter((r) => r._id !== reservaSeleccionada._id));
         setShowModal(false);
+        showToast("La reserva se canceló correctamente.", "success");
       } else {
-        alert("No se pudo cancelar la reserva.");
+        showToast("No se pudo cancelar la reserva.", "danger");
       }
     } catch (error) {
       console.error("Error en el borrado:", error);
@@ -97,7 +98,7 @@ const MisReservas = () => {
       </h4>
 
       {reservas.length === 0 ? (
-        <div className="alert alert-dark border-secondary text-secondary-custom">
+        <div className="alert alert-dark border-secondary text-black">
           No tienes reservas activas en este momento.
         </div>
       ) : (
