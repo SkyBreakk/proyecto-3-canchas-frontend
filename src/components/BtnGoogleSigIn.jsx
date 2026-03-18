@@ -2,10 +2,12 @@ import { useNavigate } from "react-router-dom";
 import { loginWithGoogle } from "../helpers/authGoogle";
 import { useContext } from "react";
 import { UserContext } from "../context/UserContext";
+import { useToast } from "../context/ToastContext";
 
 const BtnGoogleSigIn = () => {
   const navigate = useNavigate();
   const { loadUserData } = useContext(UserContext);
+  const { showToast } = useToast();
 
   const handleGoogleLogin = async (e) => {
     e.preventDefault();
@@ -34,6 +36,7 @@ const BtnGoogleSigIn = () => {
 
     if (data.ok) {
       await loadUserData();
+      showToast("Se inició sesión correctamente", "success");
       navigate("/");
     } else {
       alert(data.message);

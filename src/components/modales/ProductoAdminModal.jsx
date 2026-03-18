@@ -17,20 +17,26 @@ function ProductoAdminModal({
 
   useEffect(() => {
     if (show) {
-      const categoriaId = producto?.categoria?._id || producto?.categoria || "";
-
-      reset(
-        producto
-          ? { ...producto, categoria: categoriaId }
-          : {
-              nombre: "",
-              precio: "",
-              categoria: "",
-              descripcion: "",
-              stock: "",
-              img: "",
-            },
-      );
+      if (producto) {
+        const categoriaId = producto.categoria?._id || producto.categoria || "";
+        reset({
+          nombre: producto.nombre,
+          precio: producto.precio,
+          categoria: categoriaId,
+          descripcion: producto.descripcion || "",
+          stock: producto.stock,
+          img: producto.img || "",
+        });
+      } else {
+        reset({
+          nombre: "",
+          precio: "",
+          categoria: "",
+          descripcion: "",
+          stock: "",
+          img: "",
+        });
+      }
     }
   }, [show, producto, reset]);
 
@@ -216,7 +222,7 @@ function ProductoAdminModal({
               <button type="button" className="btn text-light" onClick={close}>
                 CANCELAR
               </button>
-              <button type="submit" className="btn btn-alquilar-admin px-5">
+              <button type="submit" className="btn btn-neon px-5">
                 {producto ? "ACTUALIZAR" : "GUARDAR"}
               </button>
             </div>
