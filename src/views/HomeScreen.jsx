@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../assets/css/home.css";
 import ContactoModal from "../components/modales/ContactoModal";
+import zona5pasto from "../assets/img/zona5pasto.png";
 
 const HomeView = () => {
   const [showModal, setShowModal] = useState(false);
@@ -14,7 +15,7 @@ const HomeView = () => {
           <div className="col-12 col-md-8 col-lg-6">
             <div className="home-bg text-center rounded-4 p-4 shadow">
               <img
-                src="../src/assets/img/zona5pasto.png"
+                src={zona5pasto}
                 alt="Zona5 Logo"
                 className="img-fluid rounded mb-4 pointer"
                 onClick={() => navigate("/reserva")}
