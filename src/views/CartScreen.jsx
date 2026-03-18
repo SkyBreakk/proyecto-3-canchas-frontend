@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useLocation } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import PaymentBtnApp from "../components/PaymentBtnApp";
 import { obtenerProductoPorId } from "../helpers/producto";
@@ -7,8 +7,12 @@ import "../assets/css/cart.css";
 
 const CartScreen = () => {
   const { productoId } = useParams();
+  const { search } = useLocation();
   const { cart, cartLoading, totalItems, clearCart, updateQuantity } =
     useCart();
+  const query = new URLSearchParams(search);
+  const cantidadQuery = parseInt(query.get("qty")) || 1;
+
   const [compraDirecta, setCompraDirecta] = useState(null);
   const [productLoading, setProductLoading] = useState(!!productoId);
 
@@ -35,7 +39,7 @@ const CartScreen = () => {
   const costoEnvio = 20000;
   const esCompraDirecta = !!productoId && compraDirecta;
   const subtotal = esCompraDirecta
-    ? compraDirecta.precio
+    ? compraDirecta.precio * cantidadQuery
     : Number(cart.total || 0);
   const totalFinal = subtotal > 0 ? subtotal + costoEnvio : 0;
 
@@ -70,15 +74,20 @@ const CartScreen = () => {
                     className="producto-img-container rounded-3"
                   />
                 </div>
+
                 <div className="bg-zona5-dark rounded-4 p-4 shadow-sm flex-grow-1 d-flex justify-content-between align-items-center">
                   <div>
                     <h4 className="m-0 fw-bold">{compraDirecta.nombre}</h4>
                     <small className="text-light opacity-75 fs-6">
-                      Compra directa (1 unidad)
+                      Compra directa ({cantidadQuery}{" "}
+                      {cantidadQuery > 1 ? "unidades" : "unidad"})
                     </small>
                   </div>
                   <h4 className="m-0 fw-bold text-success">
-                    ${compraDirecta.precio.toLocaleString("es-AR")}
+                    $
+                    {(compraDirecta.precio * cantidadQuery).toLocaleString(
+                      "es-AR",
+                    )}
                   </h4>
                 </div>
               </div>

@@ -26,13 +26,29 @@ const ProductoModal = ({ producto }) => {
 
   const cantidadSeleccionada = watch("cantidad");
 
+  const forceCloseModal = () => {
+    const modalElement = document.getElementById("modalProducto");
+    const modalInstance = window.bootstrap?.Modal.getInstance(modalElement);
+    modalInstance?.hide();
+
+    const backdrops = document.querySelectorAll(".modal-backdrop");
+    backdrops.forEach((backdrop) => backdrop.remove());
+
+    document.body.classList.remove("modal-open");
+    document.body.style.overflow = "";
+    document.body.style.paddingRight = "";
+  };
+
   const onSubmit = (data, accion) => {
     if (!producto) return;
     const cantidad = parseInt(data.cantidad);
 
     if (accion === "carrito") {
       addItem(producto._id, cantidad);
-    } else {
+      forceCloseModal();
+    } else if (accion === "comprar") {
+      forceCloseModal();
+      navigate(`/cart/${producto._id}?qty=${cantidad}`);
     }
   };
 
@@ -130,13 +146,22 @@ const ProductoModal = ({ producto }) => {
                             <input
                               type="number"
                               {...register("cantidad", {
-                                required: true,
-                                min: 1,
-                                max: producto?.stock,
+                                required: "Campo obligatorio",
+                                min: { value: 1, message: "Mínimo 1" },
+                                max: {
+                                  value: producto?.stock,
+                                  message: `Máximo ${producto?.stock}`,
+                                },
                               })}
-                              className="form-control form-control-dark"
+                              className={`form-control form-control-dark ${errors.cantidad ? "is-invalid" : ""}`}
                               id="prod-quantity"
                             />
+                            {errors.cantidad && (
+                              <span className="error-message">
+                                <i className="bi bi-exclamation-triangle me-1"></i>
+                                {errors.cantidad.message}
+                              </span>
+                            )}
                           </div>
                           <div className="col-6 text-end">
                             <span className="text-secondary-custom d-block small">
@@ -158,9 +183,14 @@ const ProductoModal = ({ producto }) => {
                             <button
                               type="button"
                               className="btn btn-alquilar text-white"
-                              disabled={producto?.stock <= 0}
-                              data-bs-dismiss="modal"
-                              onClick={() => navigate(`/cart/${producto._id}`)}
+                              disabled={
+                                producto?.stock <= 0 ||
+                                cantidadSeleccionada > producto?.stock ||
+                                cantidadSeleccionada <= 0
+                              }
+                              onClick={handleSubmit((data) =>
+                                onSubmit(data, "comprar"),
+                              )}
                             >
                               Comprar Ahora
                             </button>
@@ -169,7 +199,11 @@ const ProductoModal = ({ producto }) => {
                               type="button"
                               className="btn btn-outline-light border-2 py-2 fw-bold"
                               style={{ borderRadius: "12px" }}
-                              disabled={producto?.stock <= 0}
+                              disabled={
+                                producto?.stock <= 0 ||
+                                cantidadSeleccionada > producto?.stock ||
+                                cantidadSeleccionada <= 0
+                              }
                               onClick={handleSubmit((data) =>
                                 onSubmit(data, "carrito"),
                               )}
