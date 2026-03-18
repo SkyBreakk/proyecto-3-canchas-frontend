@@ -1,0 +1,102 @@
+@import "./root.css";
+
+.background-adminScreen {
+  min-height: 100vh;
+  background-attachment: fixed;
+  background-position: center;
+  background-size: cover;
+  padding-top: 50px;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+}
+
+.neon-text {
+  color: white;
+}
+
+.containerTable-adminScreen {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+}
+
+.itemRow-adminScreen {
+  transition: all 0.3s ease;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.itemRow-adminScreen:hover {
+  background: rgba(57, 255, 20, 0.05);
+}
+
+.modal-custom-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+}
+
+.modal-content-zona5 {
+  background-color: var(--bg-night-stadium, #111);
+  border: 1px solid var(--verde-neon, #39ff14);
+  box-shadow: 0 0 20px rgba(57, 255, 20, 0.2);
+  color: white;
+}
+
+.modal-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.modal-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-neon {
+  background-color: transparent;
+  border: 1px solid var(--verde-neon, #39ff14);
+  color: var(--verde-neon, #39ff14);
+  transition: 0.3s;
+}
+
+.btn-neon:hover {
+  background-color: var(--verde-neon, #39ff14);
+  color: #000;
+  box-shadow: 0 0 15px var(--verde-neon, #39ff14);
+}
+
+.btn-delete-zona5 {
+  background-color: #ff4444;
+  border: none;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .containerTable-adminScreen {
+    padding: 15px !important;
+    margin: 10px;
+    border-radius: 10px;
+  }
+
+  .display-4 {
+    font-size: 1.8rem !important;
+  }
+
+  .header-grid {
+    display: none !important;
+  }
+
+  .itemRow-adminScreen {
+    margin-bottom: 15px;
+    padding: 15px !important;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(57, 255, 20, 0.1);
+    border-radius: 10px;
+  }
+}

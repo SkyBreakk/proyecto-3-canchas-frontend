@@ -1,0 +1,18 @@
+.carrito-container {
+  background-image: url('/pasto.jpg'); 
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+.bg-zona5-dark {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
+  color: white;
+}
+
+.producto-img-container {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+}
