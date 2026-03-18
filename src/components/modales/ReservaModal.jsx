@@ -8,6 +8,7 @@ const ReservaModal = ({ cancha }) => {
   const [disponible, setDisponible] = useState(null);
   const [cargando, setCargando] = useState(false);
   const [reservaExitosa, setReservaExitosa] = useState(false);
+  const [datosReservaExitosa, setDatosReservaExitosa] = useState(null);
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
 
@@ -68,21 +69,27 @@ const ReservaModal = ({ cancha }) => {
 
     setCargando(true);
     const fechaFormateada = `${data.fechaStr}T${data.horaStr}:00`;
+    const porcentajeSenia = 0.5;
+    const totalReserva = cancha.precio * parseInt(data.horas);
 
     const reservaFinal = {
       cancha: cancha._id,
       fecha: fechaFormateada,
       horas: parseInt(data.horas),
-      senia: 0,
+      senia: totalReserva * porcentajeSenia,
     };
 
     try {
       const respuesta = await apiReserva.post(reservaFinal);
 
       if (respuesta.ok) {
-        console.log("¡Reserva guardada en BD!", respuesta);
+        setDatosReservaExitosa({
+          fecha: data.fechaStr.split("-").reverse().join("/"),
+          hora: data.horaStr,
+          canchaNombre: cancha.nombre,
+        });
         setReservaExitosa(true);
-        reset();
+        reset(); // Ahora reset ya no rompe el mensaje porque usamos el nuevo estado
       } else {
         console.error("Error del backend:", respuesta);
         alert(
@@ -120,7 +127,7 @@ const ReservaModal = ({ cancha }) => {
             <div className="modal-body text-center p-5">
               <div className="spinner-border text-primary" role="status"></div>
             </div>
-          ) : reservaExitosa ? (
+          ) : reservaExitosa && datosReservaExitosa ? (
             <div className="modal-body text-center p-5">
               <i
                 className="bi bi-check-circle-fill text-success"
@@ -130,9 +137,11 @@ const ReservaModal = ({ cancha }) => {
                 ¡Reserva Confirmada!
               </h2>
               <p className="fs-5 text-light mt-3">
-                Tu turno para la <strong>{cancha.nombre}</strong> el día{" "}
-                <strong>{fechaStr.split("-").reverse().join("/")}</strong> a las{" "}
-                <strong>{horaStr}</strong> fue guardado con éxito.
+                Tu turno para la{" "}
+                <strong>{datosReservaExitosa.canchaNombre}</strong> el día{" "}
+                <strong>{datosReservaExitosa.fecha}</strong> a las{" "}
+                <strong>{datosReservaExitosa.hora}</strong> fue guardado con
+                éxito.
               </p>
               <div className="bg-dark p-3 rounded-3 mt-4 border border-secondary text-secondary-custom">
                 <i className="bi bi-info-circle me-2"></i>
@@ -186,13 +195,24 @@ const ReservaModal = ({ cancha }) => {
                           : "Césped natural nivel profesional con iluminación LED simétrica para partidos nocturnos."}
                     </p>
 
-                    <div className="d-flex align-items-baseline gap-2 my-3">
-                      <span className="text-secondary-custom">
-                        Precio a pagar en el local:
-                      </span>
-                      <h3 className="fw-bold text-success mb-0">
-                        ${(cancha.precio * horas).toLocaleString("es-AR")}
-                      </h3>
+                    <div className="d-flex flex-column my-3">
+                      <div className="d-flex align-items-baseline gap-2">
+                        <span className="text-secondary-custom">Total:</span>
+                        <h4 className="fw-bold text-white mb-0">
+                          ${(cancha.precio * horas).toLocaleString("es-AR")}
+                        </h4>
+                      </div>
+                      <div className="d-flex align-items-baseline gap-2">
+                        <span className="text-secondary-custom">
+                          Seña requerida:
+                        </span>
+                        <h3 className="fw-bold text-success mb-0">
+                          $
+                          {(cancha.precio * horas * 0.3).toLocaleString(
+                            "es-AR",
+                          )}
+                        </h3>
+                      </div>
                     </div>
 
                     <div className="mb-3">
