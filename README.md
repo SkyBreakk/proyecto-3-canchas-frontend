@@ -2,7 +2,7 @@
 
 <div align="center">
 
-<img src="/client/public/logo.svg" alt="Logo Zona 5" width="300"/>
+<img src="/src/assets/img/zona5pasto.png" alt="Logo Zona 5" width="300"/>
 
 </div>
 
