@@ -9,7 +9,7 @@ import CartScreen from "../views/CartScreen";
 import AdminScreen from "../views/AdminScreen";
 import Perfil from "../components/perfil/Perfil";
 import Success from "../components/success";
-import Error404 from "../views/Error404Screen";
+import Error404Screen from "../views/Error404Screen";
 import AdminRoute from "./AdminRoute";
 import UserRoute from "./UserRoute";
 import GuestRoute from "./GuestRoute";
@@ -42,7 +42,7 @@ const RoutesPrincipal = () => {
           <Route path="admin/:seccion?" element={<AdminScreen />} />
         </Route>
       </Route>
-      <Route path="*" element={<Error404 />} />
+      <Route path="*" element={<Error404Screen />} />
     </Routes>
   );
 };
