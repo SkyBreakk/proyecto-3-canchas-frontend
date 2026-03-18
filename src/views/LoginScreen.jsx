@@ -12,6 +12,7 @@ import { useToast } from "../context/ToastContext.jsx";
 function LoginScreen() {
   const { loadUserData } = useContext(UserContext);
   const [response, setResponse] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const { showToast } = useToast();
 
@@ -60,18 +61,29 @@ function LoginScreen() {
               )}
             </div>
 
-            <div className="mb-3">
+            <div className="mb-3 position-relative">
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 className="form-control password-icon input text-white"
                 placeholder="Contraseña"
                 {...register("password", {
                   required: "La contraseña es obligatoria",
                 })}
               />
-              {errors.password && (
-                <p className="texto-error fw-bold">{errors.password.message}</p>
-              )}
+
+              <button
+                type="button"
+                className="btn-ver-password"
+                onClick={() => setShowPassword(!showPassword)}
+                aria-label={
+                  showPassword ? "Ocultar contraseña" : "Mostrar contraseña"
+                }
+              >
+                <i
+                  className={`fa ${showPassword ? "fa-eye-slash" : "fa-eye"}`}
+                  aria-hidden="true"
+                ></i>
+              </button>
             </div>
 
             <div className="mb-3 d-grid">
@@ -96,7 +108,10 @@ function LoginScreen() {
 
             <p className="text-center text-white my-3">
               ¿No tienes cuenta?{" "}
-              <a href="/register" className="text-registro">
+              <a
+                className="text-registro"
+                onClick={() => navigate("/register")}
+              >
                 Regístrate
               </a>
             </p>

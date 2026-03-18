@@ -55,8 +55,37 @@
   background-repeat: no-repeat;
   background-size: 18px;
   background-position: 10px center;
+  padding-right: 45px;
   padding-left: 40px;
   color: white;
+}
+
+.position-relative {
+  position: relative;
+}
+
+.btn-ver-password {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #bbb;
+  cursor: pointer;
+  padding: 0;
+  z-index: 10;
+  font-size: 1.2rem; /* Tamaño del icono */
+  transition: color 0.2s ease;
+}
+
+.btn-ver-password:hover {
+  color: #ffffff;
+}
+
+/* Evita que el texto escrito se meta debajo del icono */
+.form-control.password-icon {
+  padding-right: 40px;
 }
 
 .logo-img {
@@ -66,7 +95,7 @@
 .input {
   background-color: #216921;
   border-radius: 10px;
-  border: 1px solid #25b225;
+  border: 2px solid #217721;
 
   transition:
     border-width 0.2s ease,
