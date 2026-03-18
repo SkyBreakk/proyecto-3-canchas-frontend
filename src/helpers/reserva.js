@@ -1,4 +1,4 @@
-const url = "http://localhost:4500/api/reserva";
+const url = import.meta.env.VITE_API_URL + "/reserva";
 
 export const apiReserva = {
   get: async (limite = 5, desde = 0) => {

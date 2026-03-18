@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import * as api from "../../helpers/categoria";
 import CategoriaAdminModal from "../modales/CategoriaAdminModal";
 import ConfirmModal from "../modales/ConfirmModal";
+import { useToast } from "../../context/ToastContext";
 
 function CategoriaAdmin() {
   const [categorias, setCategorias] = useState([]);
@@ -13,6 +14,7 @@ function CategoriaAdmin() {
     id: null,
     nombre: "",
   });
+  const { showToast } = useToast();
 
   const cargarCategorias = async () => {
     const res = await api.traerCategoriasPaginado(5, pagina);
@@ -35,8 +37,9 @@ function CategoriaAdmin() {
     if (res.ok) {
       cargarCategorias();
       setModalForm({ show: false, data: null });
+      showToast("La categoría se guardó correctamente.", "success");
     } else {
-      alert(res.message);
+      showToast("Se produjo un error.", "danger");
     }
   };
 
@@ -45,6 +48,9 @@ function CategoriaAdmin() {
     if (res.ok) {
       cargarCategorias();
       setModalDelete({ show: false, id: null });
+      showToast("La categoría se borró correctamente.", "success");
+    } else {
+      showToast("Se produjo un error.", "danger");
     }
   };
 
@@ -62,7 +68,6 @@ function CategoriaAdmin() {
         </button>
       </div>
 
-      {/* Tabla de Categorías Inline */}
       <div className="row fw-bold border-bottom pb-2 mb-2 neon-text">
         <div className="col-6">Nombre</div>
         <div className="col-6 text-center">Acciones</div>
@@ -97,7 +102,6 @@ function CategoriaAdmin() {
         </div>
       ))}
 
-      {/* Paginación */}
       <div className="d-flex justify-content-center gap-3 mt-4">
         <button
           className="btn btn-neon btn-sm"
@@ -106,7 +110,9 @@ function CategoriaAdmin() {
         >
           <i className="bi bi-arrow-left"></i>
         </button>
-        <span className="align-self-center">Página {pagina / 5 + 1}</span>
+        <span className="text-secondary small">
+          Mostrando {pagina + 1} - {pagina + categorias.length} de {total}
+        </span>
         <button
           className="btn btn-neon btn-sm"
           onClick={() => setPagina((p) => p + 5)}

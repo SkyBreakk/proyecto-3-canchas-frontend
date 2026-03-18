@@ -10,13 +10,16 @@ import "font-awesome/css/font-awesome.css";
 initMercadoPago(import.meta.env.VITE_MP_PUBLIC_KEY);
 
 import App from "./App.jsx";
+import { ToastProvider } from "./context/ToastContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <UserProvider>
-      <CartProvider>
-        <App />
-      </CartProvider>
-    </UserProvider>
+    <ToastProvider>
+      <UserProvider>
+        <CartProvider>
+          <App />
+        </CartProvider>
+      </UserProvider>
+    </ToastProvider>
   </StrictMode>,
 );

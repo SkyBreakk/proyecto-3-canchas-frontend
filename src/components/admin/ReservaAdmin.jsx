@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import { apiReserva } from "../../helpers/reserva";
 import ConfirmModal from "../modales/ConfirmModal";
+import { useToast } from "../../context/ToastContext";
 
 function ReservaAdmin() {
   const [reservas, setReservas] = useState([]);
   const [total, setTotal] = useState(0);
   const [pagina, setPagina] = useState(0);
   const [deleteModal, setDeleteModal] = useState({ show: false, id: null });
+  const { showToast } = useToast();
 
   const cargarReservas = () => {
     apiReserva.get(5, pagina).then((data) => {
@@ -23,6 +25,9 @@ function ReservaAdmin() {
       setReservas(reservas.filter((r) => r._id !== deleteModal.id));
       setTotal((prev) => prev - 1);
       setDeleteModal({ show: false, id: null });
+      showToast("La reserva se eliminó correctamente.", "success");
+    } else {
+      showToast("Se produjo un error.", "danger");
     }
   };
 
@@ -31,17 +36,22 @@ function ReservaAdmin() {
     const nuevoMetodo = nuevoEstado === "Pagado" ? "Efectivo" : "A confirmar";
 
     try {
-      const res = await apiReserva.updatePago(id, { 
-        estadoPago: nuevoEstado, 
-        metodoPago: nuevoMetodo 
+      const res = await apiReserva.updatePago(id, {
+        estadoPago: nuevoEstado,
+        metodoPago: nuevoMetodo,
       });
 
       if (res.ok) {
-        setReservas(reservas.map(r => 
-          r._id === id ? { ...r, estadoPago: nuevoEstado, metodoPago: nuevoMetodo } : r
-        ));
+        setReservas(
+          reservas.map((r) =>
+            r._id === id
+              ? { ...r, estadoPago: nuevoEstado, metodoPago: nuevoMetodo }
+              : r,
+          ),
+        );
+        showToast("La reserva se actualizó correctamente.", "success");
       } else {
-        alert("Error al actualizar el pago");
+        showToast("Error al actualizar el pago.", "danger");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -86,24 +96,27 @@ function ReservaAdmin() {
             })}
             <br />
             <span className="badge bg-dark border border-secondary mt-1 text-secondary">
-               {res.horas} hrs
+              {res.horas} hrs
             </span>
           </div>
-          
+
           <div className="col-12 col-lg-4 mt-3 mt-lg-0 d-flex flex-column flex-sm-row justify-content-center align-items-center gap-2">
-            
             <button
               onClick={() => handlePago(res._id, res.estadoPago)}
               className={`btn btn-sm w-100 ${
-                res.estadoPago === "Pagado" 
-                ? "btn-success" 
-                : "btn-outline-warning"
+                res.estadoPago === "Pagado"
+                  ? "btn-success"
+                  : "btn-outline-warning"
               }`}
             >
               {res.estadoPago === "Pagado" ? (
-                <><i className="bi bi-check-circle-fill me-1"></i> Pagado</>
+                <>
+                  <i className="bi bi-check-circle-fill me-1"></i> Pagado
+                </>
               ) : (
-                <><i className="bi bi-clock-history me-1"></i> Pendiente</>
+                <>
+                  <i className="bi bi-clock-history me-1"></i> Pendiente
+                </>
               )}
             </button>
 
@@ -113,7 +126,6 @@ function ReservaAdmin() {
             >
               <i className="bi bi-trash3 me-1"></i> Borrar
             </button>
-
           </div>
         </div>
       ))}
@@ -127,7 +139,7 @@ function ReservaAdmin() {
           <i className="bi bi-chevron-left"></i>
         </button>
         <span className="text-secondary small">
-          Mostrando {reservas.length} de {total}
+          Mostrando {pagina + 1} - {pagina + reservas.length} de {total}
         </span>
         <button
           className="btn btn-sm btn-neon"

@@ -1,11 +1,7 @@
 @import "./root.css";
 
-/* Contenedor Principal con Overlay para legibilidad */
 .background-adminScreen {
   min-height: 100vh;
-  background-image:
-    linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-    url(../img/pasto.jpg);
   background-attachment: fixed;
   background-position: center;
   background-size: cover;
@@ -15,16 +11,12 @@
   justify-content: center;
 }
 
-/* Estilo Neon para ZONA 5 */
 .neon-text {
-  color: var(--verde-neon, #39ff14);
-  text-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
+  color: white;
 }
 
-/* Tabla Estilo Stadium */
 .containerTable-adminScreen {
-  background: rgba(20, 20, 20, 0.8);
-  backdrop-filter: blur(10px);
+  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 15px;
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
@@ -39,7 +31,6 @@
   background: rgba(57, 255, 20, 0.05);
 }
 
-/* Modales con estructura Bootstrap */
 .modal-custom-overlay {
   position: fixed;
   top: 0;
@@ -67,7 +58,6 @@
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Botones */
 .btn-neon {
   background-color: transparent;
   border: 1px solid var(--verde-neon, #39ff14);
@@ -87,7 +77,6 @@
   color: white;
 }
 
-/* Ajuste del contenedor para móviles */
 @media (max-width: 768px) {
   .containerTable-adminScreen {
     padding: 15px !important;
@@ -99,12 +88,10 @@
     font-size: 1.8rem !important;
   }
 
-  /* Ocultamos los encabezados de tabla en móvil porque no alinean bien */
   .header-grid {
     display: none !important;
   }
 
-  /* Cada fila se convierte en una "tarjeta" */
   .itemRow-adminScreen {
     margin-bottom: 15px;
     padding: 15px !important;

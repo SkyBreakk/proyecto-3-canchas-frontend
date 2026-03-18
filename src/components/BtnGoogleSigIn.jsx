@@ -4,12 +4,10 @@ import { useContext } from "react";
 import { UserContext } from "../context/UserContext";
 
 const BtnGoogleSigIn = () => {
-
   const navigate = useNavigate();
   const { loadUserData } = useContext(UserContext);
 
   const handleGoogleLogin = async (e) => {
-
     e.preventDefault();
 
     const response = await loginWithGoogle();
@@ -21,23 +19,23 @@ const BtnGoogleSigIn = () => {
 
     const email = response.email;
 
-    const res = await fetch("http://localhost:4500/api/auth/google", {
+    const res = await fetch(import.meta.env.VITE_API_URL + "/auth/google", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       credentials: "include",
       body: JSON.stringify({
-        email: email
-      })
+        email: email,
+      }),
     });
 
     const data = await res.json();
 
     if (data.ok) {
-      await loadUserData(); 
+      await loadUserData();
       navigate("/");
-    }else {
+    } else {
       alert(data.message);
     }
   };
@@ -45,14 +43,10 @@ const BtnGoogleSigIn = () => {
     <div className="d-grid mt-3">
       <button
         type="button"
-        onClick={handleGoogleLogin} 
+        onClick={handleGoogleLogin}
         className="btn btn-light border rounded d-flex align-items-center justify-content-center gap-2 py-1"
       >
-        <svg
-          width="18"
-          height="18"
-          viewBox="0 0 24 24"
-        >
+        <svg width="18" height="18" viewBox="0 0 24 24">
           <path
             d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
             fill="#4285F4"
@@ -70,7 +64,6 @@ const BtnGoogleSigIn = () => {
             fill="#EA4335"
           />
         </svg>
-
         Inicia sesión con Google
       </button>
     </div>

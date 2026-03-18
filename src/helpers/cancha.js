@@ -1,4 +1,4 @@
-const url = "http://localhost:4500/api/cancha";
+const url = import.meta.env.VITE_API_URL + "/cancha";
 
 export const apiCancha = {
   get: (limit, offset) =>
@@ -16,7 +16,6 @@ export const apiCancha = {
 
   update: (data) =>
     fetch(`${url}/update/${data._id}`, {
-      // Corregido: agregado /update/
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       credentials: "include",

@@ -1,11 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { checkDisponibilidad, apiReserva } from "../../helpers/reserva";
+import { UserContext } from "../../context/UserContext";
 
-const CanchaModal = ({ cancha }) => {
+const ReservaModal = ({ cancha }) => {
   const [disponible, setDisponible] = useState(null);
   const [cargando, setCargando] = useState(false);
   const [reservaExitosa, setReservaExitosa] = useState(false);
+  const { user } = useContext(UserContext);
+  const navigate = useNavigate();
 
   const {
     register,
@@ -106,7 +110,6 @@ const CanchaModal = ({ cancha }) => {
       id="modalCancha"
       tabIndex="-1"
       aria-labelledby="modalCanchaLabel"
-      onHiddenBsModal={cerrarModal}
     >
       <div className="modal-dialog modal-lg modal-dialog-centered">
         <div
@@ -173,12 +176,14 @@ const CanchaModal = ({ cancha }) => {
                         ? "Cesped Sintético"
                         : cancha.descripcion?.includes("Futbol 11")
                           ? "Cesped Premium"
-                          : "Pista Dura"}
+                          : "Cesped Deluxe"}
                     </span>
                     <p className="text-secondary-custom small lh-sm">
                       {cancha.descripcion?.includes("Futbol 5")
-                        ? "Césped sintético de última generación con drenaje rápido, ideal para partidos."
-                        : "Superficie profesional para la mejor experiencia deportiva."}
+                        ? "Césped sintético de última generación con drenaje rápido, ideal para partidos de Futbol de alta intensidad."
+                        : cancha.descripcion?.includes("Futbol 11")
+                          ? "Césped natural nivel profesional con iluminación LED simétrica para partidos nocturnos."
+                          : "Césped natural nivel profesional con iluminación LED simétrica para partidos nocturnos."}
                     </p>
 
                     <div className="d-flex align-items-baseline gap-2 my-3">
@@ -186,7 +191,7 @@ const CanchaModal = ({ cancha }) => {
                         Precio a pagar en el local:
                       </span>
                       <h3 className="fw-bold text-success mb-0">
-                        ${cancha.precio * horas || "10.000"}
+                        ${(cancha.precio * horas).toLocaleString("es-AR")}
                       </h3>
                     </div>
 
@@ -210,7 +215,10 @@ const CanchaModal = ({ cancha }) => {
                         style={{ backgroundColor: "rgba(255,255,255,0.03)" }}
                       >
                         <div className="col-md-4 col-6">
-                          <label className="small mb-1 d-block opacity-75">
+                          <label
+                            className="small mb-1 d-block opacity-75"
+                            htmlFor="date-input"
+                          >
                             FECHA
                           </label>
                           <input
@@ -219,26 +227,35 @@ const CanchaModal = ({ cancha }) => {
                             {...register("fechaStr", {
                               required: "La fecha es obligatoria",
                             })}
-                            className="form-control form-control-dark"
+                            className={`form-control form-control-dark ${errors.fechaStr ? "is-invalid" : ""}`}
+                            id="date-input"
                           />
                         </div>
                         <div className="col-md-4 col-6">
-                          <label className="small mb-1 d-block opacity-75">
+                          <label
+                            className="small mb-1 d-block opacity-75"
+                            htmlFor="hour-input"
+                          >
                             HORA
                           </label>
                           <input
                             type="time"
                             {...register("horaStr")}
                             className="form-control form-control-dark"
+                            id="hour-input"
                           />
                         </div>
                         <div className="col-md-4 col-12">
-                          <label className="small mb-1 d-block opacity-75">
+                          <label
+                            className="small mb-1 d-block opacity-75"
+                            htmlFor="duration-input"
+                          >
                             DURACIÓN
                           </label>
                           <select
                             {...register("horas")}
                             className="form-select form-control-dark"
+                            id="duration-input"
                           >
                             <option value="1">1 Hora</option>
                             <option value="2">2 Horas</option>
@@ -248,17 +265,37 @@ const CanchaModal = ({ cancha }) => {
                       </div>
 
                       <div className="mt-4">
-                        <button
-                          type="submit"
-                          disabled={!disponible || cargando}
-                          className={`btn w-100 py-3 shadow ${disponible ? "btn-alquilar text-white" : "btn-secondary"}`}
-                        >
-                          {cargando
-                            ? "Guardando..."
-                            : disponible
+                        {user ? (
+                          <button
+                            type="submit"
+                            disabled={!disponible || cargando}
+                            className={`btn w-100 py-3 shadow ${
+                              disponible
+                                ? "btn-alquilar text-white"
+                                : "btn-secondary"
+                            }`}
+                          >
+                            {disponible
                               ? "Confirmar Reserva"
                               : "Horario No Disponible"}
-                        </button>
+                          </button>
+                        ) : (
+                          <div className="p-3 rounded-4 border border-warning bg-warning bg-opacity-10 text-center">
+                            <p className="text-warning small mb-2">
+                              <i className="bi bi-info-circle me-2"></i>
+                              Inicia sesión para poder reservar esta cancha
+                            </p>
+                            <button
+                              type="button"
+                              className="btn btn-outline-warning btn-sm w-100 shadow-sm"
+                              style={{ borderRadius: "8px" }}
+                              data-bs-dismiss="modal"
+                              onClick={() => navigate("/login")}
+                            >
+                              Ir a login
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </form>
                   </div>
@@ -272,4 +309,4 @@ const CanchaModal = ({ cancha }) => {
   );
 };
 
-export default CanchaModal;
+export default ReservaModal;

@@ -23,16 +23,13 @@ const MisDatos = () => {
 
   const onSubmit = async (data) => {
     setMensaje({ tipo: "", texto: "" });
-
     const datosAEnviar = {
       username: data.username,
       // email: data.email,
     };
-
     if (data.password && data.password.trim() !== "") {
       datosAEnviar.password = data.password;
     }
-
     try {
       const res = await apiUser.updateProfile(datosAEnviar);
 
@@ -71,7 +68,10 @@ const MisDatos = () => {
 
       <form onSubmit={handleSubmit(onSubmit)} className="row g-3">
         <div className="col-md-6">
-          <label className="form-label text-secondary-custom small">
+          <label
+            className="form-label text-secondary-custom small"
+            htmlFor="profile-username"
+          >
             NOMBRE DE USUARIO
           </label>
           <input
@@ -84,6 +84,8 @@ const MisDatos = () => {
                 message: "Debe tener al menos 3 caracteres",
               },
             })}
+            id="profile-username"
+            autoComplete="username"
           />
           {errors.username && (
             <div className="invalid-feedback fw-bold">
@@ -93,7 +95,10 @@ const MisDatos = () => {
         </div>
 
         <div className="col-md-6">
-          <label className="form-label text-secondary-custom small">
+          <label
+            className="form-label text-secondary-custom small"
+            htmlFor="profile-email"
+          >
             EMAIL
           </label>
           <input
@@ -102,6 +107,8 @@ const MisDatos = () => {
             {...register("email")}
             disabled
             style={{ cursor: "not-allowed", opacity: "0.7" }}
+            id="profile-email"
+            autoComplete="email"
           />
           <small className="text-secondary mt-1 d-block">
             <i className="bi bi-info-circle me-1"></i>
@@ -122,7 +129,10 @@ const MisDatos = () => {
             </p>
 
             <div className="col-md-6">
-              <label className="form-label text-secondary-custom small">
+              <label
+                className="form-label text-secondary-custom small"
+                htmlFor="profile-password"
+              >
                 NUEVA CONTRASEÑA
               </label>
               <input
@@ -135,6 +145,7 @@ const MisDatos = () => {
                     message: "Debe tener al menos 6 caracteres",
                   },
                 })}
+                id="profile-password"
               />
               {errors.password && (
                 <div className="invalid-feedback fw-bold">

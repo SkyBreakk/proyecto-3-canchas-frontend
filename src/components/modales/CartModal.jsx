@@ -1,14 +1,12 @@
 import React from "react";
 import { useCart } from "../../context/CartContext";
 import "../../assets/css/tienda.css";
+import { useNavigate } from "react-router-dom";
 
 const CartModal = () => {
   const { cart, cartLoading, updateQuantity, removeItem, clearCart } =
     useCart();
-
-  const handleCheckout = () => {
-    console.log("Procesando compra de:", cart.items);
-  };
+  const navigate = useNavigate();
 
   return (
     <div
@@ -47,13 +45,13 @@ const CartModal = () => {
                 <button
                   className="btn btn-outline-light mt-2"
                   data-bs-dismiss="modal"
+                  onClick={() => navigate("/tienda")}
                 >
                   Volver a la tienda
                 </button>
               </div>
             ) : (
               <>
-                {/* Lista de Productos */}
                 <div
                   className="cart-items-container mb-4"
                   style={{ maxHeight: "70vh", overflowY: "auto" }}
@@ -64,7 +62,6 @@ const CartModal = () => {
                       className="row align-items-center mb-3 p-3 rounded-4 mx-0"
                       style={{ backgroundColor: "rgba(255,255,255,0.03)" }}
                     >
-                      {/* Imagen */}
                       <div className="col-2 px-0">
                         <img
                           src={item.producto.img}
@@ -74,6 +71,7 @@ const CartModal = () => {
                             width: "60px",
                             height: "60px",
                             objectFit: "cover",
+                            backgroundColor: "white",
                           }}
                         />
                       </div>
@@ -159,7 +157,8 @@ const CartModal = () => {
                   <div className="d-grid gap-2">
                     <button
                       className="btn btn-alquilar text-white"
-                      onClick={handleCheckout}
+                      data-bs-dismiss="modal"
+                      onClick={() => navigate("/cart")}
                     >
                       Finalizar Compra
                     </button>

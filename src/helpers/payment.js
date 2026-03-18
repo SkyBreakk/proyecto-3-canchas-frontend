@@ -1,4 +1,4 @@
-const url = "http://localhost:4500/api/payment";
+const url = import.meta.env.VITE_API_URL + "/payment";
 
 export const pagarMercadoPago = async (datos) => {
   try {

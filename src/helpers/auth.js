@@ -1,4 +1,4 @@
-const url = "http://localhost:4500/api/auth/";
+const url = import.meta.env.VITE_API_URL + "/auth/";
 
 const logIn = async (email, password) => {
   const response = await fetch(url + "login", {
@@ -16,7 +16,7 @@ const logIn = async (email, password) => {
 
 export const registerUser = async (data) => {
   try {
-    const response = await fetch("http://localhost:4500/api/auth/register", {
+    const response = await fetch(url + "register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -53,16 +53,13 @@ export const registerUser = async (data) => {
 
 export const verifyEmail = async (data) => {
   try {
-    const response = await fetch(
-      "http://localhost:4500/api/auth/verify-email",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
+    const response = await fetch(url + "verify-email", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
+      body: JSON.stringify(data),
+    });
 
     const result = await response.json();
 
@@ -87,11 +84,4 @@ const LogOut = async () => {
   return data;
 };
 
-// const getPerfil = async () => {
-//   const response = await fetch(url + "profile");
-//   const data = await response.json();
-//   return data;
-// };
-
-// export { logIn, getPerfil, LogOut };
 export { logIn, LogOut };

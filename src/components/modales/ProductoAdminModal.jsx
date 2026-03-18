@@ -17,7 +17,6 @@ function ProductoAdminModal({
 
   useEffect(() => {
     if (show) {
-      // Al resetear, nos aseguramos de pasar solo el ID si categoria viene como objeto
       const categoriaId = producto?.categoria?._id || producto?.categoria || "";
 
       reset(
@@ -62,68 +61,117 @@ function ProductoAdminModal({
             })}
           >
             <div className="modal-body row g-3">
-              {/* Sección de Imagen */}
               <div className="col-md-5 text-center">
                 <div className="position-relative">
                   <img
                     src={
                       producto?.img ||
-                      "https://via.placeholder.com/300x200?text=Sin+Imagen"
+                      "https://png.pngtree.com/png-vector/20230407/ourmid/pngtree-placeholder-line-icon-vector-png-image_6691835.png"
                     }
                     className="modal-img-cancha mb-3"
                     alt="preview"
                   />
                 </div>
-                <label className="form-label small text-secondary-custom d-block text-start">
+                <label
+                  className="form-label small text-secondary-custom d-block text-start"
+                  htmlFor="product-img"
+                >
                   URL de Imagen
                 </label>
                 <input
                   className="form-control form-control-dark"
                   {...register("img")}
                   placeholder="https://..."
+                  id="product-img"
                 />
               </div>
 
-              {/* Sección de Datos */}
               <div className="col-md-7">
                 <div className="mb-3">
-                  <label className="form-label small text-secondary-custom">
+                  <label
+                    className="form-label small text-secondary-custom"
+                    htmlFor="product-name"
+                  >
                     Nombre
                   </label>
                   <input
-                    className="form-control form-control-dark"
+                    className={`form-control form-control-dark ${errors.nombre ? "is-invalid" : ""}`}
                     {...register("nombre", {
                       required: "El nombre es obligatorio",
+                      minLength: {
+                        value: 5,
+                        message:
+                          "El nombre debe de tener por lo menos 5 carácteres",
+                      },
                     })}
+                    id="product-name"
                   />
+                  {errors.nombre && (
+                    <div className="invalid-feedback small">
+                      {errors.nombre.message}
+                    </div>
+                  )}
                 </div>
 
                 <div className="row">
                   <div className="col-6 mb-3">
-                    <label className="form-label small text-secondary-custom">
+                    <label
+                      className="form-label small text-secondary-custom"
+                      htmlFor="product-price"
+                    >
                       Precio
                     </label>
                     <input
                       type="number"
-                      className="form-control form-control-dark"
-                      {...register("precio")}
+                      className={`form-control form-control-dark ${errors.precio ? "is-invalid" : ""}`}
+                      {...register("precio", {
+                        required: "El precio es obligatorio",
+                        min: {
+                          value: 0,
+                          message: "El precio no puede ser menor a 0",
+                        },
+                      })}
+                      id="product-price"
                     />
+                    {errors.precio && (
+                      <div className="invalid-feedback small">
+                        {errors.precio.message}
+                      </div>
+                    )}
                   </div>
+
                   <div className="col-6 mb-3">
-                    <label className="form-label small text-secondary-custom">
+                    <label
+                      className="form-label small text-secondary-custom"
+                      htmlFor="product-stock"
+                    >
                       Stock
                     </label>
                     <input
                       type="number"
-                      className="form-control form-control-dark"
-                      {...register("stock")}
+                      className={`form-control form-control-dark ${errors.stock ? "is-invalid" : ""}`}
+                      {...register("stock", {
+                        required: "El stock es obligatorio",
+                        min: {
+                          value: 0,
+                          message: "No puede ser menor a 0",
+                        },
+                      })}
+                      id="product-stock"
                     />
+                    {errors.stock && (
+                      <div className="invalid-feedback small">
+                        {errors.stock.message}
+                      </div>
+                    )}
                   </div>
                 </div>
 
-                {/* SELECTOR DE CATEGORÍA */}
                 <div className="mb-3">
-                  <label className="form-label small text-secondary-custom">
+                  <label
+                    className="form-label small text-secondary-custom"
+                    htmlFor="product-category"
+                  >
                     Categoría
                   </label>
                   <select
@@ -131,6 +179,7 @@ function ProductoAdminModal({
                     {...register("categoria", {
                       required: "Selecciona una categoría",
                     })}
+                    id="product-category"
                   >
                     <option value="">Seleccione una categoría...</option>
                     {categorias.map((cat) => (
@@ -147,13 +196,17 @@ function ProductoAdminModal({
                 </div>
 
                 <div className="mb-0">
-                  <label className="form-label small text-secondary-custom">
+                  <label
+                    className="form-label small text-secondary-custom"
+                    htmlFor="product-desc"
+                  >
                     Descripción
                   </label>
                   <textarea
                     className="form-control form-control-dark"
                     rows="3"
                     {...register("descripcion")}
+                    id="product-desc"
                   ></textarea>
                 </div>
               </div>

@@ -1,4 +1,4 @@
-const url = "http://localhost:4500/api/auth";
+const url = import.meta.env.VITE_API_URL + "/auth";
 
 export const apiUser = {
   get: async (limite = 5, desde = 0) => {

@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
-import { getCategorias } from "../helpers/categorias";
-import { getProductos } from "../helpers/productos";
 import "../assets/css/tienda.css";
 import ProductoModal from "../components/modales/ProductoModal";
+import { obtenerProductos } from "../helpers/producto";
+import { traerCategoriasPaginado } from "../helpers/categoria";
 
 const TiendaScreen = () => {
   const [categorias, setCategorias] = useState([]);
@@ -11,7 +11,7 @@ const TiendaScreen = () => {
   const [productoSeleccionado, setProductoSeleccionado] = useState(null);
 
   useEffect(() => {
-    Promise.all([getCategorias(), getProductos()])
+    Promise.all([traerCategoriasPaginado(50, 0), obtenerProductos(100, 0)])
       .then(([categoriaData, productoData]) => {
         setCategorias(categoriaData.categorias);
         setProductos(productoData.productos);
@@ -44,10 +44,15 @@ const TiendaScreen = () => {
   return (
     <div className="menu-container container p-3">
       {categorias.map((cat) => {
-        const catId = cat._id || cat.nombre; // Usamos el ID o el nombre como clave
-        const productosFiltrados = productos.filter(
-          (p) => p.categoria.nombre === cat.nombre,
-        );
+        const catId = cat._id;
+        const catNombre = cat.nombre;
+
+        const productosFiltrados = productos.filter((p) => {
+          const pCatId = p.categoria?._id || p.categoria;
+          const pCatNombre = p.categoria?.nombre;
+
+          return pCatId === catId || pCatNombre === catNombre;
+        });
 
         return (
           <div key={catId} className="mb-4">
@@ -76,11 +81,20 @@ const TiendaScreen = () => {
                     data-bs-target="#modalProducto"
                   >
                     <div className="img-container mb-2">
-                      <img src={p.img} alt={p.nombre} className="product-img" />
+                      <img
+                        src={
+                          p.img ||
+                          "https://png.pngtree.com/png-vector/20230407/ourmid/pngtree-placeholder-line-icon-vector-png-image_6691835.png"
+                        }
+                        alt={p.nombre}
+                        className="product-img"
+                      />
                     </div>
                     <div className="item-info text-white">
                       <p className="m-0 fw-bold item-name">{p.nombre}</p>
-                      <p className="m-0 item-price">${p.precio}</p>
+                      <p className="m-0 item-price">
+                        ${p.precio.toLocaleString("es-AR")}
+                      </p>
                     </div>
                   </div>
                 ))}
