@@ -1,48 +1,64 @@
 # ⚽ Zona 5 - Complejo Deportivo & E-commerce
 
-🚀 **Descripción**
+<div align="center">
 
-Zona 5 es una plataforma web integral desarrollada con el stack MERN (MongoDB, Express, React, Node.js) diseñada para gestionar un complejo de canchas deportivas. La aplicación no solo permite a los usuarios registrarse y reservar sus turnos, sino que también integra una tienda virtual para la compra de artículos deportivos.
+<img src="/client/public/logo.svg" alt="Logo Zona 5" width="300"/>
 
-El sistema cuenta con un robusto panel de administración y un sistema de pagos híbrido, permitiendo abonar los turnos de manera presencial o de forma 100% online a través de Mercado Pago.
+</div>
 
-### ✨ Características Principales
-* **Autenticación Segura:** Registro y Login con JWT (JSON Web Tokens) y verificación de cuentas mediante envío de correos electrónicos (Nodemailer).
-* **Gestión de Reservas:** Sistema inteligente que evita el solapamiento de turnos en una misma cancha, fecha y hora.
-* **Pasarela de Pagos:** Integración nativa con la API de **Mercado Pago** para abonar reservas directamente desde la web.
-* **Panel de Administrador:** Vista exclusiva con protección de rutas (Middlewares de roles) para gestionar reservas, cambiar estados de pago y moderar usuarios/productos.
-* **Tienda Online:** E-commerce integrado para la venta de productos deportivos.
+## 🚀 Descripción
 
----
+**Zona 5** es una plataforma web integral desarrollada con el stack MERN (MongoDB, Express, React, Node.js), diseñada para modernizar y facilitar la gestión de un complejo de canchas deportivas.
 
-📖 **Sobre el Proyecto**
+El proyecto busca ofrecer una solución completa que combina la gestión de turnos con una tienda virtual, transmitiendo valores de:
 
-Zona 5 nace con el objetivo de modernizar la gestión de los complejos deportivos, eliminando las planillas de papel y los mensajes de WhatsApp perdidos. Buscamos ofrecer una experiencia de usuario rápida, intuitiva y segura, donde reservar un partido con amigos tome menos de un minuto.
+- Rapidez y eficiencia en la reserva de turnos.
+- Transparencia y facilidad en los métodos de pago.
+- Experiencia de usuario intuitiva y moderna.
 
----
+La aplicación incorpora **MongoDB** como base de datos principal, **JWT** para la autenticación y protección de rutas privadas, y una integración nativa con la API de **Mercado Pago** para procesar cobros de manera 100% online y segura.
 
-🛠️ **Tecnologías Utilizadas**
+## 📖 Sobre el Proyecto
 
-| Tecnología | Descripción |
-| :--- | :--- |
-| **React + Vite** | Biblioteca principal para la construcción de interfaces de usuario dinámicas y ultrarrápidas. |
-| **Node.js & Express** | Entorno de ejecución y framework para la creación de nuestra API REST y manejo de rutas backend. |
-| **MongoDB & Mongoose** | Base de datos NoSQL orientada a documentos para almacenar usuarios, reservas, productos y canchas. |
-| **Mercado Pago API** | SDK oficial utilizado para generar preferencias de pago y procesar cobros online. |
-| **JWT & Bcrypt** | Herramientas para la encriptación de contraseñas y el manejo de sesiones seguras mediante tokens. |
-| **React Hook Form** | Gestión eficiente y validación estricta de formularios en el frontend. |
-| **Bootstrap** | Framework de CSS para un diseño 100% responsivo (Mobile First) y estilizado. |
+**Zona 5** nace con el objetivo de eliminar las fricciones clásicas en el alquiler de canchas (llamadas perdidas, mensajes de WhatsApp sin leer, solapamiento de horarios). Ofrecemos un sistema donde reservar un partido tome menos de un minuto.
 
----
+🛡️ Control inteligente anti-solapamiento de turnos.  
+💳 Pasarela de pagos online y registro de pagos en efectivo.  
+📧 Verificación de cuentas mediante correo electrónico.
 
-🖥️ **Demostración**
+## 🛠️ Tecnologías Utilizadas
 
-**Ver Demo en Vivo:** [https://zona-5.vercel.app/](https://zona-5.vercel.app/)
+<div align="center">
 
----
+| Tecnologías                                                                                                         | Descripción                                                                                                  |
+| ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)               | Biblioteca de JavaScript para crear interfaces de usuario interactivas y dinámicas.                          |
+| ![Vite](https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E)                  | Herramienta de construcción rápida y moderna para proyectos web.                                             |
+| ![Bootstrap](https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white)    | Framework de CSS para diseño responsivo y componentes estilizados (Mobile First).                            |
+| ![MercadoPago](https://img.shields.io/badge/MercadoPago-00B1EA?style=for-the-badge&logo=mercadopago&logoColor=white)| Integración de pasarela de pagos para procesar reservas de forma online.                                     |
+| ![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)          | Base de datos NoSQL orientada a documentos, utilizada para almacenar información de la app.                  |
 
-⚙️ **Instalación y Ejecución Local**
+</div>
 
-### 1️⃣ Clonar el repositorio
-```bash
-git clone [https://github.com/tu-usuario/zona-5.git](https://github.com/tu-usuario/zona-5.git)
+Ver Demo en Vivo: [https://zona-5.vercel.app/](https://zona-5.vercel.app/)
+
+</div>
+
+## ⚙️ Instalación y Ejecución Local
+
+1️⃣ Clonar el repositorio <br/>
+`git clone https://github.com/SkyBreakk/proyecto-3-canchas-frontend.git`
+
+2️⃣ Instalar dependencias del Frontend <br/>
+`npm install`
+
+3️⃣ Configurar variables de entorno <br/>
+Crea un archivo `.env` en la carpeta `backend/` con las siguientes variables:
+
+```env
+PORT=4500
+MONGO_URI=<tu_uri_de_mongodb_atlas>
+JWT_SECRET=<tu_palabra_secreta>
+MP_ACCESS_TOKEN=<tu_access_token_de_mercado_pago>
+EMAIL_USER=<tu_correo_para_nodemailer>
+EMAIL_PASS=<tu_contraseña_de_aplicacion>
