@@ -63,6 +63,33 @@ export const checkDisponibilidad = async (params, canchaID) => {
   }
 };
 
+export const getHorariosDisponibles = async (fecha, canchaID) => {
+  try {
+    const resp = await fetch(`${url}/horarios/${canchaID}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ fecha }),
+    });
+
+    const result = await resp.json();
+
+    if (result.ok) {
+      const horarios = Array.isArray(result.horarios)
+        ? result.horarios.map((h) =>
+            typeof h === "string" ? h : h.hora || h.horaStr,
+          )
+        : [];
+
+      return { ok: true, horarios };
+    }
+
+    return { ok: false, horarios: [] };
+  } catch (error) {
+    console.error("Error getting available hours", error);
+    return { ok: false, horarios: [] };
+  }
+};
+
 export const contactoReserva = async (data) => {
   try {
     const response = await fetch(`${url}/contacto`, {
