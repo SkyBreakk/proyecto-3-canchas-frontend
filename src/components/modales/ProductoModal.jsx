@@ -13,6 +13,7 @@ const ProductoModal = ({ producto }) => {
     handleSubmit,
     watch,
     reset,
+    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: { cantidad: 1 },
@@ -136,25 +137,76 @@ const ProductoModal = ({ producto }) => {
                       >
                         <div className="row align-items-end">
                           <div className="col-6">
-                            <label
-                              className="small mb-1 d-block opacity-75 text-uppercase fw-bold"
-                              htmlFor="prod-quantity"
-                            >
+                            <span className="small mb-1 d-block opacity-75 text-uppercase fw-bold">
                               Cantidad
-                            </label>
-                            <input
-                              type="number"
-                              {...register("cantidad", {
-                                required: "Campo obligatorio",
-                                min: { value: 1, message: "Mínimo 1" },
-                                max: {
-                                  value: producto?.stock,
-                                  message: `Máximo ${producto?.stock}`,
-                                },
-                              })}
-                              className={`form-control form-control-dark ${errors.cantidad ? "is-invalid" : ""}`}
-                              id="prod-quantity"
-                            />
+                            </span>
+                            <div className="d-flex align-items-center gap-2">
+                              <button
+                                type="button"
+                                className="btn btn-outline-light btn-sm px-3"
+                                style={{ borderRadius: "8px" }}
+                                onClick={() => {
+                                  const current = watch("cantidad") || 1;
+                                  if (current > 1) {
+                                    setValue("cantidad", current - 1, {
+                                      shouldValidate: true,
+                                    });
+                                  }
+                                }}
+                                disabled={(cantidadSeleccionada || 1) <= 1}
+                              >
+                                <i className="bi bi-dash"></i>
+                              </button>
+
+                              <input
+                                type="number"
+                                {...register("cantidad", {
+                                  required: "Campo obligatorio",
+                                  min: { value: 1, message: "Mínimo 1" },
+                                  max: {
+                                    value: producto?.stock,
+                                    message: `Máximo ${producto?.stock}`,
+                                  },
+                                })}
+                                min={1}
+                                max={producto?.stock}
+                                className={`form-control form-control-dark text-center ${errors.cantidad ? "is-invalid" : ""}`}
+                                style={{ width: "60px" }}
+                                inputMode="numeric"
+                                onFocus={(e) => e.target.select()}
+                                onChange={(e) => {
+                                  let val = e.target.value || 1;
+                                  val = Math.max(
+                                    1,
+                                    Math.min(val, producto?.stock || 1),
+                                  );
+                                  setValue("cantidad", val, {
+                                    shouldValidate: true,
+                                  });
+                                }}
+                              />
+
+                              <button
+                                type="button"
+                                className="btn btn-outline-light btn-sm px-3"
+                                style={{ borderRadius: "8px" }}
+                                onClick={() => {
+                                  const current =
+                                    parseInt(watch("cantidad")) || 1;
+                                  if (current < (producto?.stock || 1)) {
+                                    setValue("cantidad", current + 1, {
+                                      shouldValidate: true,
+                                    });
+                                  }
+                                }}
+                                disabled={
+                                  (cantidadSeleccionada || 1) >=
+                                  (producto?.stock || 1)
+                                }
+                              >
+                                <i className="bi bi-plus"></i>
+                              </button>
+                            </div>
                             {errors.cantidad && (
                               <span className="error-message">
                                 <i className="bi bi-exclamation-triangle me-1"></i>
@@ -200,9 +252,10 @@ const ProductoModal = ({ producto }) => {
                               data-bs-dismiss="modal"
                               style={{ borderRadius: "12px" }}
                               disabled={
-                                producto?.stock <= 0 ||
-                                cantidadSeleccionada > producto?.stock ||
-                                cantidadSeleccionada <= 0
+                                !producto ||
+                                producto.stock <= 0 ||
+                                (cantidadSeleccionada || 1) > producto.stock ||
+                                (cantidadSeleccionada || 1) < 1
                               }
                               onClick={handleSubmit((data) =>
                                 onSubmit(data, "carrito"),

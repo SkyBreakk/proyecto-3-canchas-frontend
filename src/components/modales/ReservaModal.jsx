@@ -1,14 +1,17 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { checkDisponibilidad, apiReserva } from "../../helpers/reserva";
+import { getHorariosDisponibles, apiReserva } from "../../helpers/reserva";
 import { UserContext } from "../../context/UserContext";
+import ReservaExitosaModal from "./ReservaExitosaModal";
 
 const ReservaModal = ({ cancha }) => {
-  const [disponible, setDisponible] = useState(null);
-  const [cargando, setCargando] = useState(false);
+  const [horariosDisponibles, setHorariosDisponibles] = useState([]);
+  const [cargandoHorarios, setCargandoHorarios] = useState(false);
+  const [cargandoReserva, setCargandoReserva] = useState(false);
   const [reservaExitosa, setReservaExitosa] = useState(false);
   const [datosReservaExitosa, setDatosReservaExitosa] = useState(null);
+  const [errorDuracion, setErrorDuracion] = useState(null);
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
 
@@ -17,12 +20,13 @@ const ReservaModal = ({ cancha }) => {
     handleSubmit,
     watch,
     reset,
+    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: {
       horas: 1,
       fechaStr: new Date().toISOString().split("T")[0],
-      horaStr: "19:00",
+      horaStr: "",
     },
   });
 
@@ -31,45 +35,58 @@ const ReservaModal = ({ cancha }) => {
   const hoyStr = hoy.toISOString().split("T")[0];
 
   useEffect(() => {
-    const verificar = async () => {
-      if (!cancha?._id) return;
+    const fetchHorarios = async () => {
+      if (!cancha?._id || !fechaStr) return;
 
-      const [hora, minutos] = horaStr.split(":").map(Number);
-      if (hora >= 1 && hora < 11) {
-        setDisponible(false);
+      const fechaSeleccionada = new Date(fechaStr);
+      const hoyInicio = new Date(hoyStr);
+      if (fechaSeleccionada < hoyInicio) {
+        setHorariosDisponibles([]);
+        setValue("horaStr", "");
         return;
       }
 
-      const fechaSeleccionada = new Date(`${fechaStr}T${horaStr}:00`);
-      const ahora = new Date();
-      if (fechaSeleccionada < ahora) {
-        setDisponible(false);
-        return;
+      setCargandoHorarios(true);
+      const res = await getHorariosDisponibles(fechaStr, cancha._id);
+
+      if (res.ok) {
+        setHorariosDisponibles(res.horarios);
+        if (horaStr && !res.horarios.includes(horaStr)) {
+          setValue("horaStr", "");
+        }
+      } else {
+        setHorariosDisponibles([]);
+        setValue("horaStr", "");
       }
-
-      setCargando(true);
-      const res = await checkDisponibilidad(
-        {
-          fecha: `${fechaStr}T${horaStr}:00`,
-          horas: Number(horas),
-        },
-        cancha._id,
-      );
-
-      setDisponible(res.ok && res.disponible);
-      setCargando(false);
+      setCargandoHorarios(false);
     };
 
-    const timeout = setTimeout(verificar, 500);
+    const timeout = setTimeout(fetchHorarios, 300);
     return () => clearTimeout(timeout);
-  }, [fechaStr, horaStr, horas, cancha?._id]);
+  }, [fechaStr, cancha?._id, hoyStr, datosReservaExitosa]);
+
+  useEffect(() => {
+    if (horaStr && horas > 1) {
+      setErrorDuracion(null);
+    }
+  }, [horaStr, horas]);
+
+  const handleHoraSelect = (hora) => {
+    setValue("horaStr", hora);
+    setErrorDuracion(null);
+  };
 
   const onSubmit = async (data) => {
-    if (!disponible) return alert("El horario no está disponible");
+    if (!horaStr) {
+      alert("Seleccioná un horario disponible");
+      return;
+    }
 
-    setCargando(true);
+    setCargandoReserva(true);
+    setErrorDuracion(null);
+
     const fechaFormateada = `${data.fechaStr}T${data.horaStr}:00`;
-    const porcentajeSenia = 0.5;
+    const porcentajeSenia = 0.3;
     const totalReserva = cancha.precio * parseInt(data.horas);
 
     const reservaFinal = {
@@ -87,28 +104,40 @@ const ReservaModal = ({ cancha }) => {
           fecha: data.fechaStr.split("-").reverse().join("/"),
           hora: data.horaStr,
           canchaNombre: cancha.nombre,
+          horas: data.horas,
+          total: totalReserva,
+          senia: reservaFinal.senia,
         });
         setReservaExitosa(true);
-        reset(); // Ahora reset ya no rompe el mensaje porque usamos el nuevo estado
+        reset();
       } else {
-        console.error("Error del backend:", respuesta);
-        alert(
-          respuesta.msg ||
-            "Hubo un error al guardar la reserva en el servidor.",
-        );
+        if (
+          respuesta.message?.includes("duración") ||
+          respuesta.message?.includes("ocupado")
+        ) {
+          setErrorDuracion(
+            `No hay disponibilidad para ${data.horas} horas en este horario. Probá con menos.`,
+          );
+        } else {
+          alert(respuesta.message || "Hubo un error al guardar la reserva.");
+        }
       }
     } catch (error) {
       console.error("Error al hacer la petición:", error);
-      alert(
-        "Hubo un error de conexión al procesar tu reserva. Intentá de nuevo.",
-      );
+      alert("Hubo un error de conexión. Intentá de nuevo.");
     } finally {
-      setCargando(false);
+      setCargandoReserva(false);
     }
   };
 
   const cerrarModal = () => {
-    setTimeout(() => setReservaExitosa(false), 500);
+    setTimeout(() => {
+      setReservaExitosa(false);
+      setDatosReservaExitosa(null);
+      setHorariosDisponibles([]);
+      setValue("horaStr", "");
+      setErrorDuracion(null);
+    }, 500);
   };
 
   return (
@@ -128,36 +157,12 @@ const ReservaModal = ({ cancha }) => {
               <div className="spinner-border text-primary" role="status"></div>
             </div>
           ) : reservaExitosa && datosReservaExitosa ? (
-            <div className="modal-body text-center p-5">
-              <i
-                className="bi bi-check-circle-fill text-success"
-                style={{ fontSize: "5rem" }}
-              ></i>
-              <h2 className="fw-bold text-success mt-3">
-                ¡Reserva Confirmada!
-              </h2>
-              <p className="fs-5 text-light mt-3">
-                Tu turno para la{" "}
-                <strong>{datosReservaExitosa.canchaNombre}</strong> el día{" "}
-                <strong>{datosReservaExitosa.fecha}</strong> a las{" "}
-                <strong>{datosReservaExitosa.hora}</strong> fue guardado con
-                éxito.
-              </p>
-              <div className="bg-dark p-3 rounded-3 mt-4 border border-secondary text-secondary-custom">
-                <i className="bi bi-info-circle me-2"></i>
-                Recordá que podés abonar en el local o pagar por adelantado
-                desde tu perfil.
-              </div>
-              <button
-                type="button"
-                className="btn btn-outline-success btn-lg w-100 mt-4 rounded-pill"
-                data-bs-dismiss="modal"
-                onClick={cerrarModal}
-              >
-                Entendido, cerrar
-              </button>
-            </div>
+            <ReservaExitosaModal
+              datos={datosReservaExitosa}
+              cerrarModal={cerrarModal}
+            />
           ) : (
+            /* 📝 RESERVATION FORM */
             <>
               <div className="modal-header border-0 pb-0">
                 <h2 className="modal-title w-100 text-center fw-bold mt-2">
@@ -177,34 +182,39 @@ const ReservaModal = ({ cancha }) => {
                       className="modal-img-cancha shadow-lg"
                       alt={cancha.nombre}
                     />
-                  </div>
-
-                  <div className="col-lg-7">
-                    <span className="badge bg-success mb-2">
+                    <span className="badge bg-success my-2">
                       {cancha.descripcion?.includes("Futbol 5")
                         ? "Cesped Sintético"
                         : cancha.descripcion?.includes("Futbol 11")
                           ? "Cesped Premium"
                           : "Cesped Deluxe"}
                     </span>
-                    <p className="text-secondary-custom small lh-sm">
+                    <p className="text-secondary-custom small lh-sm ms-2">
                       {cancha.descripcion?.includes("Futbol 5")
-                        ? "Césped sintético de última generación con drenaje rápido, ideal para partidos de Futbol de alta intensidad."
-                        : cancha.descripcion?.includes("Futbol 11")
-                          ? "Césped natural nivel profesional con iluminación LED simétrica para partidos nocturnos."
-                          : "Césped natural nivel profesional con iluminación LED simétrica para partidos nocturnos."}
+                        ? "Césped sintético de última generación con drenaje rápido."
+                        : "Césped natural nivel profesional con iluminación LED."}
                     </p>
-
-                    <div className="d-flex flex-column my-3">
-                      <div className="d-flex align-items-baseline gap-2">
+                    <div
+                      className="d-flex flex-column my-3 p-3 rounded-3"
+                      style={{ backgroundColor: "rgba(255,255,255,0.05)" }}
+                    >
+                      <div className="d-flex justify-content-between align-items-baseline">
+                        <span className="text-secondary-custom">
+                          Precio por hora:
+                        </span>
+                        <span className="text-white fw-bold">
+                          ${cancha.precio.toLocaleString("es-AR")}
+                        </span>
+                      </div>
+                      <div className="d-flex justify-content-between align-items-baseline mt-2">
                         <span className="text-secondary-custom">Total:</span>
                         <h4 className="fw-bold text-white mb-0">
                           ${(cancha.precio * horas).toLocaleString("es-AR")}
                         </h4>
                       </div>
-                      <div className="d-flex align-items-baseline gap-2">
+                      <div className="d-flex justify-content-between align-items-baseline mt-2">
                         <span className="text-secondary-custom">
-                          Seña requerida:
+                          Seña (30%):
                         </span>
                         <h3 className="fw-bold text-success mb-0">
                           $
@@ -214,30 +224,18 @@ const ReservaModal = ({ cancha }) => {
                         </h3>
                       </div>
                     </div>
+                  </div>
 
-                    <div className="mb-3">
-                      {cargando && !reservaExitosa ? (
-                        <span className="badge bg-info">Procesando...</span>
-                      ) : disponible === true ? (
-                        <span className="badge bg-success">
-                          ✓ Horario Disponible
-                        </span>
-                      ) : disponible === false ? (
-                        <span className="badge bg-danger">
-                          ✗ Horario Ocupado
-                        </span>
-                      ) : null}
-                    </div>
-
+                  <div className="col-lg-7">
                     <form id="reserva-form" onSubmit={handleSubmit(onSubmit)}>
                       <div
                         className="row g-3 pb-3 rounded-4"
                         style={{ backgroundColor: "rgba(255,255,255,0.03)" }}
                       >
-                        <div className="col-md-4 col-6">
+                        <div className="col-md-6 col-12">
                           <label
                             className="small mb-1 d-block opacity-75"
-                            htmlFor="date-input"
+                            htmlFor="reserva-date"
                           >
                             FECHA
                           </label>
@@ -248,34 +246,20 @@ const ReservaModal = ({ cancha }) => {
                               required: "La fecha es obligatoria",
                             })}
                             className={`form-control form-control-dark ${errors.fechaStr ? "is-invalid" : ""}`}
-                            id="date-input"
+                            id="reserva-date"
                           />
                         </div>
-                        <div className="col-md-4 col-6">
+                        <div className="col-md-6 col-12">
                           <label
                             className="small mb-1 d-block opacity-75"
-                            htmlFor="hour-input"
-                          >
-                            HORA
-                          </label>
-                          <input
-                            type="time"
-                            {...register("horaStr")}
-                            className="form-control form-control-dark"
-                            id="hour-input"
-                          />
-                        </div>
-                        <div className="col-md-4 col-12">
-                          <label
-                            className="small mb-1 d-block opacity-75"
-                            htmlFor="duration-input"
+                            htmlFor="reserva-hours"
                           >
                             DURACIÓN
                           </label>
                           <select
                             {...register("horas")}
                             className="form-select form-control-dark"
-                            id="duration-input"
+                            id="reserva-hours"
                           >
                             <option value="1">1 Hora</option>
                             <option value="2">2 Horas</option>
@@ -285,19 +269,91 @@ const ReservaModal = ({ cancha }) => {
                       </div>
 
                       <div className="mt-4">
+                        <div className="d-flex justify-content-between align-items-center mb-2">
+                          <span className="small d-block opacity-75 mb-0">
+                            HORARIOS DISPONIBLES (13:00 - 23:00)
+                          </span>
+                          {cargandoHorarios && (
+                            <span className="badge bg-info">
+                              <span className="spinner-border spinner-border-sm me-1"></span>
+                              Cargando...
+                            </span>
+                          )}
+                        </div>
+
+                        {!horariosDisponibles ||
+                        horariosDisponibles.length === 0 ? (
+                          !cargandoHorarios && (
+                            <div className="text-center py-4 bg-warning bg-opacity-10 rounded-3 border border-warning w-100">
+                              <i className="bi bi-exclamation-circle text-warning me-2"></i>
+                              <span className="text-warning small">
+                                {fechaStr === hoyStr
+                                  ? "No hay horarios disponibles para hoy"
+                                  : "No hay horarios disponibles para esta fecha"}
+                              </span>
+                            </div>
+                          )
+                        ) : (
+                          <div className="horarios-grid" id="reserva-available">
+                            {horariosDisponibles.map((hora, index) => {
+                              const horaValue =
+                                typeof hora === "string"
+                                  ? hora
+                                  : hora?.hora || hora?.horaStr || `${index}`;
+                              return (
+                                <button
+                                  key={`${horaValue}-${index}`}
+                                  type="button"
+                                  className={`btn-horario ${horaStr === horaValue ? "activo" : ""}`}
+                                  onClick={() => handleHoraSelect(horaValue)}
+                                >
+                                  {horaValue}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        )}
+
+                        {horaStr && (
+                          <div className="mt-3 text-center">
+                            <span className="badge bg-success">
+                              <i className="bi bi-check-circle me-1"></i>
+                              {horaStr} seleccionado
+                            </span>
+                          </div>
+                        )}
+
+                        {errorDuracion && (
+                          <div className="mt-2 text-center text-wrap">
+                            <span className="badge bg-danger">
+                              <i className="bi bi-exclamation-circle me-1"></i>
+                              {errorDuracion}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="mt-4">
                         {user ? (
                           <button
                             type="submit"
-                            disabled={!disponible || cargando}
-                            className={`btn w-100 py-3 shadow ${
-                              disponible
+                            disabled={!horaStr || cargandoReserva}
+                            className={`btn w-100 mt-2 shadow ${
+                              horaStr && !cargandoReserva
                                 ? "btn-alquilar text-white"
                                 : "btn-secondary"
                             }`}
                           >
-                            {disponible
-                              ? "Confirmar Reserva"
-                              : "Horario No Disponible"}
+                            {cargandoReserva ? (
+                              <>
+                                <span className="spinner-border spinner-border-sm me-2"></span>
+                                Procesando...
+                              </>
+                            ) : horaStr ? (
+                              "Confirmar Reserva"
+                            ) : (
+                              "Seleccioná un horario"
+                            )}
                           </button>
                         ) : (
                           <div className="p-3 rounded-4 border border-warning bg-warning bg-opacity-10 text-center">
