@@ -12,10 +12,20 @@ const apiCall = async (endpoint, method = "GET", body = null) => {
     const response = await fetch(`${url}${endpoint}`, options);
     const resultado = await response.json().catch(() => ({}));
 
-    if (!response.ok)
+    if (!response.ok) {
+      console.error(`API Error ${response.status}:`, resultado);
       throw new Error(
-        resultado.message || resultado.msg || `Error: ${response.status}`,
+        resultado.message ||
+          resultado.msg ||
+          resultado.message ||
+          `Error: ${response.status}`,
       );
+    }
+
+    if (resultado.ok === false) {
+      throw new Error(resultado.message || "Operación fallida");
+    }
+
     return { ok: true, ...resultado };
   } catch (error) {
     console.error(`Error en ${endpoint}:`, error);
