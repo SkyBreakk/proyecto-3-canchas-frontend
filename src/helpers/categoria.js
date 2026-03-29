@@ -9,13 +9,22 @@ const apiCall = async (endpoint, method = "GET", body = null) => {
     };
     if (body) options.body = JSON.stringify(body);
 
-    const response = await fetch(`${url}${endpoint}`, options);
+    const finalUrl = endpoint.startsWith("/")
+      ? `${url}${endpoint}`
+      : `${url}${endpoint ? "/" + endpoint : ""}`;
+
+    const response = await fetch(finalUrl, options);
+
+    if (response.status === 204) return { ok: true };
+
     const resultado = await response.json().catch(() => ({}));
 
-    if (!response.ok)
+    if (!response.ok) {
       throw new Error(
         resultado.message || resultado.msg || `Error: ${response.status}`,
       );
+    }
+
     return { ok: true, ...resultado };
   } catch (error) {
     console.error(`Error en ${endpoint}:`, error);
@@ -27,9 +36,9 @@ export const traerCategoriasPaginado = (limite, inicio) =>
   apiCall(`?limite=${limite}&desde=${inicio}`);
 
 export const crearCategoria = (newCategoria) =>
-  apiCall("/", "POST", newCategoria);
+  apiCall("", "POST", newCategoria);
 
 export const actualizarCategoria = (categoria) =>
-  apiCall(`/${categoria._id}`, "PUT", categoria);
+  apiCall(categoria._id, "PUT", categoria);
 
-export const eliminarCategoria = (id) => apiCall(`/${id}`, "DELETE");
+export const eliminarCategoria = (id) => apiCall(id, "DELETE");
