@@ -49,6 +49,15 @@ function RegisterScreen() {
                 autoComplete="username"
                 {...register("username", {
                   required: "El nombre de usuario es obligatorio",
+                  minLength: {
+                    value: 3,
+                    message: "El usuario debe tener al menos 3 caracteres",
+                  },
+                  pattern: {
+                    value: /^(?![0-9]+$)[a-zA-Z0-9_]+$/,
+                    message:
+                      "No puede ser solo números. Solo letras, números y guiones bajos.",
+                  },
                 })}
               />
 
@@ -133,7 +142,11 @@ function RegisterScreen() {
           {showVerifyModal && (
             <VerifyEmailModal
               email={userEmail}
-              onSuccess={() => navigate("/login")}
+              onSuccess={() => {
+                setShowVerifyModal(false);
+                navigate("/login");
+              }}
+              onClose={() => setShowVerifyModal(false)}
             />
           )}
         </div>

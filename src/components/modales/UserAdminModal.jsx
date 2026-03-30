@@ -57,9 +57,6 @@ function UserAdminModal({ show, close, onSubmit, user }) {
               >
                 <option value="user">Usuario (user)</option>
                 <option value="admin">Administrador (admin)</option>
-                <option value="superadmin">
-                  Super Administrador (superadmin)
-                </option>
               </select>
               {errors.role && (
                 <small className="text-danger">{errors.role.message}</small>

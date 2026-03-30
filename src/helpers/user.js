@@ -67,31 +67,4 @@ export const apiUser = {
       return { ok: false, message: error.message };
     }
   },
-
-  addSuperAdmin: async (email) => {
-    try {
-      const res = await fetch(`${url}/super-admin`, {
-        method: "PUT",
-        credentials: "include",
-        headers: { "Content-type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-      return await res.json();
-    } catch (error) {
-      return { ok: false, message: error.message };
-    }
-  },
-
-  delSuperAdmin: async (id) => {
-    try {
-      const res = await fetch(`${url}/super-admin/${id}`, {
-        method: "DELETE",
-        credentials: "include",
-        headers: { "Content-type": "application/json" },
-      });
-      return await res.json();
-    } catch (error) {
-      return { ok: false, message: error.message };
-    }
-  },
 };

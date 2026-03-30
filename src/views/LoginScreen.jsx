@@ -8,11 +8,15 @@ import "../assets/css/login.css";
 import AlertApp from "../components/AlertApp";
 import BtnGoogleSigIn from "../components/BtnGoogleSigIn";
 import { useToast } from "../context/ToastContext.jsx";
+import VerifyEmailModal from "../components/VerifyEmailModal.jsx";
 
 function LoginScreen() {
   const { loadUserData } = useContext(UserContext);
   const [response, setResponse] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
+  const [showVerifyModal, setShowVerifyModal] = useState(false);
+  const [pendingVerificationEmail, setPendingVerificationEmail] =
+    useState(null);
   const navigate = useNavigate();
   const { showToast } = useToast();
 
@@ -26,6 +30,14 @@ function LoginScreen() {
   const onSubmit = async (data) => {
     const response = await logIn(data.email, data.password);
     setResponse(response);
+
+    if (response?.message?.includes("no está verificado")) {
+      setPendingVerificationEmail(data.email);
+      setShowVerifyModal(true);
+      showToast("Verifica tu email para continuar");
+      return;
+    }
+
     if (response.ok) {
       showToast("Iniciado Sesión Exitosamente.", "success");
       await loadUserData();
@@ -33,6 +45,18 @@ function LoginScreen() {
     } else {
       showToast("Hubo un error al iniciar sesión", "danger");
     }
+  };
+
+  const handleVerificationSuccess = () => {
+    setShowVerifyModal(false);
+    setPendingVerificationEmail(null);
+    showToast("Email verificado. Ahora puedes iniciar sesión.", "success");
+  };
+
+  const handleCloseVerifyModal = () => {
+    setShowVerifyModal(false);
+    setPendingVerificationEmail(null);
+    setResponse(null);
   };
 
   return (
@@ -119,6 +143,13 @@ function LoginScreen() {
         </div>
         <img src={zona5} alt="logo" className="logo-fondo img-fluid" />
       </div>
+      {showVerifyModal && (
+        <VerifyEmailModal
+          email={pendingVerificationEmail}
+          onSuccess={handleVerificationSuccess}
+          onClose={handleCloseVerifyModal}
+        />
+      )}
     </div>
   );
 }

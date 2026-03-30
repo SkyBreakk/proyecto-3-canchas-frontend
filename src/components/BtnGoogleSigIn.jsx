@@ -1,45 +1,61 @@
 import { useNavigate } from "react-router-dom";
 import { loginWithGoogle } from "../helpers/authGoogle";
-import { useContext } from "react";
+import { useState, useContext } from "react";
 import { UserContext } from "../context/UserContext";
 import { useToast } from "../context/ToastContext";
 
 const BtnGoogleSigIn = () => {
   const navigate = useNavigate();
   const { loadUserData } = useContext(UserContext);
+  const [loading, setLoading] = useState(false);
   const { showToast } = useToast();
 
   const handleGoogleLogin = async (e) => {
     e.preventDefault();
 
-    const response = await loginWithGoogle();
+    if (loading) return;
 
-    if (!response.ok) {
-      alert("Error al iniciar con Google");
-      return;
-    }
+    setLoading(true);
 
-    const email = response.email;
+    try {
+      const response = await loginWithGoogle();
+      console.log("RESPONSE GOOGLE:", response);
+      if (!response.ok) {
+        alert(response.message);
+        return;
+      }
 
-    const res = await fetch(import.meta.env.VITE_API_URL + "/auth/google", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify({
-        email: email,
-      }),
-    });
+      const res = await fetch(import.meta.env.VITE_API_URL + "/auth/google", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          token: response.token,
+        }),
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (data.ok) {
-      await loadUserData();
-      showToast("Se inició sesión correctamente", "success");
-      navigate("/");
-    } else {
-      alert(data.message);
+      if (!res.ok) {
+        console.error("ERROR BACKEND:", data);
+        alert(data.message);
+        return;
+      }
+
+      if (data.ok) {
+        await loadUserData();
+        showToast("Se inició sesión correctamente", "success");
+        navigate("/");
+      } else {
+        showToast(data.message, "danger");
+      }
+    } catch (error) {
+      console.error(error);
+      showToast("Error al iniciar sesión", "danger");
+    } finally {
+      setLoading(false);
     }
   };
   return (
@@ -47,6 +63,7 @@ const BtnGoogleSigIn = () => {
       <button
         type="button"
         onClick={handleGoogleLogin}
+        disabled={loading}
         className="btn btn-light border rounded d-flex align-items-center justify-content-center gap-2 py-1"
       >
         <svg width="18" height="18" viewBox="0 0 24 24">
@@ -67,7 +84,7 @@ const BtnGoogleSigIn = () => {
             fill="#EA4335"
           />
         </svg>
-        Inicia sesión con Google
+        {loading ? "Cargando..." : "Inicia sesión con Google"}
       </button>
     </div>
   );

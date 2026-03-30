@@ -49,14 +49,6 @@ function UserAdmin() {
       res = await apiUser.addAdmin(roleModal.user.email);
     } else if (nuevoRol === "user" && rolActual === "admin") {
       res = await apiUser.delAdmin(roleModal.user._id);
-    } else if (nuevoRol === "superadmin" && rolActual !== "superadmin") {
-      res = await apiUser.addSuperAdmin(roleModal.user.email);
-    } else if (nuevoRol === "user" && rolActual === "superadmin") {
-      res = await apiUser.delSuperAdmin(roleModal.user._id);
-    } else if (nuevoRol === "admin" && rolActual === "superadmin") {
-      res = await apiUser.delSuperAdmin(roleModal.user._id);
-    } else if (nuevoRol === "superadmin" && rolActual === "admin") {
-      res = await apiUser.addSuperAdmin(roleModal.user.email);
     }
 
     if (res.ok) {
@@ -140,7 +132,10 @@ function UserAdmin() {
                   className="btn btn-sm btn-outline-warning border-0"
                   onClick={() => setRoleModal({ show: true, user: userItem })}
                   title="Cambiar rol"
-                  disabled={userItem.username === user.username}
+                  disabled={
+                    userItem.username === user.username ||
+                    userItem.role === user.role
+                  }
                 >
                   <i className="bi bi-person-gear fs-5"></i>
                 </button>

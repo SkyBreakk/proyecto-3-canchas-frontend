@@ -52,38 +52,6 @@ const HomeView = () => {
 
         <div className="row justify-content-center pb-5">
           <div className="col-12 col-lg-10">
-            <div className="home-bg text-white rounded-4 shadow border-0">
-              <div className="card-body p-5 text-center">
-                <h2 className="card-title mb-4 fw-bold">Membresías</h2>
-                <p className="card-text fs-5 text-light opacity-75 mb-4">
-                  ¿Juegas todas las semanas? Conoce nuestros planes y asegura tu
-                  horario fijo.
-                </p>
-
-                <ul className="list-unstyled fs-5 text-start d-inline-block mx-auto">
-                  <li className="mb-2">
-                    ⚽{" "}
-                    <span className="ms-2">10% de descuento en la Tienda</span>
-                  </li>
-                  <li className="mb-2">
-                    ⚽{" "}
-                    <span className="ms-2">
-                      Prioridad de reserva en horarios pico
-                    </span>
-                  </li>
-                  <li className="mb-2">
-                    ⚽{" "}
-                    <span className="ms-2">
-                      Camisetas de color para diferenciar equipos
-                    </span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="row justify-content-center pb-5">
-          <div className="col-12 col-lg-10">
             <div className="home-bg text-white rounded-4 shadow border border-success border-opacity-25">
               <div className="card-body p-5 text-center">
                 <h2 className="card-title mb-4 fw-bold">

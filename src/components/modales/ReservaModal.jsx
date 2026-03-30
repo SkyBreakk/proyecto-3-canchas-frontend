@@ -25,22 +25,29 @@ const ReservaModal = ({ cancha }) => {
   } = useForm({
     defaultValues: {
       horas: 1,
-      fechaStr: new Date().toISOString().split("T")[0],
+      fechaStr: "",
       horaStr: "",
     },
   });
 
   const [fechaStr, horaStr, horas] = watch(["fechaStr", "horaStr", "horas"]);
-  const hoy = new Date();
-  const hoyStr = hoy.toISOString().split("T")[0];
+
+  const mañana = new Date();
+  mañana.setDate(mañana.getDate() + 1);
+  const mañanaStr = mañana.toISOString().split("T")[0];
+
+  useEffect(() => {
+    if (!fechaStr) setValue("fechaStr", mañanaStr);
+  }, [mañanaStr, setValue, fechaStr]);
 
   useEffect(() => {
     const fetchHorarios = async () => {
       if (!cancha?._id || !fechaStr) return;
 
       const fechaSeleccionada = new Date(fechaStr);
-      const hoyInicio = new Date(hoyStr);
-      if (fechaSeleccionada < hoyInicio) {
+      const fechaMinima = new Date(mañanaStr);
+
+      if (fechaSeleccionada < fechaMinima) {
         setHorariosDisponibles([]);
         setValue("horaStr", "");
         return;
@@ -63,7 +70,7 @@ const ReservaModal = ({ cancha }) => {
 
     const timeout = setTimeout(fetchHorarios, 300);
     return () => clearTimeout(timeout);
-  }, [fechaStr, cancha?._id, hoyStr, datosReservaExitosa]);
+  }, [fechaStr, cancha?._id, mañanaStr, datosReservaExitosa]);
 
   useEffect(() => {
     if (horaStr && horas > 1) {
@@ -162,7 +169,6 @@ const ReservaModal = ({ cancha }) => {
               cerrarModal={cerrarModal}
             />
           ) : (
-            /* 📝 RESERVATION FORM */
             <>
               <div className="modal-header border-0 pb-0">
                 <h2 className="modal-title w-100 text-center fw-bold mt-2">
@@ -241,7 +247,7 @@ const ReservaModal = ({ cancha }) => {
                           </label>
                           <input
                             type="date"
-                            min={hoyStr}
+                            min={mañanaStr}
                             {...register("fechaStr", {
                               required: "La fecha es obligatoria",
                             })}
@@ -287,8 +293,8 @@ const ReservaModal = ({ cancha }) => {
                             <div className="text-center py-4 bg-warning bg-opacity-10 rounded-3 border border-warning w-100">
                               <i className="bi bi-exclamation-circle text-warning me-2"></i>
                               <span className="text-warning small">
-                                {fechaStr === hoyStr
-                                  ? "No hay horarios disponibles para hoy"
+                                {fechaStr === mañanaStr
+                                  ? "No hay horarios disponibles para mañana"
                                   : "No hay horarios disponibles para esta fecha"}
                               </span>
                             </div>
