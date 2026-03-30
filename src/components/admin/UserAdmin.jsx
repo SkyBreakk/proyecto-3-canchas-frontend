@@ -140,6 +140,7 @@ function UserAdmin() {
                   className="btn btn-sm btn-outline-warning border-0"
                   onClick={() => setRoleModal({ show: true, user: userItem })}
                   title="Cambiar rol"
+                  disabled={userItem.username === user.username}
                 >
                   <i className="bi bi-person-gear fs-5"></i>
                 </button>
