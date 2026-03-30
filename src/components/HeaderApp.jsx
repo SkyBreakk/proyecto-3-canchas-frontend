@@ -36,24 +36,20 @@ const HeaderApp = () => {
                 Reservar
               </NavLink>
             </li>
-            <li className="nav-item">
-              <NavLink className="nav-link text-white fs-5" to="/tienda">
-                Comprar
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink className="nav-link text-white fs-5" to="/nosotros">
-                Nosotros
-              </NavLink>
-            </li>
+            <NavLink className="nav-link text-white fs-5" to="/tienda">
+              <li className="nav-item">Comprar</li>
+            </NavLink>
+            <NavLink className="nav-link text-white fs-5" to="/nosotros">
+              <li className="nav-item">Nosotros</li>
+            </NavLink>
           </ul>
 
           <div className="d-flex align-items-center justify-content-center flex-column flex-lg-row gap-3 pb-3 pb-lg-0">
             {!authLoading && !cartLoading && (
               <>
                 {user ? (
-                  <div className="d-flex align-items-center gap-3">
-                    {user.role === "admin" && (
+                  <div className="d-flex flex-wrap flex-md-nowrap align-items-center justify-content-center gap-2 gap-lg-3">
+                    {(user.role === "admin" || user.role === "superadmin") && (
                       <NavLink
                         to="/admin"
                         className="btn btn-outline-warning btn-sm me-2"

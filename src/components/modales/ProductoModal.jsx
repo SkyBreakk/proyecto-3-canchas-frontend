@@ -13,6 +13,7 @@ const ProductoModal = ({ producto }) => {
     handleSubmit,
     watch,
     reset,
+    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: { cantidad: 1 },
@@ -26,13 +27,28 @@ const ProductoModal = ({ producto }) => {
 
   const cantidadSeleccionada = watch("cantidad");
 
+  const forceCloseModal = () => {
+    const modalElement = document.getElementById("modalProducto");
+    const modalInstance = window.bootstrap?.Modal.getInstance(modalElement);
+    modalInstance?.hide();
+
+    const backdrops = document.querySelectorAll(".modal-backdrop");
+    backdrops.forEach((backdrop) => backdrop.remove());
+
+    document.body.classList.remove("modal-open");
+    document.body.style.overflow = "";
+    document.body.style.paddingRight = "";
+  };
+
   const onSubmit = (data, accion) => {
     if (!producto) return;
     const cantidad = parseInt(data.cantidad);
 
     if (accion === "carrito") {
       addItem(producto._id, cantidad);
-    } else {
+    } else if (accion === "comprar") {
+      forceCloseModal();
+      navigate(`/cart/${producto._id}?qty=${cantidad}`);
     }
   };
 
@@ -121,22 +137,82 @@ const ProductoModal = ({ producto }) => {
                       >
                         <div className="row align-items-end">
                           <div className="col-6">
-                            <label
-                              className="small mb-1 d-block opacity-75 text-uppercase fw-bold"
-                              htmlFor="prod-quantity"
-                            >
+                            <span className="small mb-1 d-block opacity-75 text-uppercase fw-bold">
                               Cantidad
-                            </label>
-                            <input
-                              type="number"
-                              {...register("cantidad", {
-                                required: true,
-                                min: 1,
-                                max: producto?.stock,
-                              })}
-                              className="form-control form-control-dark"
-                              id="prod-quantity"
-                            />
+                            </span>
+                            <div className="d-flex align-items-center gap-2">
+                              <button
+                                type="button"
+                                className="btn btn-outline-light btn-sm px-3"
+                                style={{ borderRadius: "8px" }}
+                                onClick={() => {
+                                  const current = watch("cantidad") || 1;
+                                  if (current > 1) {
+                                    setValue("cantidad", current - 1, {
+                                      shouldValidate: true,
+                                    });
+                                  }
+                                }}
+                                disabled={(cantidadSeleccionada || 1) <= 1}
+                              >
+                                <i className="bi bi-dash"></i>
+                              </button>
+
+                              <input
+                                type="number"
+                                {...register("cantidad", {
+                                  required: "Campo obligatorio",
+                                  min: { value: 1, message: "Mínimo 1" },
+                                  max: {
+                                    value: producto?.stock,
+                                    message: `Máximo ${producto?.stock}`,
+                                  },
+                                })}
+                                min={1}
+                                max={producto?.stock}
+                                className={`form-control form-control-dark text-center ${errors.cantidad ? "is-invalid" : ""}`}
+                                style={{ width: "60px" }}
+                                inputMode="numeric"
+                                onFocus={(e) => e.target.select()}
+                                onChange={(e) => {
+                                  let val = e.target.value || 1;
+                                  val = Math.max(
+                                    1,
+                                    Math.min(val, producto?.stock || 1),
+                                  );
+                                  setValue("cantidad", val, {
+                                    shouldValidate: true,
+                                  });
+                                }}
+                              />
+
+                              <button
+                                type="button"
+                                className="btn btn-outline-light btn-sm px-3"
+                                style={{ borderRadius: "8px" }}
+                                onClick={() => {
+                                  const current =
+                                    parseInt(watch("cantidad")) || 1;
+                                  if (current < (producto?.stock || 1)) {
+                                    setValue("cantidad", current + 1, {
+                                      shouldValidate: true,
+                                    });
+                                  }
+                                }}
+                                disabled={
+                                  (cantidadSeleccionada || 1) >=
+                                  (producto?.stock || 1)
+                                }
+                              >
+                                <i className="bi bi-plus"></i>
+                              </button>
+                            </div>
+                            {errors.cantidad && (
+                              <span className="error-message">
+                                <i className="bi bi-exclamation-triangle me-1"></i>
+                                {errors.cantidad.message}
+                              </span>
+                            )}
                           </div>
                           <div className="col-6 text-end">
                             <span className="text-secondary-custom d-block small">
@@ -158,9 +234,14 @@ const ProductoModal = ({ producto }) => {
                             <button
                               type="button"
                               className="btn btn-alquilar text-white"
-                              disabled={producto?.stock <= 0}
-                              data-bs-dismiss="modal"
-                              onClick={() => navigate(`/cart/${producto._id}`)}
+                              disabled={
+                                producto?.stock <= 0 ||
+                                cantidadSeleccionada > producto?.stock ||
+                                cantidadSeleccionada <= 0
+                              }
+                              onClick={handleSubmit((data) =>
+                                onSubmit(data, "comprar"),
+                              )}
                             >
                               Comprar Ahora
                             </button>
@@ -168,8 +249,14 @@ const ProductoModal = ({ producto }) => {
                             <button
                               type="button"
                               className="btn btn-outline-light border-2 py-2 fw-bold"
+                              data-bs-dismiss="modal"
                               style={{ borderRadius: "12px" }}
-                              disabled={producto?.stock <= 0}
+                              disabled={
+                                !producto ||
+                                producto.stock <= 0 ||
+                                (cantidadSeleccionada || 1) > producto.stock ||
+                                (cantidadSeleccionada || 1) < 1
+                              }
                               onClick={handleSubmit((data) =>
                                 onSubmit(data, "carrito"),
                               )}

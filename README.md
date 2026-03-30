@@ -1,18 +1,65 @@
-# React + Vite
+# ⚽ Zona 5 - Complejo Deportivo & E-commerce
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+<div align="center">
 
-Currently, two official plugins are available:
+<img src="/src/assets/img/zona5pasto.png" alt="Logo Zona 5" width="300"/>
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+</div>
 
-## React Compiler
+## 🚀 Descripción
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+**Zona 5** es una plataforma web integral desarrollada con el stack MERN (MongoDB, Express, React, Node.js), diseñada para modernizar y facilitar la gestión de un complejo de canchas deportivas.
 
-Note: This will impact Vite dev & build performances.
+El proyecto busca ofrecer una solución completa que combina la gestión de turnos con una tienda virtual, transmitiendo valores de:
 
-## Expanding the ESLint configuration
+- Rapidez y eficiencia en la reserva de turnos.
+- Transparencia y facilidad en los métodos de pago.
+- Experiencia de usuario intuitiva y moderna.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+La aplicación incorpora **MongoDB** como base de datos principal, **JWT** para la autenticación y protección de rutas privadas, y una integración nativa con la API de **Mercado Pago** para procesar cobros de manera 100% online y segura.
+
+## 📖 Sobre el Proyecto
+
+**Zona 5** nace con el objetivo de eliminar las fricciones clásicas en el alquiler de canchas (llamadas perdidas, mensajes de WhatsApp sin leer, solapamiento de horarios). Ofrecemos un sistema donde reservar un partido tome menos de un minuto.
+
+🛡️ Control inteligente anti-solapamiento de turnos.  
+💳 Pasarela de pagos online y registro de pagos en efectivo.  
+📧 Verificación de cuentas mediante correo electrónico.
+
+## 🛠️ Tecnologías Utilizadas
+
+<div align="center">
+
+| Tecnologías                                                                                                         | Descripción                                                                                                  |
+| ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)               | Biblioteca de JavaScript para crear interfaces de usuario interactivas y dinámicas.                          |
+| ![Vite](https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E)                  | Herramienta de construcción rápida y moderna para proyectos web.                                             |
+| ![Bootstrap](https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white)    | Framework de CSS para diseño responsivo y componentes estilizados (Mobile First).                            |
+| ![MercadoPago](https://img.shields.io/badge/MercadoPago-00B1EA?style=for-the-badge&logo=mercadopago&logoColor=white)| Integración de pasarela de pagos para procesar reservas de forma online.                                     |
+| ![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)          | Base de datos NoSQL orientada a documentos, utilizada para almacenar información de la app.                  |
+
+</div>
+
+Ver Demo en Vivo: [https://zona-5.vercel.app/](https://zona-5.vercel.app/)
+Ver Documentación: [https://documenter.getpostman.com/view/51129014/2sBXihqY8e](https://documenter.getpostman.com/view/51129014/2sBXihqY8e)
+
+</div>
+
+## ⚙️ Instalación y Ejecución Local
+
+1️⃣ Clonar el repositorio <br/>
+`git clone https://github.com/SkyBreakk/proyecto-3-canchas-frontend.git`
+
+2️⃣ Instalar dependencias del Frontend <br/>
+`npm install`
+
+3️⃣ Configurar variables de entorno <br/>
+Crea un archivo `.env` en la carpeta `backend/` con las siguientes variables:
+
+```env
+PORT=4500
+MONGO_URI=<tu_uri_de_mongodb_atlas>
+JWT_SECRET=<tu_palabra_secreta>
+MP_ACCESS_TOKEN=<tu_access_token_de_mercado_pago>
+EMAIL_USER=<tu_correo_para_nodemailer>
+EMAIL_PASS=<tu_contraseña_de_aplicacion>

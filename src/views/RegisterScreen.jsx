@@ -9,10 +9,10 @@ import VerifyEmailModal from "../components/VerifyEmailModal";
 
 function RegisterScreen() {
   const navigate = useNavigate();
-
   const [response, setResponse] = useState(null);
   const [showVerifyModal, setShowVerifyModal] = useState(false);
   const [userEmail, setUserEmail] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const {
     register,
@@ -49,6 +49,15 @@ function RegisterScreen() {
                 autoComplete="username"
                 {...register("username", {
                   required: "El nombre de usuario es obligatorio",
+                  minLength: {
+                    value: 3,
+                    message: "El usuario debe tener al menos 3 caracteres",
+                  },
+                  pattern: {
+                    value: /^(?![0-9]+$)[a-zA-Z0-9_]+$/,
+                    message:
+                      "No puede ser solo números. Solo letras, números y guiones bajos.",
+                  },
                 })}
               />
 
@@ -78,18 +87,30 @@ function RegisterScreen() {
             </div>
 
             <div className="mb-3">
-              <input
-                type="password"
-                className="form-control password-icon input text-white"
-                placeholder="Contraseña"
-                {...register("password", {
-                  required: "La contraseña es obligatoria",
-                  minLength: {
-                    value: 6,
-                    message: "Debe tener al menos 6 caracteres",
-                  },
-                })}
-              />
+              <div className="wrapper-password position-relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  className="form-control password-icon input text-white"
+                  placeholder="Contraseña"
+                  {...register("password", {
+                    required: "La contraseña es obligatoria",
+                  })}
+                />
+
+                <button
+                  type="button"
+                  className="btn-ver-password"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={
+                    showPassword ? "Ocultar contraseña" : "Mostrar contraseña"
+                  }
+                >
+                  <i
+                    className={`fa show-pass ${showPassword ? "fa-eye-slash" : "fa-eye"}`}
+                    aria-hidden="true"
+                  ></i>
+                </button>
+              </div>
 
               {errors.password && (
                 <p className="texto-error fw-bold">{errors.password.message}</p>
@@ -112,7 +133,7 @@ function RegisterScreen() {
 
             <p className="text-center text-white mt-3">
               ¿Ya tienes cuenta?{" "}
-              <a href="/login" className="text-registro">
+              <a className="text-registro" onClick={() => navigate("/login")}>
                 Inicia sesión
               </a>
             </p>
@@ -121,7 +142,11 @@ function RegisterScreen() {
           {showVerifyModal && (
             <VerifyEmailModal
               email={userEmail}
-              onSuccess={() => navigate("/login")}
+              onSuccess={() => {
+                setShowVerifyModal(false);
+                navigate("/login");
+              }}
+              onClose={() => setShowVerifyModal(false)}
             />
           )}
         </div>

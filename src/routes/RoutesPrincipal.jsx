@@ -7,9 +7,10 @@ import LoginScreen from "../views/LoginScreen";
 import RegisterScreen from "../views/RegisterScreen";
 import CartScreen from "../views/CartScreen";
 import AdminScreen from "../views/AdminScreen";
+import AboutScreen from "../views/AboutScreen";
 import Perfil from "../components/perfil/Perfil";
-import Success from "../components/success";
-import Error404 from "../views/Error404Screen";
+import Success from "../components/Success";
+import Error404Screen from "../views/Error404Screen";
 import AdminRoute from "./AdminRoute";
 import UserRoute from "./UserRoute";
 import GuestRoute from "./GuestRoute";
@@ -21,7 +22,8 @@ const RoutesPrincipal = () => {
         <Route index element={<HomeScreen />} />
         <Route path="reserva" element={<ReservaScreen />} />
         <Route path="tienda" element={<TiendaScreen />} />
-
+        <Route path="/nosotros" element={<AboutScreen/>}/>
+          
         <Route element={<GuestRoute />}>
           <Route path="login" element={<LoginScreen />} />
           <Route path="register" element={<RegisterScreen />} />
@@ -42,7 +44,7 @@ const RoutesPrincipal = () => {
           <Route path="admin/:seccion?" element={<AdminScreen />} />
         </Route>
       </Route>
-      <Route path="*" element={<Error404 />} />
+      <Route path="*" element={<Error404Screen />} />
     </Routes>
   );
 };

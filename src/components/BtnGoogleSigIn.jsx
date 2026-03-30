@@ -1,17 +1,19 @@
 import { useNavigate } from "react-router-dom";
 import { loginWithGoogle } from "../helpers/authGoogle";
-import {useState, useContext } from "react";
+import { useState, useContext } from "react";
 import { UserContext } from "../context/UserContext";
+import { useToast } from "../context/ToastContext";
 
 const BtnGoogleSigIn = () => {
   const navigate = useNavigate();
   const { loadUserData } = useContext(UserContext);
   const [loading, setLoading] = useState(false);
+  const { showToast } = useToast();
 
   const handleGoogleLogin = async (e) => {
     e.preventDefault();
 
-    if (loading) return; 
+    if (loading) return;
 
     setLoading(true);
 
@@ -23,19 +25,16 @@ const BtnGoogleSigIn = () => {
         return;
       }
 
-      const res = await fetch(
-        import.meta.env.VITE_API_URL + "/auth/google",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({
-            token: response.token, 
-          }),
-        }
-      );
+      const res = await fetch(import.meta.env.VITE_API_URL + "/auth/google", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          token: response.token,
+        }),
+      });
 
       const data = await res.json();
 
@@ -47,13 +46,14 @@ const BtnGoogleSigIn = () => {
 
       if (data.ok) {
         await loadUserData();
+        showToast("Se inició sesión correctamente", "success");
         navigate("/");
       } else {
-        alert(data.message);
+        showToast(data.message, "danger");
       }
     } catch (error) {
       console.error(error);
-      alert("Error al iniciar sesión");
+      showToast("Error al iniciar sesión", "danger");
     } finally {
       setLoading(false);
     }

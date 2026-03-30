@@ -41,7 +41,7 @@ const FooterApp = () => {
                 <Link to="/tienda">Comprar</Link>
               </li>
               <li>
-                <a href="#">Nosotros</a>
+                <Link to="/nosotros">Nosotros</Link>
               </li>
             </ul>
           </div>

@@ -102,6 +102,89 @@
   color: var(--text-secondary);
 }
 
+.horarios-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
+  gap: 8px;
+  padding: 12px;
+  background-color: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+#horario-no-disponible {
+  display: block;
+}
+
+.btn-horario {
+  background-color: #2a2a2a;
+  border: 2px solid #3d3d3d;
+  color: #ffffff;
+  border-radius: 10px;
+  padding: 12px 5px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.btn-horario:hover {
+  border-color: var(--accent-green);
+  background-color: rgba(40, 167, 69, 0.15);
+  transform: translateY(-2px);
+}
+
+.btn-horario.activo {
+  background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+  border-color: #28a745;
+  color: white;
+  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+}
+
+.btn-horario:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #1a1a1a;
+  border-color: #2d2d2d;
+}
+
+.horarios-grid::-webkit-scrollbar {
+  width: 6px;
+}
+
+.horarios-grid::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+}
+
+.horarios-grid::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+.horarios-grid::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+@media (max-width: 576px) {
+  .horarios-grid {
+    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+    gap: 6px;
+    padding: 8px;
+  }
+
+  .btn-horario {
+    padding: 10px 3px;
+    font-size: 0.8rem;
+  }
+
+  .modal-cancha-custom {
+    max-height: 90vh !important;
+  }
+}
+
 body {
   background-image: url(../img/pasto.jpg);
   background-size: 50%;

@@ -7,7 +7,7 @@ const AdminRoute = () => {
 
   if (authLoading) return <div className="text-white">Cargando...</div>;
 
-  if (user && user.role === "admin") {
+  if (user && (user.role === "admin" || user.role === "superadmin")) {
     return <Outlet />;
   }
 

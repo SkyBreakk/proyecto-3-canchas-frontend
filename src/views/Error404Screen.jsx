@@ -1,7 +1,7 @@
 import zona5 from "../assets/img/zona5.png";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link as Linkerror404 } from "react-router-dom";
-import "../assets/css/Error404.css";
+import "../assets/css/error404.css";
 
 const Error404 = () => {
   return (

@@ -39,10 +39,15 @@ const UserProvider = ({ children }) => {
     loadUserData();
   }, []);
 
-  const clearUserData = () => {
-    setUser(null);
-    LogOut();
-    showToast("El cerró sesión correctamente", "success");
+  const clearUserData = async () => {
+    try {
+      await LogOut();
+      setUser(null);
+      showToast("Sesión cerrada correctamente", "success");
+    } catch (error) {
+      console.error("Error al cerrar sesión:", error);
+      showToast("Ocurrió un error al cerrar sesión", "danger");
+    }
   };
 
   return (

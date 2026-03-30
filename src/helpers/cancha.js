@@ -23,7 +23,8 @@ export const apiCancha = {
     }).then((r) => r.json()),
 
   delete: (id) =>
-    fetch(`${url}/${id}`, { method: "DELETE", credentials: "include" }).then(
-      (r) => r.json(),
-    ),
+    fetch(`${url}/${id}`, {
+      method: "DELETE",
+      credentials: "include",
+    }).then((r) => r.json()),
 };

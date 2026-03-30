@@ -73,7 +73,9 @@ function ProductoAdmin() {
         </h1>
         <button
           className="btn btn-neon px-4"
-          onClick={() => setModalState({ ...modalState, form: true })}
+          onClick={() =>
+            setModalState({ form: true, delete: false, selected: null })
+          }
         >
           <i className="bi bi-plus-lg me-2"></i>Agregar Producto
         </button>
@@ -180,6 +182,7 @@ function ProductoAdmin() {
       </div>
 
       <ProductoAdminModal
+        key={modalState.selected?._id || "new"}
         show={modalState.form}
         producto={modalState.selected}
         close={() =>

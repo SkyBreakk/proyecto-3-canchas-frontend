@@ -1,17 +1,15 @@
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 function CategoriaAdminModal({ show, close, onSave, categoria }) {
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
-  } = useForm();
-
-  useEffect(() => {
-    reset(categoria ? { nombre: categoria.nombre } : { nombre: "" });
-  }, [categoria, reset, show]);
+  } = useForm({
+    defaultValues: {
+      nombre: categoria?.nombre || "",
+    },
+  });
 
   if (!show) return null;
 
@@ -28,9 +26,13 @@ function CategoriaAdminModal({ show, close, onSave, categoria }) {
             </label>
             <input
               type="text"
-              className={`form-control bg-dark text-light border-${errors.nombre ? "danger" : "secondary"}`}
+              className={`form-control bg-dark text-light border-${
+                errors.nombre ? "danger" : "secondary"
+              }`}
               {...register("nombre", { required: "El nombre es obligatorio" })}
               id="category-name"
+              // Aseguramos que el valor inicial del DOM coincida con RHF
+              defaultValue={categoria?.nombre || ""}
             />
             {errors.nombre && (
               <small className="text-danger">{errors.nombre.message}</small>
@@ -53,4 +55,5 @@ function CategoriaAdminModal({ show, close, onSave, categoria }) {
     </div>
   );
 }
+
 export default CategoriaAdminModal;
