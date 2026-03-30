@@ -1,18 +1,18 @@
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
 
 const CanchaAdminModal = ({ isOpen, onClose, onSubmit, cancha }) => {
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
-  } = useForm();
-
-  useEffect(() => {
-    if (cancha) reset(cancha);
-    else reset({ nombre: "", descripcion: "", precio: "", img: "" });
-  }, [cancha, reset, isOpen]);
+  } = useForm({
+    defaultValues: {
+      nombre: cancha?.nombre || "",
+      descripcion: cancha?.descripcion || "",
+      precio: cancha?.precio || "",
+      img: cancha?.img || "",
+    },
+  });
 
   if (!isOpen) return null;
 
@@ -42,6 +42,7 @@ const CanchaAdminModal = ({ isOpen, onClose, onSubmit, cancha }) => {
                   className="form-control bg-dark text-light border-secondary"
                   placeholder="Ej: Cancha 5 - Sintético"
                   id="cancha-name"
+                  defaultValue={cancha?.nombre || ""}
                 />
                 {errors.nombre && (
                   <small className="text-danger fw-bold">
@@ -62,6 +63,7 @@ const CanchaAdminModal = ({ isOpen, onClose, onSubmit, cancha }) => {
                   rows="2"
                   placeholder="Detalles de la cancha..."
                   id="cancha-desc"
+                  defaultValue={cancha?.descripcion || ""}
                 />
               </div>
               <div className="col-md-6 mb-3">
@@ -81,6 +83,7 @@ const CanchaAdminModal = ({ isOpen, onClose, onSubmit, cancha }) => {
                   })}
                   className="form-control bg-dark text-light border-secondary"
                   id="cancha-price"
+                  defaultValue={cancha?.precio || ""}
                 />
               </div>
               <div className="col-md-6 mb-3">
@@ -95,6 +98,7 @@ const CanchaAdminModal = ({ isOpen, onClose, onSubmit, cancha }) => {
                   className="form-control bg-dark text-light border-secondary"
                   placeholder="https://..."
                   id="cancha-img"
+                  defaultValue={cancha?.img || ""}
                 />
               </div>
             </div>

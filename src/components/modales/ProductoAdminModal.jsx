@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 function ProductoAdminModal({
@@ -8,37 +7,21 @@ function ProductoAdminModal({
   producto = null,
   categorias = [],
 }) {
+  // SOLUCIÓN 1: defaultValues en la configuración de useForm
   const {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
-  } = useForm();
-
-  useEffect(() => {
-    if (show) {
-      if (producto) {
-        const categoriaId = producto.categoria?._id || producto.categoria || "";
-        reset({
-          nombre: producto.nombre,
-          precio: producto.precio,
-          categoria: categoriaId,
-          descripcion: producto.descripcion || "",
-          stock: producto.stock,
-          img: producto.img || "",
-        });
-      } else {
-        reset({
-          nombre: "",
-          precio: "",
-          categoria: "",
-          descripcion: "",
-          stock: "",
-          img: "",
-        });
-      }
-    }
-  }, [show, producto, reset]);
+  } = useForm({
+    defaultValues: {
+      nombre: producto?.nombre || "",
+      precio: producto?.precio || "",
+      categoria: producto?.categoria?._id || producto?.categoria || "",
+      descripcion: producto?.descripcion || "",
+      stock: producto?.stock || "",
+      img: producto?.img || "",
+    },
+  });
 
   if (!show) return null;
 
@@ -72,7 +55,7 @@ function ProductoAdminModal({
                   <img
                     src={
                       producto?.img ||
-                      "https://png.pngtree.com/png-vector/20230407/ourmid/pngtree-placeholder-line-icon-vector-png-image_6691835.png"
+                      "https://png.pngtree.com/png-vector/20230407/ourmid/pngtree-placeholder-line-icon-vector-png-image_6691833.png"
                     }
                     className="modal-img-cancha mb-3"
                     alt="preview"
@@ -89,6 +72,7 @@ function ProductoAdminModal({
                   {...register("img")}
                   placeholder="https://..."
                   id="product-img"
+                  defaultValue={producto?.img || ""}
                 />
               </div>
 
@@ -111,6 +95,7 @@ function ProductoAdminModal({
                       },
                     })}
                     id="product-name"
+                    defaultValue={producto?.nombre || ""}
                   />
                   {errors.nombre && (
                     <div className="invalid-feedback small">
@@ -138,6 +123,7 @@ function ProductoAdminModal({
                         },
                       })}
                       id="product-price"
+                      defaultValue={producto?.precio || ""}
                     />
                     {errors.precio && (
                       <div className="invalid-feedback small">
@@ -164,6 +150,7 @@ function ProductoAdminModal({
                         },
                       })}
                       id="product-stock"
+                      defaultValue={producto?.stock || ""}
                     />
                     {errors.stock && (
                       <div className="invalid-feedback small">
@@ -186,6 +173,9 @@ function ProductoAdminModal({
                       required: "Selecciona una categoría",
                     })}
                     id="product-category"
+                    defaultValue={
+                      producto?.categoria?._id || producto?.categoria || ""
+                    }
                   >
                     <option value="">Seleccione una categoría...</option>
                     {categorias.map((cat) => (
@@ -213,6 +203,7 @@ function ProductoAdminModal({
                     rows="3"
                     {...register("descripcion")}
                     id="product-desc"
+                    defaultValue={producto?.descripcion || ""}
                   ></textarea>
                 </div>
               </div>

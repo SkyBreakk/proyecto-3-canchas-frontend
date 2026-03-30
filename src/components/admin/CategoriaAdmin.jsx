@@ -30,9 +30,12 @@ function CategoriaAdmin() {
 
   const handleSave = async (formValues) => {
     const isEdit = !!modalForm.data;
+
+    const payload = isEdit ? { ...modalForm.data, ...formValues } : formValues;
+
     const res = isEdit
-      ? await api.actualizarCategoria({ ...modalForm.data, ...formValues })
-      : await api.crearCategoria(formValues);
+      ? await api.actualizarCategoria(payload)
+      : await api.crearCategoria(payload);
 
     if (res.ok) {
       cargarCategorias();
@@ -122,11 +125,13 @@ function CategoriaAdmin() {
         </button>
       </div>
       <CategoriaAdminModal
+        key={modalForm.data?._id || "new"}
         show={modalForm.show}
         categoria={modalForm.data}
         close={() => setModalForm({ show: false, data: null })}
         onSave={handleSave}
       />
+
       <ConfirmModal
         show={modalDelete.show}
         message={`¿Estás seguro de eliminar "${modalDelete.nombre}"?`}

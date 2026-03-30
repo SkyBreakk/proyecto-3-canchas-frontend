@@ -9,7 +9,11 @@ const apiFetch = async (endpoint, method = "GET", body = null) => {
     };
     if (body) config.body = JSON.stringify(body);
 
-    const response = await fetch(`${url}/${endpoint}`, config);
+    const finalUrl = endpoint
+      ? `${url}${endpoint.startsWith("/") ? endpoint : "/" + endpoint}`
+      : url;
+
+    const response = await fetch(finalUrl, config);
     const resultado = await response.json();
 
     if (!response.ok)
@@ -21,15 +25,14 @@ const apiFetch = async (endpoint, method = "GET", body = null) => {
   }
 };
 
-export const obtenerProductoPorId = (id) => apiFetch(`${id}`);
+export const obtenerProductoPorId = (id) => apiFetch(`/${id}`);
 
 export const obtenerProductos = (limite, inicio) =>
   apiFetch(`?limite=${limite}&desde=${inicio}`);
 
-export const crearProducto = (newProducto) =>
-  apiFetch("/", "POST", newProducto);
+export const crearProducto = (newProducto) => apiFetch("", "POST", newProducto);
 
 export const actualizarProducto = (producto) =>
-  apiFetch(`${producto._id}`, "PUT", producto);
+  apiFetch(`/${producto._id}`, "PUT", producto);
 
-export const borrarProducto = (id) => apiFetch(`${id}`, "DELETE");
+export const borrarProducto = (id) => apiFetch(`/${id}`, "DELETE");

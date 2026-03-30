@@ -182,6 +182,7 @@ function ProductoAdmin() {
       </div>
 
       <ProductoAdminModal
+        key={modalState.selected?._id || "new"}
         show={modalState.form}
         producto={modalState.selected}
         close={() =>

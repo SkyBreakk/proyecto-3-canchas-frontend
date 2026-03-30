@@ -122,12 +122,15 @@ function CanchaAdmin() {
           <i className="bi bi-chevron-right"></i>
         </button>
       </div>
+
       <CanchaAdminModal
+        key={modalState.data?._id || "new"}
         isOpen={modalState.type === "form"}
         onClose={() => setModalState({ type: null, data: null })}
         onSubmit={handleSave}
         cancha={modalState.data}
       />
+
       <ConfirmModal
         show={modalState.type === "delete"}
         close={() => setModalState({ type: null, data: null })}

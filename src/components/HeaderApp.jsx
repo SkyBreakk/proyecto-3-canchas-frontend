@@ -49,7 +49,7 @@ const HeaderApp = () => {
               <>
                 {user ? (
                   <div className="d-flex flex-wrap flex-md-nowrap align-items-center justify-content-center gap-2 gap-lg-3">
-                    {user.role === "admin" && (
+                    {(user.role === "admin" || user.role === "superadmin") && (
                       <NavLink
                         to="/admin"
                         className="btn btn-outline-warning btn-sm me-2"
