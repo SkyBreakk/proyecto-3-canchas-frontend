@@ -30,13 +30,13 @@ La aplicación incorpora **MongoDB** como base de datos principal, **JWT** para 
 
 <div align="center">
 
-| Tecnologías                                                                                                         | Descripción                                                                                                  |
-| ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)               | Biblioteca de JavaScript para crear interfaces de usuario interactivas y dinámicas.                          |
-| ![Vite](https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E)                  | Herramienta de construcción rápida y moderna para proyectos web.                                             |
-| ![Bootstrap](https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white)    | Framework de CSS para diseño responsivo y componentes estilizados (Mobile First).                            |
-| ![MercadoPago](https://img.shields.io/badge/MercadoPago-00B1EA?style=for-the-badge&logo=mercadopago&logoColor=white)| Integración de pasarela de pagos para procesar reservas de forma online.                                     |
-| ![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)          | Base de datos NoSQL orientada a documentos, utilizada para almacenar información de la app.                  |
+| Tecnologías                                                                                                          | Descripción                                                                                 |
+| -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)                  | Biblioteca de JavaScript para crear interfaces de usuario interactivas y dinámicas.         |
+| ![Vite](https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E)                     | Herramienta de construcción rápida y moderna para proyectos web.                            |
+| ![Bootstrap](https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white)       | Framework de CSS para diseño responsivo y componentes estilizados (Mobile First).           |
+| ![MercadoPago](https://img.shields.io/badge/MercadoPago-00B1EA?style=for-the-badge&logo=mercadopago&logoColor=white) | Integración de pasarela de pagos para procesar reservas de forma online.                    |
+| ![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)             | Base de datos NoSQL orientada a documentos, utilizada para almacenar información de la app. |
 
 </div>
 
@@ -57,9 +57,15 @@ Ver Documentación: [https://documenter.getpostman.com/view/51129014/2sBXihqY8e]
 Crea un archivo `.env` en la carpeta `backend/` con las siguientes variables:
 
 ```env
-PORT=4500
-MONGO_URI=<tu_uri_de_mongodb_atlas>
-JWT_SECRET=<tu_palabra_secreta>
-MP_ACCESS_TOKEN=<tu_access_token_de_mercado_pago>
-EMAIL_USER=<tu_correo_para_nodemailer>
-EMAIL_PASS=<tu_contraseña_de_aplicacion>
+VITE_API_URL=
+
+VITE_FIREBASE_API_KEY=
+VITE_FIREBASE_AUTH_DOMAIN=
+VITE_FIREBASE_PROJECT_ID=
+VITE_FIREBASE_STORAGE_BUCKET=
+VITE_FIREBASE_MESSAGING_SENDER_ID=
+VITE_FIREBASE_APP_ID=
+VITE_FIREBASE_MEASUREMENT_ID=
+
+VITE_MP_PUBLIC_KEY=
+```
