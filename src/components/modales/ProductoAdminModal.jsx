@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 function ProductoAdminModal({
@@ -7,7 +8,6 @@ function ProductoAdminModal({
   producto = null,
   categorias = [],
 }) {
-  // SOLUCIÓN 1: defaultValues en la configuración de useForm
   const {
     register,
     handleSubmit,
@@ -23,6 +23,17 @@ function ProductoAdminModal({
     },
   });
 
+  useEffect(() => {
+    if (show) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [show]);
+
   if (!show) return null;
 
   return (
@@ -33,8 +44,8 @@ function ProductoAdminModal({
       >
         <div className="modal-content modal-cancha-custom p-2">
           <div className="modal-header border-0">
-            <h5 className="modal-title fw-bold neon-text">
-              {producto ? "EDITAR PRODUCTO" : "NUEVO PRODUCTO"}
+            <h5 className="modal-title fw-bold neon-text text-uppercase">
+              {producto ? "Editar Producto" : "Nuevo Producto"}
             </h5>
             <button
               type="button"
@@ -49,7 +60,7 @@ function ProductoAdminModal({
               close();
             })}
           >
-            <div className="modal-body row g-3">
+            <div className="modal-body row g-3 mx-0">
               <div className="col-md-5 text-center">
                 <div className="position-relative">
                   <img
@@ -57,8 +68,9 @@ function ProductoAdminModal({
                       producto?.img ||
                       "https://png.pngtree.com/png-vector/20230407/ourmid/pngtree-placeholder-line-icon-vector-png-image_6691833.png"
                     }
-                    className="modal-img-cancha mb-3"
+                    className="modal-img-cancha mb-3 img-fluid rounded border border-secondary"
                     alt="preview"
+                    style={{ maxHeight: "200px", objectFit: "cover" }}
                   />
                 </div>
                 <label
@@ -72,7 +84,6 @@ function ProductoAdminModal({
                   {...register("img")}
                   placeholder="https://..."
                   id="product-img"
-                  defaultValue={producto?.img || ""}
                 />
               </div>
 
@@ -88,14 +99,9 @@ function ProductoAdminModal({
                     className={`form-control form-control-dark ${errors.nombre ? "is-invalid" : ""}`}
                     {...register("nombre", {
                       required: "El nombre es obligatorio",
-                      minLength: {
-                        value: 5,
-                        message:
-                          "El nombre debe de tener por lo menos 5 carácteres",
-                      },
+                      minLength: { value: 5, message: "Mínimo 5 caracteres" },
                     })}
                     id="product-name"
-                    defaultValue={producto?.nombre || ""}
                   />
                   {errors.nombre && (
                     <div className="invalid-feedback small">
@@ -104,7 +110,7 @@ function ProductoAdminModal({
                   )}
                 </div>
 
-                <div className="row">
+                <div className="row g-2">
                   <div className="col-6 mb-3">
                     <label
                       className="form-label small text-secondary-custom"
@@ -116,22 +122,12 @@ function ProductoAdminModal({
                       type="number"
                       className={`form-control form-control-dark ${errors.precio ? "is-invalid" : ""}`}
                       {...register("precio", {
-                        required: "El precio es obligatorio",
-                        min: {
-                          value: 0,
-                          message: "El precio no puede ser menor a 0",
-                        },
+                        required: "Obligatorio",
+                        min: { value: 0, message: "Mínimo 0" },
                       })}
                       id="product-price"
-                      defaultValue={producto?.precio || ""}
                     />
-                    {errors.precio && (
-                      <div className="invalid-feedback small">
-                        {errors.precio.message}
-                      </div>
-                    )}
                   </div>
-
                   <div className="col-6 mb-3">
                     <label
                       className="form-label small text-secondary-custom"
@@ -143,20 +139,11 @@ function ProductoAdminModal({
                       type="number"
                       className={`form-control form-control-dark ${errors.stock ? "is-invalid" : ""}`}
                       {...register("stock", {
-                        required: "El stock es obligatorio",
-                        min: {
-                          value: 0,
-                          message: "No puede ser menor a 0",
-                        },
+                        required: "Obligatorio",
+                        min: { value: 0, message: "Mínimo 0" },
                       })}
                       id="product-stock"
-                      defaultValue={producto?.stock || ""}
                     />
-                    {errors.stock && (
-                      <div className="invalid-feedback small">
-                        {errors.stock.message}
-                      </div>
-                    )}
                   </div>
                 </div>
 
@@ -173,22 +160,14 @@ function ProductoAdminModal({
                       required: "Selecciona una categoría",
                     })}
                     id="product-category"
-                    defaultValue={
-                      producto?.categoria?._id || producto?.categoria || ""
-                    }
                   >
-                    <option value="">Seleccione una categoría...</option>
+                    <option value="">Seleccione...</option>
                     {categorias.map((cat) => (
                       <option key={cat._id} value={cat._id}>
                         {cat.nombre}
                       </option>
                     ))}
                   </select>
-                  {errors.categoria && (
-                    <div className="invalid-feedback">
-                      {errors.categoria.message}
-                    </div>
-                  )}
                 </div>
 
                 <div className="mb-0">
@@ -203,7 +182,6 @@ function ProductoAdminModal({
                     rows="3"
                     {...register("descripcion")}
                     id="product-desc"
-                    defaultValue={producto?.descripcion || ""}
                   ></textarea>
                 </div>
               </div>

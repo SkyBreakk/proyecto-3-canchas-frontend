@@ -89,12 +89,12 @@ function RegisterScreen() {
                 {...register("username", {
                   required: "El nombre de usuario es obligatorio",
                   minLength: {
-                    value: 3,
-                    message: "Mínimo 3 caracteres",
+                    value: 5,
+                    message: "Mínimo 5 caracteres",
                   },
                   maxLength: {
-                    value: 30,
-                    message: "Máximo 30 caracteres",
+                    value: 20,
+                    message: "Máximo 20 caracteres",
                   },
                   pattern: {
                     value: /^(?![0-9]+$)[a-zA-Z0-9_]+$/,
@@ -279,20 +279,19 @@ function RegisterScreen() {
               </a>
             </p>
           </form>
-
-          {showVerifyModal && (
-            <VerifyEmailModal
-              email={userEmail}
-              onSuccess={() => {
-                setShowVerifyModal(false);
-                navigate("/login");
-              }}
-              onClose={() => setShowVerifyModal(false)}
-            />
-          )}
         </div>
         <img src={zona5} alt="logo" className="logo-fondo img-fluid" />
       </div>
+      {showVerifyModal && (
+        <VerifyEmailModal
+          email={userEmail}
+          onSuccess={() => {
+            setShowVerifyModal(false);
+            navigate("/login");
+          }}
+          onClose={() => setShowVerifyModal(false)}
+        />
+      )}
     </div>
   );
 }

@@ -50,7 +50,7 @@ function ProductoAdmin() {
       setModalState({ ...modalState, form: false, selected: null });
       showToast("El producto se guardó correctamente.", "success");
     } else {
-      showToast("Se produjo un error.", "danger");
+      showToast(res.message || "Se produjo un error.", "danger");
     }
   };
 
@@ -61,7 +61,7 @@ function ProductoAdmin() {
       setModalState({ ...modalState, delete: false, selected: null });
       showToast("El producto se eliminó correctamente.", "success");
     } else {
-      showToast("Se produjo un error.", "danger");
+      showToast(res.message || "Se produjo un error.", "danger");
     }
   };
 

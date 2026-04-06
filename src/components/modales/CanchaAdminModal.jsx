@@ -18,7 +18,7 @@ const CanchaAdminModal = ({ isOpen, onClose, onSubmit, cancha }) => {
 
   return (
     <div className="modal-custom-overlay">
-      <div className="modal-content-zona5 w-50 rounded shadow-lg">
+      <div className="modal-content-zona5 rounded shadow-lg">
         <div className="modal-header p-4">
           <h2 className="modal-title neon-text fs-3">
             {cancha ? "Editar Cancha" : "Crear Nueva Cancha"}

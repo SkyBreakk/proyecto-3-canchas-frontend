@@ -42,7 +42,7 @@ function CategoriaAdmin() {
       setModalForm({ show: false, data: null });
       showToast("La categoría se guardó correctamente.", "success");
     } else {
-      showToast("Se produjo un error.", "danger");
+      showToast(res.message || "Se produjo un error.", "danger");
     }
   };
 
@@ -53,7 +53,7 @@ function CategoriaAdmin() {
       setModalDelete({ show: false, id: null });
       showToast("La categoría se borró correctamente.", "success");
     } else {
-      showToast("Se produjo un error.", "danger");
+      showToast(res.message || "Se produjo un error.", "danger");
     }
   };
 

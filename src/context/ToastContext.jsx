@@ -12,7 +12,12 @@ export const ToastProvider = ({ children }) => {
 
   const showToast = useCallback((message, type = "success") => {
     setToast({ show: true, message, type });
-    setTimeout(() => setToast((prev) => ({ ...prev, show: false })), 3000);
+
+    const timer = setTimeout(() => {
+      setToast((prev) => ({ ...prev, show: false }));
+    }, 3000);
+
+    return () => clearTimeout(timer);
   }, []);
 
   return (

@@ -18,7 +18,7 @@ const Perfil = () => {
       <div className="container containerTable-adminScreen p-4 shadow-lg">
         <h2 className="neon-text text-center mb-4">MI CUENTA</h2>
 
-        <div className="d-flex justify-content-center gap-3 mb-5">
+        <div className="d-flex flex-wrap justify-content-center gap-3 mb-5">
           <button
             onClick={() => navigate("/perfil/reservas")}
             className={`btn ${seccion === "reservas" ? "btn-neon" : "btn-outline-light"} px-4 rounded-pill`}

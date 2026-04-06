@@ -27,7 +27,7 @@ function ReservaAdmin() {
       setDeleteModal({ show: false, id: null });
       showToast("La reserva se eliminó correctamente.", "success");
     } else {
-      showToast("Se produjo un error.", "danger");
+      showToast(res.message || "Se produjo un error.", "danger");
     }
   };
 
@@ -51,11 +51,11 @@ function ReservaAdmin() {
         );
         showToast("La reserva se actualizó correctamente.", "success");
       } else {
-        showToast("Error al actualizar el pago.", "danger");
+        showToast(res.message || "Error al actualizar el pago.", "danger");
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("Error de conexión");
+      showToast(error, "danger");
     }
   };
 

@@ -95,7 +95,6 @@
   letter-spacing: 0.5px;
 }
 
-/* Puntos animados */
 .loading-dots {
   display: flex;
   justify-content: center;
@@ -327,6 +326,12 @@
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
   filter: invert(1);
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 body {

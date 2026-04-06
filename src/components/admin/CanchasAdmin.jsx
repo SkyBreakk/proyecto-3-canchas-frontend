@@ -30,7 +30,7 @@ function CanchaAdmin() {
       setModalState({ type: null, data: null });
       showToast("La cancha se guardó correctamente.", "success");
     } else {
-      showToast("Se produjo un error.", "danger");
+      showToast(res.message || "Se produjo un error.", "danger");
     }
   };
 
@@ -41,7 +41,7 @@ function CanchaAdmin() {
       setModalState({ type: null, data: null });
       showToast("La cancha se eliminó correctamente.", "success");
     } else {
-      showToast("Se produjo un error.", "danger");
+      showToast(res.message || "Se produjo un error.", "danger");
     }
   };
 

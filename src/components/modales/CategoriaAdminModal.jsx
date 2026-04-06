@@ -31,7 +31,6 @@ function CategoriaAdminModal({ show, close, onSave, categoria }) {
               }`}
               {...register("nombre", { required: "El nombre es obligatorio" })}
               id="category-name"
-              // Aseguramos que el valor inicial del DOM coincida con RHF
               defaultValue={categoria?.nombre || ""}
             />
             {errors.nombre && (

@@ -1,26 +1,43 @@
-/* Toast.css actualizado */
 .toast-container-custom {
   position: fixed;
   bottom: 1.5rem;
-  right: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: 90%;
+  max-width: 400px;
   z-index: 10000;
+  pointer-events: none;
+  display: flex;
+  justify-content: center;
+}
+
+@media (min-width: 768px) {
+  .toast-container-custom {
+    left: auto;
+    right: 1.5rem;
+    transform: none;
+    width: auto;
+    justify-content: flex-end;
+  }
 }
 
 .toast-custom {
   display: block !important;
   visibility: hidden;
   opacity: 0;
-  transform: translateY(-20px);
-  transition: all 0.4s ease;
+  transform: translateY(20px);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   border: none !important;
   border-radius: 12px;
-  min-width: 280px;
+  width: 100%;
 }
 
 .toast-custom.active {
   visibility: visible;
   opacity: 1;
   transform: translateY(0);
+  pointer-events: auto;
 }
 
 .toast-custom.toast-success-subtle {

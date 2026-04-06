@@ -2,69 +2,68 @@ import React, { useContext, useState, useEffect } from "react";
 import { UserContext } from "../../context/UserContext";
 import { apiUser } from "../../helpers/user";
 import { useForm } from "react-hook-form";
+import { useToast } from "../../context/ToastContext";
 
 const MisDatos = () => {
   const { user, loadUserData } = useContext(UserContext);
-  const [mensaje, setMensaje] = useState({ tipo: "", texto: "" });
+  const { showToast } = useToast();
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const {
     register,
     handleSubmit,
     setValue,
+    watch,
+    reset,
     formState: { errors, isSubmitting },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      username: user?.username || "",
+      email: user?.email || "",
+    },
+  });
 
-  useEffect(() => {
-    if (user) {
-      setValue("username", user.username || "");
-      setValue("email", user.email || "");
-    }
-  }, [user, setValue]);
+  const password = watch("password");
 
   const onSubmit = async (data) => {
-    setMensaje({ tipo: "", texto: "" });
-    const datosAEnviar = {
-      username: data.username,
-      // email: data.email,
-    };
-    if (data.password && data.password.trim() !== "") {
+    const sinCambiosEnUsername = data.username === user.username;
+    const sinCambiosEnPassword = !data.password || data.password.trim() === "";
+
+    if (sinCambiosEnUsername && sinCambiosEnPassword) {
+      showToast("No has realizado ningún cambio para guardar.", "warning");
+      return;
+    }
+
+    const datosAEnviar = { username: data.username };
+    if (!sinCambiosEnPassword) {
       datosAEnviar.password = data.password;
     }
+
     try {
       const res = await apiUser.updateProfile(datosAEnviar);
 
       if (res.ok) {
-        setMensaje({
-          tipo: "success",
-          texto: "¡Perfil actualizado con éxito!",
-        });
+        showToast("¡Perfil actualizado con éxito!", "success");
         await loadUserData();
+
+        setValue("username", user.username || "");
         setValue("password", "");
+        setValue("confirmPassword", "");
       } else {
-        setMensaje({
-          tipo: "danger",
-          texto: res.message || "Error al actualizar",
-        });
+        showToast(res.message || "Error al actualizar el perfil", "danger");
       }
     } catch (error) {
-      setMensaje({
-        tipo: "danger",
-        texto: "Error de conexión con el servidor",
-      });
+      showToast("Error de conexión con el servidor", "warning");
     }
   };
 
   return (
     <div className="p-3">
-      <h4 className="text-white border-bottom border-secondary pb-2 mb-4">
+      <h4 className="text-white border-bottom border-secondary pb-2 mb-4 neon-text">
         Mi Información Personal
       </h4>
-
-      {mensaje.texto && (
-        <div className={`alert alert-${mensaje.tipo} fade show`} role="alert">
-          {mensaje.texto}
-        </div>
-      )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="row g-3">
         <div className="col-md-6">
@@ -80,12 +79,26 @@ const MisDatos = () => {
             {...register("username", {
               required: "El nombre de usuario es obligatorio",
               minLength: {
-                value: 3,
-                message: "Debe tener al menos 3 caracteres",
+                value: 5,
+                message: "Mínimo 5 caracteres",
+              },
+              maxLength: {
+                value: 20,
+                message: "Máximo 20 caracteres",
+              },
+              pattern: {
+                value: /^(?![0-9]+$)[a-zA-Z0-9_]+$/,
+                message:
+                  "Solo letras, números y guiones bajos. No puede ser solo números",
+              },
+              validate: {
+                notEmpty: (value) =>
+                  value?.trim() !== "" || "El usuario no puede estar vacío",
+                noSpaces: (value) =>
+                  !value?.includes(" ") || "No puede contener espacios",
               },
             })}
             id="profile-username"
-            autoComplete="username"
           />
           {errors.username && (
             <div className="invalid-feedback fw-bold">
@@ -101,6 +114,7 @@ const MisDatos = () => {
           >
             EMAIL
           </label>
+
           <input
             type="email"
             className="form-control bg-dark text-white border-secondary"
@@ -124,34 +138,88 @@ const MisDatos = () => {
             <h5 className="text-success mb-3">
               <i className="bi bi-shield-lock me-2"></i>Seguridad
             </h5>
-            <p className="text-secondary small mb-3">
-              Si no deseas cambiar tu contraseña, deja este campo vacío.
-            </p>
 
-            <div className="col-md-6">
-              <label
-                className="form-label text-secondary-custom small"
-                htmlFor="profile-password"
-              >
-                NUEVA CONTRASEÑA
-              </label>
-              <input
-                type="password"
-                className={`form-control bg-dark text-white border-secondary ${errors.password ? "is-invalid" : ""}`}
-                placeholder="Mínimo 6 caracteres"
-                {...register("password", {
-                  minLength: {
-                    value: 6,
-                    message: "Debe tener al menos 6 caracteres",
-                  },
-                })}
-                id="profile-password"
-              />
-              {errors.password && (
-                <div className="invalid-feedback fw-bold">
-                  {errors.password.message}
+            <div className="row g-3">
+              <div className="col-md-6">
+                <label
+                  className="form-label text-secondary-custom small"
+                  htmlFor="profile-password"
+                >
+                  NUEVA CONTRASEÑA
+                </label>
+                <div className="position-relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    className={`form-control bg-dark text-white border-secondary ${errors.password ? "is-invalid" : ""}`}
+                    placeholder="Vacio para mantener actual"
+                    {...register("password", {
+                      minLength: {
+                        value: 6,
+                        message: "Mínimo 6 caracteres",
+                      },
+                      pattern: {
+                        value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+                        message: "Debe incluir mayúscula, minúscula y número",
+                      },
+                      validate: {
+                        noSpaces: (value) =>
+                          !value?.includes(" ") || "No puede contener espacios",
+                      },
+                    })}
+                    id="profile-password"
+                  />
+                  <button
+                    type="button"
+                    className="btn border-0 position-absolute end-0 top-50 translate-middle-y text-secondary"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    <i
+                      className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}
+                    ></i>
+                  </button>
                 </div>
-              )}
+                {errors.password && (
+                  <div className="invalid-feedback d-block fw-bold">
+                    {errors.password.message}
+                  </div>
+                )}
+              </div>
+
+              <div className="col-md-6">
+                <label
+                  className="form-label text-secondary-custom small"
+                  htmlFor="confirm-password"
+                >
+                  CONFIRMAR CONTRASEÑA
+                </label>
+                <div className="position-relative">
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    className={`form-control bg-dark text-white border-secondary ${errors.confirmPassword ? "is-invalid" : ""}`}
+                    {...register("confirmPassword", {
+                      validate: (val) =>
+                        !password ||
+                        val === password ||
+                        "Las contraseñas no coinciden",
+                    })}
+                    id="confirm-password"
+                  />
+                  <button
+                    type="button"
+                    className="btn border-0 position-absolute end-0 top-50 translate-middle-y text-secondary"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  >
+                    <i
+                      className={`bi ${showConfirmPassword ? "bi-eye-slash" : "bi-eye"}`}
+                    ></i>
+                  </button>
+                </div>
+                {errors.confirmPassword && (
+                  <div className="invalid-feedback d-block fw-bold">
+                    {errors.confirmPassword.message}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -159,13 +227,14 @@ const MisDatos = () => {
         <div className="col-12 mt-4 text-end">
           <button
             type="submit"
-            className="btn btn-neon px-5 py-2 fw-bold"
+            className="btn btn-neon px-5 py-2 fw-bold shadow-sm"
             disabled={isSubmitting}
           >
             {isSubmitting ? (
               <span className="spinner-border spinner-border-sm me-2"></span>
-            ) : null}
-            GUARDAR CAMBIOS
+            ) : (
+              "GUARDAR CAMBIOS"
+            )}
           </button>
         </div>
       </form>

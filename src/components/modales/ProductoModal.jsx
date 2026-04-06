@@ -141,12 +141,12 @@ const ProductoModal = ({ producto }) => {
                         className="p-3 rounded-4 mb-4"
                         style={{ backgroundColor: "rgba(255,255,255,0.03)" }}
                       >
-                        <div className="row align-items-end">
-                          <div className="col-6">
+                        <div className="row flex-column flex-sm-row align-items-center align-items-sm-end g-3">
+                          <div className="col-12 col-sm-6 text-center text-sm-start">
                             <span className="small mb-1 d-block opacity-75 text-uppercase fw-bold">
                               Cantidad
                             </span>
-                            <div className="d-flex align-items-center gap-2">
+                            <div className="d-flex align-items-center justify-content-center justify-content-md-start gap-2">
                               <button
                                 type="button"
                                 className="btn btn-outline-light btn-sm px-3"
@@ -174,14 +174,12 @@ const ProductoModal = ({ producto }) => {
                                     message: `Máximo ${producto?.stock}`,
                                   },
                                 })}
-                                min={1}
-                                max={producto?.stock}
                                 className={`form-control form-control-dark text-center ${errors.cantidad ? "is-invalid" : ""}`}
                                 style={{ width: "60px" }}
                                 inputMode="numeric"
                                 onFocus={(e) => e.target.select()}
                                 onChange={(e) => {
-                                  let val = e.target.value || 1;
+                                  let val = parseInt(e.target.value) || 1;
                                   val = Math.max(
                                     1,
                                     Math.min(val, producto?.stock || 1),
@@ -214,18 +212,19 @@ const ProductoModal = ({ producto }) => {
                               </button>
                             </div>
                             {errors.cantidad && (
-                              <span className="error-message">
+                              <span className="error-message d-block mt-1">
                                 <i className="bi bi-exclamation-triangle me-1"></i>
                                 {errors.cantidad.message}
                               </span>
                             )}
                           </div>
-                          <div className="col-6 text-end">
+
+                          <div className="col-12 col-sm-6 text-center text-sm-end mt-3 mt-sm-0">
                             <span className="text-secondary-custom d-block small">
                               Subtotal
                             </span>
                             <h4 className="fw-bold text-white mb-0">
-                              $
+                              ${" "}
                               {(
                                 producto?.precio * (cantidadSeleccionada || 1)
                               ).toLocaleString()}

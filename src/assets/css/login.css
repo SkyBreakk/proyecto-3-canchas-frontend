@@ -66,20 +66,20 @@
 
 .btn-ver-password {
   position: absolute;
-  right: 12px; /* ← Distancia desde el borde derecho del input */
+  right: 12px;
   top: 50%;
   transform: translateY(-50%);
   background: none;
   border: none;
   color: #bbb;
   cursor: pointer;
-  padding: 0 8px; /* ← Área de clic más cómoda */
-  z-index: 10; /* ← Por encima del input */
+  padding: 0 8px;
+  z-index: 10;
   font-size: 1.2rem;
   transition: color 0.2s ease;
   display: flex;
   align-items: center;
-  height: 100%; /* ← Alineación vertical perfecta */
+  height: 100%;
 }
 
 .btn-ver-password:hover {
@@ -176,50 +176,6 @@ input:-webkit-autofill:focus {
 @media (min-width: 1024px) {
   .logo-img {
     width: 250px;
-  }
-}
-
-custom-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1050;
-  animation: fadeIn 0.2s ease;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.custom-modal-content {
-  background: rgba(33, 105, 33, 0.95);
-  border-radius: 12px;
-  border: 1px solid #25b225;
-  max-width: 400px;
-  width: 90%;
-  position: relative;
-  animation: slideIn 0.3s ease;
-}
-
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
   }
 }
 

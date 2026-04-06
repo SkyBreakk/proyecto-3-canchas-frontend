@@ -9,19 +9,11 @@ const ReservaModal = ({ show, handleClose }) => {
   const {
     register,
     handleSubmit,
-    setValue,
     reset,
     formState: { errors },
-  } = useForm();
+  } = useForm({});
   const { user } = useContext(UserContext);
   const { showToast } = useToast();
-
-  useEffect(() => {
-    if (user) {
-      setValue("nombre", user.username || "");
-      setValue("contacto", user.email || "");
-    }
-  }, [user, setValue]);
 
   const onSubmit = async (data) => {
     setLoading(true);
@@ -32,7 +24,7 @@ const ReservaModal = ({ show, handleClose }) => {
       showToast("Se mandó el mensaje correctamente", "success");
     } catch (error) {
       console.error(`Hubo un problema: ${error.message}`);
-      showToast("Hubo un error al comunicarse.", "danger");
+      showToast(error.message || "Hubo un error al contactar", "danger");
     } finally {
       setLoading(false);
     }
@@ -73,8 +65,29 @@ const ReservaModal = ({ show, handleClose }) => {
                   type="text"
                   className={`form-control form-control-dark ${errors.nombre ? "is-invalid" : ""}`}
                   placeholder="Ej: Lionel Messi"
+                  defaultValue={user?.username || ""}
                   {...register("nombre", {
-                    required: "El nombre es necesario",
+                    required: "El nombre de usuario es obligatorio",
+                    minLength: {
+                      value: 5,
+                      message: "Mínimo 5 caracteres",
+                    },
+                    maxLength: {
+                      value: 20,
+                      message: "Máximo 20 caracteres",
+                    },
+                    pattern: {
+                      value: /^(?![0-9]+$)[a-zA-Z0-9_]+$/,
+                      message:
+                        "Solo letras, números y guiones bajos. No puede ser solo números",
+                    },
+                    validate: {
+                      notEmpty: (value) =>
+                        value?.trim() !== "" ||
+                        "El usuario no puede estar vacío",
+                      noSpaces: (value) =>
+                        !value?.includes(" ") || "No puede contener espacios",
+                    },
                   })}
                   id="contact-name"
                 />
@@ -94,9 +107,32 @@ const ReservaModal = ({ show, handleClose }) => {
                   type="email"
                   className={`form-control form-control-dark ${errors.contacto ? "is-invalid" : ""}`}
                   placeholder="correo@ejemplo.com"
+                  defaultValue={user?.email || ""}
                   {...register("contacto", {
-                    required: "El correo es obligatorio",
-                    pattern: { value: /^\S+@\S+$/i, message: "Email inválido" },
+                    required: "El correo electrónico es obligatorio",
+                    pattern: {
+                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                      message:
+                        "Ingresa un correo válido (ej: usuario@dominio.com)",
+                    },
+                    validate: {
+                      notEmpty: (value) =>
+                        value?.trim() !== "" ||
+                        "El correo no puede estar vacío",
+                      noTypos: (value) => {
+                        const commonTypos = [
+                          "gmial.com",
+                          "gmai.com",
+                          "hotmial.com",
+                          "yahooo.com",
+                        ];
+                        const domain = value?.split("@")?.[1]?.toLowerCase();
+                        return (
+                          !commonTypos.includes(domain) ||
+                          "¿Quisiste decir gmail.com / hotmail.com?"
+                        );
+                      },
+                    },
                   })}
                   id="contact-email"
                 />
@@ -119,7 +155,10 @@ const ReservaModal = ({ show, handleClose }) => {
                   rows="3"
                   {...register("descripcion", {
                     required: "Dinos qué necesitas",
-                    minLength: 10,
+                    minLength: {
+                      value: 20,
+                      message: "El mensaje debe tener al menos 20 caracteres",
+                    },
                   })}
                   id="contact-desc"
                 ></textarea>

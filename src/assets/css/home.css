@@ -92,8 +92,11 @@ body.modal-open {
 
 @media (max-width: 991.98px) {
   html {
-    background-size: cover;
-    background-position: center;
-    min-height: 120vh;
+    scrollbar-gutter: stable;
+    background-image: url(../img/pasto.jpg);
+    background-size: 100%;
+    background-repeat: repeat;
+    background-color: #051a05;
+    min-height: 100vh;
   }
 }

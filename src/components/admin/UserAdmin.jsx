@@ -94,7 +94,7 @@ function UserAdmin() {
           key={userItem?._id}
           className="row itemRow-adminScreen py-3 align-items-center mx-0 px-2"
         >
-          <div className="col-3 fw-bold d-none d-md-block">
+          <div className="col-3 fw-bold d-none d-md-block text-truncate">
             {userItem.username}
           </div>
           <div className="col-7 col-md-3 opacity-75 text-truncate">
