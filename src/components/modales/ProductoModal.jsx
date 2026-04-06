@@ -80,16 +80,22 @@ const ProductoModal = ({ producto }) => {
               </div>
               <div className="modal-body p-4 pt-0">
                 <div className="row">
-                  <div className="col-lg-5 mb-4 mb-lg-0">
-                    <img
-                      src={
-                        producto?.img ||
-                        "https://png.pngtree.com/png-vector/20230407/ourmid/pngtree-placeholder-line-icon-vector-png-image_6691835.png"
-                      }
-                      className="modal-img-cancha shadow-lg"
-                      alt={producto?.nombre}
-                      style={{ height: "300px", objectFit: "cover" }}
-                    />
+                  <div className="col-lg-5 mb-3 mb-lg-0">
+                    <div className="position-relative">
+                      <img
+                        src={
+                          producto?.img ||
+                          "https://png.pngtree.com/png-vector/20230407/ourmid/pngtree-placeholder-line-icon-vector-png-image_6691835.png"
+                        }
+                        className="modal-img-responsive shadow-lg"
+                        alt={producto?.nombre}
+                      />
+                      {producto?.stock <= 0 && (
+                        <span className="position-absolute top-0 start-0 m-2 badge bg-danger">
+                          SIN STOCK
+                        </span>
+                      )}
+                    </div>
                   </div>
 
                   <div className="col-lg-7">

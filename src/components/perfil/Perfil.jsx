@@ -21,13 +21,13 @@ const Perfil = () => {
         <div className="d-flex justify-content-center gap-3 mb-5">
           <button
             onClick={() => navigate("/perfil/reservas")}
-            className={`btn ${seccion === "reservas" ? "btn-neon" : "btn-outline-secondary"} px-4 rounded-pill`}
+            className={`btn ${seccion === "reservas" ? "btn-neon" : "btn-outline-light"} px-4 rounded-pill`}
           >
             <i className="bi bi-calendar-check me-2"></i> Mis Reservas
           </button>
           <button
             onClick={() => navigate("/perfil/datos")}
-            className={`btn ${seccion === "datos" ? "btn-neon" : "btn-outline-secondary"} px-4 rounded-pill`}
+            className={`btn ${seccion === "datos" ? "btn-neon" : "btn-outline-light"} px-4 rounded-pill`}
           >
             <i className="bi bi-person-gear me-2"></i> Mis Datos
           </button>

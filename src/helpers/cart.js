@@ -31,7 +31,15 @@ export const cartService = {
       body: JSON.stringify({ cantidad }),
       credentials: "include",
     });
-    return await res.json();
+
+    const data = await res.json();
+    if (!res.ok) {
+      const errorMsg =
+        data.errors?.cantidad?.msg || data.error || "Error al actualizar";
+      throw new Error(errorMsg);
+    }
+
+    return data.cart || data;
   },
 
   removeItem: async (productoId) => {

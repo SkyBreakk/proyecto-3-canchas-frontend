@@ -53,16 +53,47 @@
   border-radius: 15px;
 }
 
-body {
+html {
+  scrollbar-gutter: stable;
   background-image: url(../img/pasto.jpg);
   background-size: 50%;
+  background-repeat: repeat;
+  background-color: #051a05;
   min-height: 100vh;
 }
 
+body {
+  min-height: 100vh;
+  margin: 0;
+}
+
+body.modal-open {
+  padding-right: 0 !important;
+}
+
+::-webkit-scrollbar-track {
+  background: #051a05 !important;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #216921;
+  border-radius: 10px;
+  border: 2px solid #051a05;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #25b225;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #216921 #051a05;
+}
+
 @media (max-width: 991.98px) {
-  body {
-    background-image: url(../img/pasto.jpg);
-    background-size: 100%;
+  html {
+    background-size: cover;
+    background-position: center;
     min-height: 120vh;
   }
 }

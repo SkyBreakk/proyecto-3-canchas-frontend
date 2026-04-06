@@ -26,7 +26,7 @@ const DashboardAdmin = () => {
             <button
               key={key}
               onClick={() => navigate(`/admin/${key}`)}
-              className={`btn btn-sm ${seccion === key ? "btn-neon" : "btn-outline-secondary"}`}
+              className={`btn btn-sm ${seccion === key ? "btn-neon" : "btn-outline-light"}`}
               style={{ textTransform: "capitalize" }}
             >
               Gestión {key}s

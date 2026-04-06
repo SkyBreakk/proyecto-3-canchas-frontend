@@ -59,77 +59,84 @@ const CartModal = () => {
                   {cart.items.map((item) => (
                     <div
                       key={item.producto._id}
-                      className="row align-items-center mb-3 p-3 rounded-4 mx-0"
+                      className="row align-items-center mb-3 p-2 p-md-3 rounded-4 mx-0 gx-2"
                       style={{ backgroundColor: "rgba(255,255,255,0.03)" }}
                     >
-                      <div className="col-2 px-0">
+                      <div className="col-3 col-md-2 px-0 text-center">
                         <img
                           src={item.producto.img}
                           alt={item.producto.nombre}
-                          className="img-fluid rounded-3"
-                          style={{
-                            width: "60px",
-                            height: "60px",
-                            objectFit: "cover",
-                            backgroundColor: "white",
-                          }}
+                          className="img-fluid rounded-3 img-cart-item"
                         />
                       </div>
 
-                      {/* Info */}
-                      <div className="col-4">
-                        <h6 className="mb-0 fw-bold">{item.producto.nombre}</h6>
+                      <div className="col-9 col-md-4 ps-2 ps-md-3">
+                        <h6
+                          className="mb-0 fw-bold text-truncate"
+                          style={{ maxWidth: "100%" }}
+                        >
+                          {item.producto.nombre}
+                        </h6>
                         <span className="small text-success fw-semibold">
                           ${item.precioUnitario.toLocaleString()} c/u
                         </span>
                       </div>
 
-                      <div className="col-3">
-                        <div className="d-flex align-items-center gap-2">
-                          <button
-                            className="btn btn-sm btn-outline-light border-0"
-                            onClick={() =>
-                              updateQuantity(
-                                item.producto._id,
-                                item.cantidad - 1,
-                              )
-                            }
-                            disabled={item.cantidad <= 1}
-                          >
-                            <i className="bi bi-dash-lg"></i>
-                          </button>
+                      <div className="col-12 col-md-6 mt-2 mt-md-0">
+                        <div className="row align-items-center">
+                          <div className="col-6 col-md-6">
+                            <div className="d-flex align-items-center gap-1 gap-md-2 justify-content-start justify-content-md-center">
+                              <button
+                                className="btn btn-sm btn-outline-light border-0 px-2"
+                                onClick={() =>
+                                  updateQuantity(
+                                    item.producto._id,
+                                    item.cantidad - 1,
+                                  )
+                                }
+                                disabled={item.cantidad <= 1}
+                              >
+                                <i className="bi bi-dash-lg"></i>
+                              </button>
 
-                          <span className="fw-bold px-2">{item.cantidad}</span>
+                              <span className="fw-bold px-1">
+                                {item.cantidad}
+                              </span>
 
-                          <button
-                            className="btn btn-sm btn-outline-light border-0"
-                            onClick={() =>
-                              updateQuantity(
-                                item.producto._id,
-                                item.cantidad + 1,
-                              )
-                            }
-                            disabled={item.cantidad >= item.producto.stock}
-                          >
-                            <i className="bi bi-plus-lg"></i>
-                          </button>
-                        </div>
-                      </div>
+                              <button
+                                className="btn btn-sm btn-outline-light border-0 px-2"
+                                onClick={() =>
+                                  updateQuantity(
+                                    item.producto._id,
+                                    item.cantidad + 1,
+                                  )
+                                }
+                                disabled={item.cantidad >= item.producto.stock}
+                              >
+                                <i className="bi bi-plus-lg"></i>
+                              </button>
+                            </div>
+                          </div>
 
-                      <div className="col-3 text-end">
-                        <div className="d-flex flex-column align-items-end">
-                          <span className="fw-bold">
-                            $
-                            {(
-                              item.precioUnitario * item.cantidad
-                            ).toLocaleString()}
-                          </span>
-                          <button
-                            className="btn btn-sm text-danger border-0 p-0 mt-1"
-                            onClick={() => removeItem(item.producto._id)}
-                          >
-                            <i className="bi bi-trash3 small"></i> Quitar
-                          </button>
+                          <div className="col-6 col-md-6 text-end">
+                            <div className="d-flex flex-column align-items-end">
+                              <span className="fw-bold text-nowrap">
+                                $
+                                {(
+                                  item.precioUnitario * item.cantidad
+                                ).toLocaleString()}
+                              </span>
+                              <button
+                                className="btn btn-sm text-danger border-0 p-0 mt-0"
+                                onClick={() => removeItem(item.producto._id)}
+                              >
+                                <i className="bi bi-trash3 small"></i>{" "}
+                                <span className="d-none d-md-inline">
+                                  Quitar
+                                </span>
+                              </button>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>

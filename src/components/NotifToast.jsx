@@ -6,6 +6,7 @@ const NotifToast = ({ config, setConfig }) => {
   const variantClass =
     {
       success: "toast-success-subtle",
+      warning: "toast-warning-subtle",
       danger: "toast-danger-subtle",
     }[type] || "bg-light";
 

@@ -197,3 +197,76 @@ body {
     min-height: 120vh;
   }
 }
+
+.modal-img-responsive {
+  width: 100%;
+  border-radius: 15px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+  aspect-ratio: 4 / 3;
+}
+
+@media (max-width: 991.98px) {
+  .modal-img-responsive {
+    max-height: 250px;
+    margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .modal-img-responsive {
+    max-height: 200px;
+    aspect-ratio: 16 / 9;
+  }
+}
+
+.img-cart-item {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  background-color: white;
+}
+
+@media (max-width: 768px) {
+  #modalCarrito .modal-dialog {
+    margin: 0.5rem;
+    max-width: 95vw;
+  }
+
+  .cart-items-container {
+    max-height: 45vh !important;
+    padding-right: 5px;
+  }
+
+  .btn-alquilar {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+
+  .img-cart-item {
+    width: 50px;
+    height: 50px;
+  }
+
+  h2.text-success {
+    font-size: 1.5rem !important;
+  }
+}
+
+.cart-items-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.cart-items-container::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+
+.cart-items-container::-webkit-scrollbar-thumb {
+  background: #28a745;
+  border-radius: 10px;
+}
+
+.text-nowrap {
+  white-space: nowrap;
+}

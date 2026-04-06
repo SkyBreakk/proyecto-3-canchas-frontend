@@ -1,7 +1,7 @@
 /* Toast.css actualizado */
 .toast-container-custom {
   position: fixed;
-  top: 1.5rem;
+  bottom: 1.5rem;
   right: 1.5rem;
   z-index: 10000;
 }
@@ -10,7 +10,7 @@
   display: block !important;
   visibility: hidden;
   opacity: 0;
-  transform: translateY(-20px); /* Ahora baja desde arriba */
+  transform: translateY(-20px);
   transition: all 0.4s ease;
   border: none !important;
   border-radius: 12px;
@@ -23,17 +23,22 @@
   transform: translateY(0);
 }
 
-/* Variantes sutiles */
-.toast-success-subtle {
-  background-color: #d1e7dd !important; /* Verde pastel */
-  color: #0f5132 !important;
+.toast-custom.toast-success-subtle {
+  background-color: #d1e7dd;
+  color: #0f5132;
   border-left: 5px solid #198754 !important;
 }
 
-.toast-danger-subtle {
-  background-color: #f8d7da !important; /* Rojo pastel */
-  color: #842029 !important;
+.toast-custom.toast-danger-subtle {
+  background-color: #f8d7da;
+  color: #842029;
   border-left: 5px solid #dc3545 !important;
+}
+
+.toast-custom.toast-warning-subtle {
+  background-color: #fff3cd;
+  color: #664d03;
+  border-left: 5px solid #ffc107 !important;
 }
 
 .toast-progress {
@@ -41,7 +46,7 @@
   bottom: 0;
   left: 0;
   height: 3px;
-  background: currentColor; /* Usa el color del texto */
+  background: currentColor;
   opacity: 0.3;
   width: 100%;
 }

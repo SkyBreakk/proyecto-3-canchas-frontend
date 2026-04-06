@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { cartService } from "../helpers/cart";
 import { UserContext } from "./UserContext";
 import { useToast } from "./ToastContext";
@@ -10,6 +16,7 @@ export const CartProvider = ({ children }) => {
   const [cartLoading, setCartLoading] = useState(true);
   const totalItems =
     cart.items.reduce((acc, item) => acc + item.cantidad, 0) || 0;
+  const debounceTimer = useRef(null);
   const { user, authLoading } = useContext(UserContext);
   const { showToast } = useToast();
 
@@ -51,17 +58,42 @@ export const CartProvider = ({ children }) => {
       showToast("No se pudo añadir el producto", "danger");
     }
   };
-  const updateQuantity = async (productoId, cantidad) => {
-    if (cantidad <= 0) {
-      return removeItem(productoId);
-    }
 
-    try {
-      const updatedCart = await cartService.updateItem(productoId, cantidad);
-      if (updatedCart) setCart(updatedCart);
-    } catch (error) {
-      console.error("Error actualizando cantidad", error);
-    }
+  const updateQuantity = async (productoId, cantidad) => {
+    if (cantidad <= 0) return removeItem(productoId);
+
+    const previousCart = { ...cart };
+
+    setCart((prev) => {
+      const nuevosItems = prev.items.map((item) => {
+        if (item.producto._id === productoId) {
+          return { ...item, cantidad };
+        }
+        return item;
+      });
+
+      return {
+        ...prev,
+        items: nuevosItems,
+        total: nuevosItems.reduce(
+          (acc, i) => acc + i.precioUnitario * i.cantidad,
+          0,
+        ),
+      };
+    });
+
+    if (debounceTimer.current) clearTimeout(debounceTimer.current);
+
+    debounceTimer.current = setTimeout(async () => {
+      try {
+        const updatedData = await cartService.updateItem(productoId, cantidad);
+        setCart(updatedData);
+      } catch (error) {
+        console.warn("Fallo en la actualización:", error.message);
+        setCart(previousCart);
+        showToast(error.message, "danger");
+      }
+    }, 800);
   };
 
   const removeItem = async (productoId) => {

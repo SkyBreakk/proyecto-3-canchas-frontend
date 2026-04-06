@@ -182,56 +182,58 @@ const ReservaModal = ({ cancha }) => {
               </div>
               <div className="modal-body p-4">
                 <div className="row">
-                  <div className="col-lg-5 mb-4 mb-lg-0">
+                  <div className="col-lg-5 mb-3 mb-lg-0 d-flex flex-column align-items-center">
                     <img
                       src={cancha.img}
-                      className="modal-img-cancha shadow-lg"
+                      className="modal-img-responsive shadow-lg"
                       alt={cancha.nombre}
                     />
-                    <span className="badge bg-success my-2">
-                      {cancha.descripcion?.includes("Futbol 5")
-                        ? "Cesped Sintético"
-                        : cancha.descripcion?.includes("Futbol 11")
-                          ? "Cesped Premium"
-                          : "Cesped Deluxe"}
-                    </span>
-                    <p className="text-secondary-custom small lh-sm ms-2">
-                      {cancha.descripcion?.includes("Futbol 5")
-                        ? "Césped sintético de última generación con drenaje rápido."
-                        : "Césped natural nivel profesional con iluminación LED."}
-                    </p>
-                    <div
-                      className="d-flex flex-column my-3 p-3 rounded-3"
-                      style={{ backgroundColor: "rgba(255,255,255,0.05)" }}
-                    >
-                      <div className="d-flex justify-content-between align-items-baseline">
-                        <span className="text-secondary-custom">
-                          Precio por hora:
-                        </span>
-                        <span className="text-white fw-bold">
-                          ${cancha.precio.toLocaleString("es-AR")}
-                        </span>
-                      </div>
-                      <div className="d-flex justify-content-between align-items-baseline mt-2">
-                        <span className="text-secondary-custom">Total:</span>
-                        <h4 className="fw-bold text-white mb-0">
-                          ${(cancha.precio * horas).toLocaleString("es-AR")}
-                        </h4>
-                      </div>
-                      <div className="d-flex justify-content-between align-items-baseline mt-2">
-                        <span className="text-secondary-custom">
-                          Seña (30%):
-                        </span>
-                        <h3 className="fw-bold text-success mb-0">
-                          $
-                          {(cancha.precio * horas * 0.3).toLocaleString(
-                            "es-AR",
-                          )}
-                        </h3>
+                    <div className="w-100 d-flex flex-column align-items-start">
+                      <span className="badge bg-success my-2">
+                        {cancha.descripcion?.includes("Futbol 5")
+                          ? "Cesped Sintético"
+                          : cancha.descripcion?.includes("Futbol 11")
+                            ? "Cesped Premium"
+                            : "Cesped Deluxe"}
+                      </span>
+                      <p className="text-secondary-custom small lh-sm ms-2">
+                        {cancha.descripcion?.includes("Futbol 5")
+                          ? "Césped sintético de última generación con drenaje rápido."
+                          : "Césped natural nivel profesional con iluminación LED."}
+                      </p>
+
+                      <div
+                        className="d-flex flex-column my-3 p-3 rounded-3 w-100"
+                        style={{ backgroundColor: "rgba(255,255,255,0.05)" }}
+                      >
+                        <div className="d-flex justify-content-between align-items-baseline">
+                          <span className="text-secondary-custom">
+                            Precio por hora:
+                          </span>
+                          <span className="text-white fw-bold">
+                            ${cancha.precio.toLocaleString("es-AR")}
+                          </span>
+                        </div>
+                        <div className="d-flex justify-content-between align-items-baseline mt-2">
+                          <span className="text-secondary-custom">Total:</span>
+                          <h4 className="fw-bold text-white mb-0">
+                            ${(cancha.precio * horas).toLocaleString("es-AR")}
+                          </h4>
+                        </div>
+                        <div className="d-flex justify-content-between align-items-baseline mt-2">
+                          <span className="text-secondary-custom">
+                            Seña (30%):
+                          </span>
+                          <h3 className="fw-bold text-success mb-0">
+                            $
+                            {(cancha.precio * horas * 0.3).toLocaleString(
+                              "es-AR",
+                            )}
+                          </h3>
+                        </div>
                       </div>
                     </div>
                   </div>
-
                   <div className="col-lg-7">
                     <form id="reserva-form" onSubmit={handleSubmit(onSubmit)}>
                       <div

@@ -56,4 +56,14 @@
     26,
     0.6
   ); /* Para modales y fondos al abrir fotos de canchas */
+
+  --verde-neon: #39ff14;
+  --verde-suave: #32cd32;
+  --dorado-neon: #ffd700;
+  --rojo-suave: #ff6b6b;
+  --bg-header-dark: #0a1e0a;
+  --bg-header-darker: #050f05;
+  --glass-bg: rgba(0, 0, 0, 0.7);
+  --glass-border: rgba(57, 255, 20, 0.15);
+  --transition-smooth: cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }

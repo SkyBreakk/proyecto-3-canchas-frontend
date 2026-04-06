@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { verifyEmail, resendVerificationCode } from "../helpers/auth";
-import AlertApp from "./AlertApp";
+import { useToast } from "../context/ToastContext";
 import "../assets/css/verifyemailmodal.css";
 
 function VerifyEmailModal({ email, onSuccess, onClose }) {
   const { register, handleSubmit } = useForm();
+  const { showToast } = useToast();
   const [response, setResponse] = useState(null);
   const [resending, setResending] = useState(false);
-  const [resendMessage, setResendMessage] = useState(null);
 
   const onSubmit = async (data) => {
     const result = await verifyEmail({
@@ -19,7 +19,13 @@ function VerifyEmailModal({ email, onSuccess, onClose }) {
     setResponse(result);
 
     if (result.ok) {
+      showToast("Email verificado correctamente", "success");
       onSuccess();
+    } else {
+      showToast(
+        result?.message || "Código inválido. Intenta nuevamente.",
+        "danger",
+      );
     }
   };
 
@@ -27,13 +33,18 @@ function VerifyEmailModal({ email, onSuccess, onClose }) {
     if (resending) return;
 
     setResending(true);
-    setResendMessage(null);
 
     const result = await resendVerificationCode(email);
-    setResendMessage(result);
-
     if (result.ok) {
-      setTimeout(() => setResendMessage(null), 3000);
+      showToast(
+        "Nuevo código enviado. Revisa tu bandeja de entrada",
+        "success",
+      );
+    } else {
+      showToast(
+        result?.message || "Error al reenviar. Intenta en unos segundos.",
+        "danger",
+      );
     }
 
     setResending(false);
@@ -65,6 +76,23 @@ function VerifyEmailModal({ email, onSuccess, onClose }) {
             <input
               className="form-control mb-3"
               placeholder="Código de verificación"
+              type="text"
+              inputMode="numeric"
+              maxLength={6}
+              onKeyDown={(e) => {
+                if (
+                  !/[0-9]/.test(e.key) &&
+                  ![
+                    "Backspace",
+                    "Delete",
+                    "Tab",
+                    "ArrowLeft",
+                    "ArrowRight",
+                  ].includes(e.key)
+                ) {
+                  e.preventDefault();
+                }
+              }}
               {...register("code", {
                 required: "El código es obligatorio",
                 pattern: {
@@ -79,13 +107,6 @@ function VerifyEmailModal({ email, onSuccess, onClose }) {
             </button>
           </form>
 
-          {resendMessage && (
-            <AlertApp
-              message={resendMessage.message}
-              type={resendMessage.ok ? "success" : "error"}
-            />
-          )}
-
           <div className="text-center mt-3">
             <small className="text-white">
               ¿No recibiste el código?{" "}
@@ -99,8 +120,6 @@ function VerifyEmailModal({ email, onSuccess, onClose }) {
               </button>
             </small>
           </div>
-
-          {response && !response.ok && <AlertApp message={response.message} />}
         </div>
       </div>
     </div>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { apiReserva } from "../../helpers/reserva";
 import ConfirmModal from "../modales/ConfirmModal";
 import { pagarMercadoPago } from "../../helpers/payment";
+import { useToast } from "../../context/ToastContext";
 
 const MisReservas = () => {
   const [reservas, setReservas] = useState([]);
@@ -11,6 +12,7 @@ const MisReservas = () => {
   const [reservaSeleccionada, setReservaSeleccionada] = useState(null);
 
   const [pagandoId, setPagandoId] = useState(null);
+  const { showToast } = useToast();
 
   const cargarReservas = async () => {
     try {
@@ -47,7 +49,7 @@ const MisReservas = () => {
       }
     } catch (error) {
       console.error("Error en el borrado:", error);
-      alert("Error de conexión.");
+      showToast("Error de conexión.", "warning");
     }
   };
 
@@ -58,7 +60,10 @@ const MisReservas = () => {
       const totalPagar = (reserva.cancha?.precio || 0) * reserva.horas;
 
       if (totalPagar === 0) {
-        alert("Error: No se pudo calcular el precio de la cancha.");
+        showToast(
+          "Error: No se pudo calcular el precio de la cancha.",
+          "danger",
+        );
         setPagandoId(null);
         return;
       }
@@ -75,12 +80,12 @@ const MisReservas = () => {
       if (res.ok && res.id) {
         window.location.href = `https://www.mercadopago.com.ar/checkout/v1/redirect?pref_id=${res.id}`;
       } else {
-        alert("No se pudo generar el link de pago.");
+        showToast("No se pudo generar link de pago.", "danger");
         setPagandoId(null);
       }
     } catch (error) {
       console.error(error);
-      alert("Error al intentar conectar con Mercado Pago.");
+      showToast("Error al intentar conectar con Mercado Pago.", "warning");
       setPagandoId(null);
     }
   };

@@ -21,7 +21,7 @@ const BtnGoogleSigIn = () => {
       const response = await loginWithGoogle();
       console.log("RESPONSE GOOGLE:", response);
       if (!response.ok) {
-        alert(response.message);
+        showToast(response.message, "danger");
         return;
       }
 
@@ -40,7 +40,7 @@ const BtnGoogleSigIn = () => {
 
       if (!res.ok) {
         console.error("ERROR BACKEND:", data);
-        alert(data.message);
+        showToast(data.message, "danger");
         return;
       }
 
