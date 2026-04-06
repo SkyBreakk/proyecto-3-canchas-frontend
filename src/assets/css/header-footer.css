@@ -3,7 +3,7 @@
   background-image: linear-gradient(var(--glass-bg), var(--glass-bg));
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  margin: 2vh 0 0 0;
+  margin: 2vh 0 3vh 0;
   padding: 0 5%;
   box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.4),
@@ -316,7 +316,7 @@ header .badge.bg-danger {
   background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  margin: 3vh 0 2vh 0;
+  margin: 3vh 0 0 0;
   padding: 2rem 0 1rem;
   border-top: 1px solid rgba(57, 255, 20, 0.2);
   position: relative;

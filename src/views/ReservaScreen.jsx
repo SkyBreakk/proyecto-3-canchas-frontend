@@ -24,11 +24,24 @@ const ReservaScreen = () => {
 
   if (loading) {
     return (
-      <div className="d-flex justify-content-center align-items-center vh-100 bg-dark text-white">
-        <div className="spinner-border text-success" role="status">
-          <span className="visually-hidden">Cargando...</span>
+      <>
+        <div className="loading-placeholder"></div>
+        <div className="loading-overlay">
+          <div className="loading-content">
+            <div className="spinner-container">
+              <div className="spinner-ring"></div>
+              <div className="spinner-ring"></div>
+              <div className="spinner-ring"></div>
+            </div>
+            <p className="loading-text">Cargando productos...</p>
+            <div className="loading-dots">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 

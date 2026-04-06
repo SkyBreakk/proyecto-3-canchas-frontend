@@ -34,11 +34,24 @@ const TiendaScreen = () => {
 
   if (loading) {
     return (
-      <div className="d-flex justify-content-center align-items-center vh-100 bg-dark text-white">
-        <div className="spinner-border text-success" role="status">
-          <span className="visually-hidden">Cargando...</span>
+      <>
+        <div className="loading-placeholder"></div>
+        <div className="loading-overlay">
+          <div className="loading-content">
+            <div className="spinner-container">
+              <div className="spinner-ring"></div>
+              <div className="spinner-ring"></div>
+              <div className="spinner-ring"></div>
+            </div>
+            <p className="loading-text">Cargando productos...</p>
+            <div className="loading-dots">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
         </div>
-      </div>
+      </>
     );
   }
   return (
@@ -54,11 +67,15 @@ const TiendaScreen = () => {
           return pCatId === catId || pCatNombre === catNombre;
         });
 
+        if (productosFiltrados.length === 0) return null;
+
         return (
           <div key={catId} className="mb-4">
-            <h2 className="text-white h5 fw-bold mb-2 ps-2">
-              {cat.nombre || cat}
-            </h2>
+            <div className="ps-2 mb-3">
+              <h2 className="text-white h5 fw-bold m-0 category-title-badge">
+                {cat.nombre || cat}
+              </h2>
+            </div>
             <div className="category-shelf d-flex align-items-center position-relative">
               <button
                 className="scroll-arrow me-2"

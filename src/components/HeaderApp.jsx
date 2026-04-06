@@ -12,7 +12,11 @@ const HeaderApp = () => {
   const location = useLocation();
 
   const isAuthPage = useMemo(() => {
-    return location.pathname === "/login" || location.pathname === "/register";
+    return (
+      location.pathname === "/login" ||
+      location.pathname === "/register" ||
+      location.pathname === "/nosotros"
+    );
   }, [location.pathname]);
 
   useEffect(() => {
