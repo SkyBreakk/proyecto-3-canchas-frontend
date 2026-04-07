@@ -135,7 +135,7 @@ const HeaderApp = () => {
                         className="btn btn-outline-light border-0 d-flex align-items-center gap-2 px-3 py-1 rounded-pill profile-btn-header"
                       >
                         <i className="bi bi-person-circle fs-5"></i>
-                        <span className="fw-bold d-none d-sm-inline d-lg-inline">
+                        <span className="fw-bold d-none d-sm-inline-flex align-items-center gap-1">
                           Hola,{" "}
                           <span className="user-neon">{user.username}</span>
                         </span>

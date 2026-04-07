@@ -8,8 +8,7 @@ import "../assets/css/cart.css";
 const CartScreen = () => {
   const { productoId } = useParams();
   const { search } = useLocation();
-  const { cart, cartLoading, totalItems, clearCart, updateQuantity } =
-    useCart();
+  const { cart, cartLoading, totalItems, clearCart, removeItem } = useCart();
   const query = new URLSearchParams(search);
   const cantidadQuery = parseInt(query.get("qty")) || 1;
 
@@ -130,9 +129,7 @@ const CartScreen = () => {
                           ).toLocaleString("es-AR")}
                         </h4>
                         <button
-                          onClick={() =>
-                            updateQuantity(itemId, item.cantidad - 1)
-                          }
+                          onClick={() => removeItem(itemId)}
                           className="btn btn-danger rounded-3 p-0 d-flex justify-content-center align-items-center"
                           style={{ width: "32px", height: "32px" }}
                         >

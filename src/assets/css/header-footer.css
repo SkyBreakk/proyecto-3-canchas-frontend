@@ -49,7 +49,6 @@
   text-overflow: ellipsis;
   max-width: 95px;
   display: inline-block;
-  vertical-align: middle;
 }
 
 .user-neon:hover {
