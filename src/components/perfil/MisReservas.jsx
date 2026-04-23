@@ -60,13 +60,14 @@ const MisReservas = () => {
         tipo: "reserva",
         id: reserva._id,
       });
-      if (response.ok && res.id) {
+      if (response.ok && response.id) {
         window.location.href = `https://www.mercadopago.com.ar/checkout/v1/redirect?pref_id=${response.id}`;
       } else {
         showToast("No se pudo generar link de pago.", "danger");
         setPagandoId(null);
       }
     } catch (error) {
+      console.error(error);
       showToast("Error al conectar con Mercado Pago.", "warning");
       setPagandoId(null);
     }
@@ -160,7 +161,7 @@ const MisReservas = () => {
 
                 <button
                   className="btn btn-sm btn-outline-danger rounded-pill px-4 w-100"
-                  onClick={() => prepararCancelacion(r)}
+                  onClick={() => prepararCancelacion(reserva)}
                 >
                   <i className="bi bi-trash me-1"></i> Cancelar
                 </button>

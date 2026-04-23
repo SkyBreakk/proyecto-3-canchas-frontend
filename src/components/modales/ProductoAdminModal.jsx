@@ -221,7 +221,7 @@ function ProductoAdminModal({
                     Descripción
                   </label>
                   <textarea
-                    className="form-control form-control-dark"
+                    className={`form-control form-control-dark ${errors.descripcion ? "is-invalid" : ""}`}
                     rows="3"
                     {...register("descripcion", {
                       maxLength: {
