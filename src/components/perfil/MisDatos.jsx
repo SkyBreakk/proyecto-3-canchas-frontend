@@ -42,17 +42,19 @@ const MisDatos = () => {
     }
 
     try {
-      const res = await apiUser.updateProfile(datosAEnviar);
+      const response = await apiUser.updateProfile(datosAEnviar);
 
-      if (res.ok) {
+      if (response.ok) {
         showToast("¡Perfil actualizado con éxito!", "success");
         await loadUserData();
 
-        setValue("username", user.username || "");
         setValue("password", "");
         setValue("confirmPassword", "");
       } else {
-        showToast(res.message || "Error al actualizar el perfil", "danger");
+        showToast(
+          response.message || "Error al actualizar el perfil",
+          "danger",
+        );
       }
     } catch (error) {
       showToast("Error de conexión con el servidor", "warning");
@@ -80,22 +82,29 @@ const MisDatos = () => {
               required: "El nombre de usuario es obligatorio",
               minLength: {
                 value: 5,
-                message: "Mínimo 5 caracteres",
+                message: "El nombre debe tener al menos 5 caracteres",
               },
               maxLength: {
                 value: 20,
-                message: "Máximo 20 caracteres",
-              },
-              pattern: {
-                value: /^(?![0-9]+$)[a-zA-Z0-9_]+$/,
-                message:
-                  "Solo letras, números y guiones bajos. No puede ser solo números",
+                message: "El nombre no puede superar los 20 caracteres",
               },
               validate: {
                 notEmpty: (value) =>
                   value?.trim() !== "" || "El usuario no puede estar vacío",
-                noSpaces: (value) =>
-                  !value?.includes(" ") || "No puede contener espacios",
+                validChars: (value) =>
+                  /^[a-zA-Z0-9_\sáéíóúÁÉÍÓÚñÑ]+$/.test(value) ||
+                  "Solo letras, números, espacios, tildes y guiones bajos (_)",
+                noMultipleSpaces: (value) =>
+                  !/\s{2,}/.test(value) ||
+                  "El nombre no puede tener múltiples espacios seguidos",
+                notOnlyNumbers: (value) =>
+                  !/^[0-9\s]+$/.test(value) ||
+                  "El usuario no puede ser solo números",
+              },
+              onChange: (event) => {
+                if (event.target.value.startsWith(" ")) {
+                  event.target.value = event.target.value.trimStart();
+                }
               },
             })}
             id="profile-username"
@@ -151,19 +160,35 @@ const MisDatos = () => {
                   <input
                     type={showPassword ? "text" : "password"}
                     className={`form-control bg-dark text-white border-secondary ${errors.password ? "is-invalid" : ""}`}
-                    placeholder="Vacio para mantener actual"
+                    placeholder="Vacío para mantener actual"
                     {...register("password", {
                       minLength: {
                         value: 6,
-                        message: "Mínimo 6 caracteres",
+                        message:
+                          "La contraseña debe tener un mínimo de 6 caracteres",
                       },
-                      pattern: {
-                        value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-                        message: "Debe incluir mayúscula, minúscula y número",
+                      maxLength: {
+                        value: 128,
+                        message:
+                          "La contraseña es demasiado larga (máximo 128)",
                       },
                       validate: {
                         noSpaces: (value) =>
-                          !value?.includes(" ") || "No puede contener espacios",
+                          !value ||
+                          !value.includes(" ") ||
+                          "La contraseña no puede contener espacios en blanco",
+                        hasUpper: (value) =>
+                          !value ||
+                          /[A-Z]/.test(value) ||
+                          "Te falta incluir al menos una letra mayúscula",
+                        hasLower: (value) =>
+                          !value ||
+                          /[a-z]/.test(value) ||
+                          "Te falta incluir al menos una letra minúscula",
+                        hasNumber: (value) =>
+                          !value ||
+                          /\d/.test(value) ||
+                          "Te falta incluir al menos un número",
                       },
                     })}
                     id="profile-password"
@@ -197,10 +222,11 @@ const MisDatos = () => {
                     type={showConfirmPassword ? "text" : "password"}
                     className={`form-control bg-dark text-white border-secondary ${errors.confirmPassword ? "is-invalid" : ""}`}
                     {...register("confirmPassword", {
-                      validate: (val) =>
-                        !password ||
-                        val === password ||
-                        "Las contraseñas no coinciden",
+                      validate: {
+                        match: (value) =>
+                          value === password ||
+                          "Las contraseñas no coinciden, revísalas",
+                      },
                     })}
                     id="confirm-password"
                   />

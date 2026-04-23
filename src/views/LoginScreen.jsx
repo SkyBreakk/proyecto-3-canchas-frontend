@@ -29,49 +29,31 @@ function LoginScreen() {
 
   const onSubmit = async (data) => {
     const response = await logIn(data.email, data.password);
-    setResponse(response);
-
-    if (response?.message?.includes("no está verificado")) {
+    if (response?.requiereVerificacion) {
       setPendingVerificationEmail(data.email);
       setShowVerifyModal(true);
-      showToast("Verifica tu email para continuar", "warning");
+      showToast(response.message, "warning");
       return;
     }
-
-    if (
-      response?.message?.includes("credenciales") ||
-      response?.message?.includes("incorrecta")
-    ) {
-      showToast(
-        "Email o contraseña incorrectos. Verifica tus datos.",
-        "danger",
-      );
-      return;
-    }
-
-    if (
-      response?.message?.includes("no encontrado") ||
-      response?.message?.includes("no existe")
-    ) {
-      showToast("No existe una cuenta con este email.", "danger");
-      return;
-    }
-
     if (response?.ok) {
-      showToast("¡Bienvenido! Sesión iniciada correctamente.", "success");
+      showToast(response.message, "success");
       await loadUserData();
       navigate("/");
-    } else if (response?.message) {
-      showToast(response.message, "danger");
-    } else {
-      showToast("Error de conexión. Intenta nuevamente.", "danger");
+      return;
     }
+
+    const errorMsg =
+      response?.message || "Error de conexión. Intenta nuevamente.";
+    showToast(errorMsg, "danger");
   };
 
-  const handleVerificationSuccess = () => {
+  const handleVerificationSuccess = async () => {
     setShowVerifyModal(false);
     setPendingVerificationEmail(null);
-    showToast("Email verificado. Ahora puedes iniciar sesión.", "success");
+
+    await loadUserData();
+    showToast("Email verificado con éxito. Bienvenido a Zona 5", "success");
+    navigate("/");
   };
 
   const handleCloseVerifyModal = () => {
@@ -95,14 +77,29 @@ function LoginScreen() {
                 autoComplete="email"
                 {...register("email", {
                   required: "El correo electrónico es obligatorio",
-                  pattern: {
-                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                    message:
-                      "Ingresa un correo válido (ej: usuario@dominio.com)",
-                  },
                   validate: {
                     notEmpty: (value) =>
-                      value?.trim() !== "" || "El correo no puede estar vacío",
+                      value?.trim() !== "" ||
+                      "El correo no puede estar formado solo por espacios",
+                    hasAtSymbol: (value) =>
+                      value?.includes("@") ||
+                      "Al correo le falta el símbolo '@'",
+                    hasDomain: (value) =>
+                      /@[^\s@]+\.[^\s@]+$/.test(value) ||
+                      "Escribe un dominio válido (ej: @gmail.com)",
+                    noTypos: (value) => {
+                      const commonTypos = [
+                        "gmial.com",
+                        "gmai.com",
+                        "hotmial.com",
+                        "yahooo.com",
+                      ];
+                      const domain = value?.split("@")?.[1]?.toLowerCase();
+                      return (
+                        !commonTypos.includes(domain) ||
+                        `Revisa el dominio. ¿Quisiste decir ${domain.replace("ia", "ai").replace("o", "")}?`
+                      );
+                    },
                   },
                 })}
               />
@@ -122,21 +119,11 @@ function LoginScreen() {
                   placeholder="Contraseña"
                   autoComplete="current-password"
                   {...register("password", {
-                    required: "La contraseña es obligatoria",
-                    minLength: {
-                      value: 6,
-                      message: "Mínimo 6 caracteres",
-                    },
-                    pattern: {
-                      value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-                      message: "Debe incluir mayúscula, minúscula y número",
-                    },
+                    required: "Ingresa tu contraseña para continuar",
                     validate: {
                       notEmpty: (value) =>
                         value?.trim() !== "" ||
                         "La contraseña no puede estar vacía",
-                      noSpaces: (value) =>
-                        !value?.includes(" ") || "No puede contener espacios",
                     },
                   })}
                 />

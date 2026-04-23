@@ -23,13 +23,13 @@ export const CartProvider = ({ children }) => {
   const fetchCart = async () => {
     try {
       const data = await cartService.getCart();
-      if (data && data.items) {
-        setCart(data);
+      if (data.ok && data.cart) {
+        setCart(data.cart);
       } else {
         setCart({ items: [], total: 0 });
       }
     } catch (error) {
-      console.warn("Usuario no autenticado o error de conexión");
+      showToast("No se pudo obtener el carrito.", "warning");
       setCart({ items: [], total: 0 });
     } finally {
       setCartLoading(false);
@@ -48,14 +48,12 @@ export const CartProvider = ({ children }) => {
   }, [user, authLoading]);
 
   const addItem = async (productoId, cantidad) => {
-    try {
-      const updatedCart = await cartService.addToCart(productoId, cantidad);
-      setCart(updatedCart);
-
-      showToast("Producto añadido al carrito", "success");
-    } catch (error) {
-      console.error("Error al añadir producto", error);
-      showToast("No se pudo añadir el producto", "danger");
+    const data = await cartService.addToCart(productoId, cantidad);
+    if (data.ok) {
+      setCart(data.cart);
+      showToast(data.message, "success");
+    } else {
+      showToast(data.message, "danger");
     }
   };
 
@@ -63,7 +61,6 @@ export const CartProvider = ({ children }) => {
     if (cantidad <= 0) return removeItem(productoId);
 
     const previousCart = { ...cart };
-
     setCart((prev) => {
       const nuevosItems = prev.items.map((item) => {
         if (item.producto._id === productoId) {
@@ -85,11 +82,10 @@ export const CartProvider = ({ children }) => {
     if (debounceTimer.current) clearTimeout(debounceTimer.current);
 
     debounceTimer.current = setTimeout(async () => {
-      try {
-        const updatedData = await cartService.updateItem(productoId, cantidad);
-        setCart(updatedData);
-      } catch (error) {
-        console.warn("Fallo en la actualización:", error.message);
+      const data = await cartService.updateItem(productoId, cantidad);
+      if (data.ok) {
+        setCart(data.cart);
+      } else {
         setCart(previousCart);
         showToast(error.message, "danger");
       }
@@ -97,18 +93,20 @@ export const CartProvider = ({ children }) => {
   };
 
   const removeItem = async (productoId) => {
-    const updatedCart = await cartService.removeItem(productoId);
-    setCart(updatedCart);
+    const data = await cartService.removeItem(productoId);
+    if (data.ok) {
+      setCart(data.cart);
+    } else {
+      showToast(data.message, "danger");
+    }
   };
 
   const clearCart = async () => {
-    try {
-      await cartService.clearCart();
+    const data = await cartService.clearCart();
+    if (data.ok) {
       setCart({ items: [], total: 0 });
-
       showToast("El carrito se ha vaciado", "success");
-    } catch (error) {
-      console.error("Error al vaciar el carrito", error);
+    } else {
       showToast("Hubo un problema al vaciar el carrito", "danger");
     }
   };

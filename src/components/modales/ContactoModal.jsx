@@ -59,40 +59,40 @@ const ReservaModal = ({ show, handleClose }) => {
                   className="form-label small text-secondary-custom"
                   htmlFor="contact-name"
                 >
-                  Nombre
+                  Nombre completo
                 </label>
                 <input
                   type="text"
                   className={`form-control form-control-dark ${errors.nombre ? "is-invalid" : ""}`}
                   placeholder="Ej: Lionel Messi"
-                  defaultValue={user?.username || ""}
                   {...register("nombre", {
-                    required: "El nombre de usuario es obligatorio",
+                    required: "Por favor, dinos tu nombre",
                     minLength: {
                       value: 5,
-                      message: "Mínimo 5 caracteres",
+                      message: "El nombre debe tener al menos 5 caracteres",
                     },
                     maxLength: {
-                      value: 20,
-                      message: "Máximo 20 caracteres",
+                      value: 40,
+                      message: "El nombre no puede superar los 40 caracteres",
                     },
                     pattern: {
-                      value: /^(?![0-9]+$)[a-zA-Z0-9_]+$/,
+                      value: /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/,
                       message:
-                        "Solo letras, números y guiones bajos. No puede ser solo números",
+                        "El nombre solo puede contener letras y espacios",
                     },
                     validate: {
                       notEmpty: (value) =>
                         value?.trim() !== "" ||
-                        "El usuario no puede estar vacío",
-                      noSpaces: (value) =>
-                        !value?.includes(" ") || "No puede contener espacios",
+                        "El nombre no puede estar compuesto solo de espacios",
                     },
                   })}
                   id="contact-name"
                 />
                 {errors.nombre && (
-                  <p className="texto-error fw-bold">{errors.nombre.message}</p>
+                  <p className="texto-error fw-bold mt-1 mb-0">
+                    <i className="bi bi-exclamation-circle me-1"></i>
+                    {errors.nombre.message}
+                  </p>
                 )}
               </div>
 
@@ -110,15 +110,20 @@ const ReservaModal = ({ show, handleClose }) => {
                   defaultValue={user?.email || ""}
                   {...register("contacto", {
                     required: "El correo electrónico es obligatorio",
-                    pattern: {
-                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                      message:
-                        "Ingresa un correo válido (ej: usuario@dominio.com)",
+                    maxLength: {
+                      value: 254,
+                      message: "El correo no puede superar los 254 caracteres",
                     },
                     validate: {
                       notEmpty: (value) =>
                         value?.trim() !== "" ||
                         "El correo no puede estar vacío",
+                      hasAtSymbol: (value) =>
+                        value?.includes("@") ||
+                        "Al correo le falta el símbolo '@'",
+                      hasDomain: (value) =>
+                        /@[^\s@]+\.[^\s@]+$/.test(value) ||
+                        "Escribe un dominio válido (ej: @gmail.com)",
                       noTypos: (value) => {
                         const commonTypos = [
                           "gmial.com",
@@ -129,7 +134,7 @@ const ReservaModal = ({ show, handleClose }) => {
                         const domain = value?.split("@")?.[1]?.toLowerCase();
                         return (
                           !commonTypos.includes(domain) ||
-                          "¿Quisiste decir gmail.com / hotmail.com?"
+                          `Revisa el dominio. ¿Quisiste decir ${domain.replace("ia", "ai").replace("o", "")}?`
                         );
                       },
                     },
@@ -137,7 +142,8 @@ const ReservaModal = ({ show, handleClose }) => {
                   id="contact-email"
                 />
                 {errors.contacto && (
-                  <p className="texto-error fw-bold">
+                  <p className="texto-error fw-bold mt-1 mb-0">
+                    <i className="bi bi-exclamation-circle me-1"></i>
                     {errors.contacto.message}
                   </p>
                 )}
@@ -154,16 +160,28 @@ const ReservaModal = ({ show, handleClose }) => {
                   className={`form-control form-control-dark ${errors.descripcion ? "is-invalid" : ""}`}
                   rows="3"
                   {...register("descripcion", {
-                    required: "Dinos qué necesitas",
+                    required: "Dinos qué necesitas consultar",
                     minLength: {
                       value: 20,
-                      message: "El mensaje debe tener al menos 20 caracteres",
+                      message:
+                        "El mensaje debe tener al menos 20 caracteres para poder ayudarte mejor",
+                    },
+                    maxLength: {
+                      value: 1000,
+                      message:
+                        "El mensaje no puede superar los 1000 caracteres",
+                    },
+                    validate: {
+                      notEmpty: (value) =>
+                        value?.trim() !== "" ||
+                        "El mensaje no puede estar vacío",
                     },
                   })}
                   id="contact-desc"
                 ></textarea>
                 {errors.descripcion && (
-                  <p className="texto-error fw-bold">
+                  <p className="texto-error fw-bold mt-1 mb-0">
+                    <i className="bi bi-exclamation-circle me-1"></i>
                     {errors.descripcion.message}
                   </p>
                 )}

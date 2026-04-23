@@ -177,9 +177,9 @@ const ProductoModal = ({ producto }) => {
                                 className={`form-control form-control-dark text-center ${errors.cantidad ? "is-invalid" : ""}`}
                                 style={{ width: "60px" }}
                                 inputMode="numeric"
-                                onFocus={(e) => e.target.select()}
-                                onChange={(e) => {
-                                  let val = parseInt(e.target.value) || 1;
+                                onFocus={(event) => event.target.select()}
+                                onChange={(event) => {
+                                  let val = parseInt(event.target.value) || 1;
                                   val = Math.max(
                                     1,
                                     Math.min(val, producto?.stock || 1),

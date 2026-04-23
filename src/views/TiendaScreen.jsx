@@ -21,8 +21,8 @@ const TiendaScreen = () => {
   }, []);
 
   const scrollRefs = useRef({});
-  const scroll = (catId, direction) => {
-    const container = scrollRefs.current[catId];
+  const scroll = (categoriaId, direction) => {
+    const container = scrollRefs.current[categoriaId];
     if (container) {
       const scrollAmount = 300;
       container.scrollBy({
@@ -56,61 +56,65 @@ const TiendaScreen = () => {
   }
   return (
     <div className="menu-container container p-3">
-      {categorias.map((cat) => {
-        const catId = cat._id;
-        const catNombre = cat.nombre;
+      {categorias.map((categoria) => {
+        const categoriaId = categoria._id;
+        const categoriaNombre = categoria.nombre;
 
-        const productosFiltrados = productos.filter((p) => {
-          const pCatId = p.categoria?._id || p.categoria;
-          const pCatNombre = p.categoria?.nombre;
+        const productosFiltrados = productos.filter((producto) => {
+          const productoCategoriaId =
+            producto.categoria?._id || producto.categoria;
+          const productoCategoriaNombre = producto.categoria?.nombre;
 
-          return pCatId === catId || pCatNombre === catNombre;
+          return (
+            productoCategoriaId === categoriaId ||
+            productoCategoriaNombre === categoriaNombre
+          );
         });
 
         if (productosFiltrados.length === 0) return null;
 
         return (
-          <div key={catId} className="mb-4">
+          <div key={categoriaId} className="mb-4">
             <div className="ps-2 mb-3">
               <h2 className="text-white h5 fw-bold m-0 category-title-badge">
-                {cat.nombre || cat}
+                {categoria.nombre || categoria}
               </h2>
             </div>
             <div className="category-shelf d-flex align-items-center position-relative">
               <button
                 className="scroll-arrow me-2"
-                onClick={() => scroll(catId, "left")}
+                onClick={() => scroll(categoriaId, "left")}
               >
                 {" "}
                 &lt;{" "}
               </button>
               <div
                 className="d-flex gap-3 overflow-hidden w-100 py-3"
-                ref={(el) => (scrollRefs.current[catId] = el)}
+                ref={(el) => (scrollRefs.current[categoriaId] = el)}
                 style={{ scrollBehavior: "smooth" }}
               >
-                {productosFiltrados.map((p) => (
+                {productosFiltrados.map((producto) => (
                   <div
-                    key={p._id}
+                    key={producto._id}
                     className="item-card text-center"
-                    onClick={() => setProductoSeleccionado(p)}
+                    onClick={() => setProductoSeleccionado(producto)}
                     data-bs-toggle="modal"
                     data-bs-target="#modalProducto"
                   >
                     <div className="img-container mb-2">
                       <img
                         src={
-                          p.img ||
+                          producto.img ||
                           "https://png.pngtree.com/png-vector/20230407/ourmid/pngtree-placeholder-line-icon-vector-png-image_6691835.png"
                         }
-                        alt={p.nombre}
+                        alt={producto.nombre}
                         className="product-img"
                       />
                     </div>
                     <div className="item-info text-white">
-                      <p className="m-0 fw-bold item-name">{p.nombre}</p>
+                      <p className="m-0 fw-bold item-name">{producto.nombre}</p>
                       <p className="m-0 item-price">
-                        ${p.precio.toLocaleString("es-AR")}
+                        ${producto.precio.toLocaleString("es-AR")}
                       </p>
                     </div>
                   </div>
@@ -119,7 +123,7 @@ const TiendaScreen = () => {
 
               <button
                 className="scroll-arrow ms-2"
-                onClick={() => scroll(catId, "right")}
+                onClick={() => scroll(categoriaId, "right")}
               >
                 {" "}
                 &gt;{" "}

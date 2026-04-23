@@ -11,6 +11,11 @@ const HeaderApp = () => {
   const { cartLoading, totalItems } = useCart();
   const location = useLocation();
 
+  const getFirstName = (fullName) => {
+    if (!fullName) return "";
+    return fullName.trim().split(" ")[0];
+  };
+
   const isAuthPage = useMemo(() => {
     return (
       location.pathname === "/login" ||
@@ -137,7 +142,9 @@ const HeaderApp = () => {
                         <i className="bi bi-person-circle fs-5"></i>
                         <span className="fw-bold d-none d-sm-inline-flex align-items-center gap-1">
                           Hola,{" "}
-                          <span className="user-neon">{user.username}</span>
+                          <span className="user-neon">
+                            {getFirstName(user.username)}
+                          </span>
                         </span>
                       </Link>
 

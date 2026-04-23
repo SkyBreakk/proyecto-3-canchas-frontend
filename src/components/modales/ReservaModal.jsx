@@ -54,11 +54,11 @@ const ReservaModal = ({ cancha }) => {
       }
 
       setCargandoHorarios(true);
-      const res = await getHorariosDisponibles(fechaStr, cancha._id);
+      const respuesta = await getHorariosDisponibles(fechaStr, cancha._id);
 
-      if (res.ok) {
-        setHorariosDisponibles(res.horarios);
-        if (horaStr && !res.horarios.includes(horaStr)) {
+      if (respuesta.ok) {
+        setHorariosDisponibles(respuesta.horarios);
+        if (horaStr && !respuesta.horarios.includes(horaStr)) {
           setValue("horaStr", "");
         }
       } else {

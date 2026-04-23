@@ -10,8 +10,8 @@ const BtnGoogleSigIn = () => {
   const [loading, setLoading] = useState(false);
   const { showToast } = useToast();
 
-  const handleGoogleLogin = async (e) => {
-    e.preventDefault();
+  const handleGoogleLogin = async (event) => {
+    event.preventDefault();
 
     if (loading) return;
 

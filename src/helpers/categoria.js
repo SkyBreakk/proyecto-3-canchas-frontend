@@ -7,6 +7,7 @@ const apiCall = async (endpoint, method = "GET", body = null) => {
       headers: { "Content-Type": "application/json" },
       credentials: "include",
     };
+
     if (body) options.body = JSON.stringify(body);
 
     const finalUrl = endpoint.startsWith("/")
@@ -14,21 +15,18 @@ const apiCall = async (endpoint, method = "GET", body = null) => {
       : `${url}${endpoint ? "/" + endpoint : ""}`;
 
     const response = await fetch(finalUrl, options);
-
-    if (response.status === 204) return { ok: true };
-
-    const resultado = await response.json().catch(() => ({}));
+    const data = await response.json().catch(() => ({}));
 
     if (!response.ok) {
-      throw new Error(
-        resultado.message || resultado.msg || `Error: ${response.status}`,
-      );
+      return {
+        ok: false,
+        mensaje: data.mensaje || `Error al hacer fetch de categoria`,
+      };
     }
-
-    return { ok: true, ...resultado };
+    return data;
   } catch (error) {
     console.error(`Error en ${endpoint}:`, error);
-    return { ok: false, message: error.message };
+    return { ok: false, mensaje: "Error de conexión con el servidor" };
   }
 };
 
@@ -39,6 +37,6 @@ export const crearCategoria = (newCategoria) =>
   apiCall("", "POST", newCategoria);
 
 export const actualizarCategoria = (categoria) =>
-  apiCall(categoria._id, "PUT", categoria);
+  apiCall(`${categoria._id}`, "PUT", categoria);
 
-export const eliminarCategoria = (id) => apiCall(id, "DELETE");
+export const eliminarCategoria = (id) => apiCall(`${id}`, "DELETE");

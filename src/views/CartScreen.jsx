@@ -165,7 +165,11 @@ const CartScreen = () => {
 
               {subtotal > 0 ? (
                 <div className="w-100">
-                  <PaymentBtnApp total={totalFinal} />
+                  <PaymentBtnApp
+                    total={totalFinal}
+                    compraDirecta={compraDirecta}
+                    cantidad={cantidadQuery}
+                  />
                   {esCompraDirecta && (
                     <Link
                       to="/tienda"
