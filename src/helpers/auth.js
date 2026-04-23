@@ -30,25 +30,9 @@ export const registerUser = async (data) => {
     });
 
     const result = await response.json();
-
-    if (!response.ok) {
-      const errorMessage =
-        result.errors?.email?.msg ||
-        result.errors?.username?.msg ||
-        "Error al registrar usuario";
-
-      return {
-        ok: false,
-        message: errorMessage,
-      };
-    }
-
-    return {
-      ok: true,
-      message: result.message,
-      data: result.data,
-    };
+    return result;
   } catch (error) {
+    console.error(error);
     return {
       ok: false,
       message: "Error al conectar con el servidor",
@@ -64,15 +48,13 @@ export const verifyEmail = async (data) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
+      credentials: "include",
     });
 
     const result = await response.json();
-
-    return {
-      ok: response.ok,
-      message: result.message,
-    };
+    return result;
   } catch (error) {
+    console.error(error);
     return {
       ok: false,
       message: "Error al verificar el código",
@@ -90,13 +72,10 @@ export const resendVerificationCode = async (email) => {
       body: JSON.stringify({ email }),
     });
 
-    const result = await response.json();
-
-    return {
-      ok: response.ok,
-      message: result.message,
-    };
+    const data = await response.json();
+    return data;
   } catch (error) {
+    console.error(error);
     return {
       ok: false,
       message: "Error al conectar con el servidor",

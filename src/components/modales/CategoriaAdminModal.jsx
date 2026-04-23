@@ -29,7 +29,11 @@ function CategoriaAdminModal({ show, close, onSave, categoria }) {
               className={`form-control bg-dark text-light border-${
                 errors.nombre ? "danger" : "secondary"
               }`}
-              {...register("nombre", { required: "El nombre es obligatorio" })}
+              {...register("nombre", {
+                required: "El nombre es obligatorio",
+                minLength: { value: 4, message: "Mínimo 4 caracteres" },
+                maxLength: { value: 20, message: "Máximo 20 caracteres" },
+              })}
               id="category-name"
               defaultValue={categoria?.nombre || ""}
             />

@@ -75,8 +75,12 @@ const ReservaScreen = () => {
                     />
                   </div>
                   <div className="cancha-info">
-                    <h5 className="cancha-title">{cancha.nombre}</h5>
-                    <span className="cancha-desc">{cancha.descripcion}</span>
+                    <h5 className="cancha-title text-truncate">
+                      {cancha.nombre}
+                    </h5>
+                    <span className="cancha-desc text-truncate">
+                      {cancha.descripcion}
+                    </span>
                   </div>
                 </div>
               </div>

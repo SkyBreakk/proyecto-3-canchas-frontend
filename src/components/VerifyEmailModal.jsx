@@ -7,7 +7,6 @@ import "../assets/css/verifyemailmodal.css";
 function VerifyEmailModal({ email, onSuccess, onClose }) {
   const { register, handleSubmit } = useForm();
   const { showToast } = useToast();
-  const [response, setResponse] = useState(null);
   const [resending, setResending] = useState(false);
 
   const onSubmit = async (data) => {
@@ -16,22 +15,15 @@ function VerifyEmailModal({ email, onSuccess, onClose }) {
       code: data.code,
     });
 
-    setResponse(result);
-
     if (result.ok) {
-      showToast("Email verificado correctamente", "success");
       onSuccess();
     } else {
-      showToast(
-        result?.message || "Código inválido. Intenta nuevamente.",
-        "danger",
-      );
+      showToast(result?.message || "Código inválido", "danger");
     }
   };
 
   const handleResendCode = async () => {
     if (resending) return;
-
     setResending(true);
 
     const result = await resendVerificationCode(email);
@@ -54,7 +46,7 @@ function VerifyEmailModal({ email, onSuccess, onClose }) {
     <div className="custom-modal-overlay" onClick={onClose}>
       <div
         className="modal-dialog modal-dialog-centered"
-        onClick={(e) => e.stopPropagation()}
+        onClick={(event) => event.stopPropagation()}
       >
         <div className="modal-content custom-modal-content p-4 position-relative">
           <button
@@ -79,18 +71,18 @@ function VerifyEmailModal({ email, onSuccess, onClose }) {
               type="text"
               inputMode="numeric"
               maxLength={6}
-              onKeyDown={(e) => {
+              onKeyDown={(event) => {
                 if (
-                  !/[0-9]/.test(e.key) &&
+                  !/[0-9]/.test(event.key) &&
                   ![
                     "Backspace",
                     "Delete",
                     "Tab",
                     "ArrowLeft",
                     "ArrowRight",
-                  ].includes(e.key)
+                  ].includes(event.key)
                 ) {
-                  e.preventDefault();
+                  event.preventDefault();
                 }
               }}
               {...register("code", {

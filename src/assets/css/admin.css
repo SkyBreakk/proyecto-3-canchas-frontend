@@ -15,6 +15,12 @@
   color: white;
 }
 
+.admin-loader {
+  width: 3rem;
+  height: 3rem;
+  color: var(--verde-neon, #39ff14);
+}
+
 .containerTable-adminScreen {
   background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -83,7 +89,17 @@
   color: white;
 }
 
+.admin-content-container {
+  min-height: 450px;
+  position: relative;
+  transition: min-height 0.3s ease;
+}
+
 @media (max-width: 768px) {
+  .admin-content-container {
+    min-height: 800px;
+  }
+
   .containerTable-adminScreen {
     padding: 15px !important;
     margin: 10px;
@@ -138,6 +154,10 @@
   background: rgba(57, 255, 20, 0.05);
 }
 
+.admin-price-amount {
+  width: 80%;
+}
+
 .background-adminScreen .modal-dialog {
   max-width: 95%;
   margin: 0 auto;
@@ -175,6 +195,15 @@
   background-color: #ff4444;
   border: none;
   color: white;
+}
+
+.modal-img-admin {
+  width: 100%;
+  border-radius: 15px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+  aspect-ratio: 4 / 3;
+  background-color: white;
 }
 
 @media (max-width: 768px) {
@@ -217,12 +246,6 @@
   .background-adminScreen .modal-body .col-md-7 {
     width: 100%;
     padding: 10px 0;
-  }
-
-  .background-adminScreen .modal-img-cancha {
-    max-width: 150px;
-    height: auto;
-    margin-bottom: 10px;
   }
 
   .background-adminScreen .modal-title {

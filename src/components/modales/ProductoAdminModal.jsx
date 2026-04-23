@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 function ProductoAdminModal({
@@ -11,6 +11,7 @@ function ProductoAdminModal({
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -22,6 +23,19 @@ function ProductoAdminModal({
       img: producto?.img || "",
     },
   });
+
+  const watchImg = watch("img");
+  const [displayImg, setDisplayImg] = useState(watchImg);
+  const placeholderImg =
+    "https://png.pngtree.com/png-vector/20230407/ourmid/pngtree-placeholder-line-icon-vector-png-image_6691835.png";
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDisplayImg(watchImg);
+    }, 400);
+
+    return () => clearTimeout(timer);
+  }, [watchImg]);
 
   useEffect(() => {
     if (show) {
@@ -40,11 +54,11 @@ function ProductoAdminModal({
     <div className="modal-custom-overlay" onClick={close}>
       <div
         className="modal-dialog modal-lg w-100 modal-animacion"
-        onClick={(e) => e.stopPropagation()}
+        onClick={(event) => event.stopPropagation()}
       >
         <div className="modal-content modal-cancha-custom p-2">
           <div className="modal-header border-0">
-            <h5 className="modal-title fw-bold neon-text text-uppercase">
+            <h5 className="modal-title fw-bold neon-text text-uppercase mb-2">
               {producto ? "Editar Producto" : "Nuevo Producto"}
             </h5>
             <button
@@ -62,15 +76,16 @@ function ProductoAdminModal({
           >
             <div className="modal-body row g-3 mx-0">
               <div className="col-md-5 text-center">
-                <div className="position-relative">
+                <div className="mb-3">
                   <img
-                    src={
-                      producto?.img ||
-                      "https://png.pngtree.com/png-vector/20230407/ourmid/pngtree-placeholder-line-icon-vector-png-image_6691833.png"
-                    }
-                    className="modal-img-cancha mb-3 img-fluid rounded border border-secondary"
+                    src={displayImg || placeholderImg}
+                    className="modal-img-admin mb-3 img-fluid rounded border border-secondary"
                     alt="preview"
-                    style={{ maxHeight: "200px", objectFit: "cover" }}
+                    onError={(event) => {
+                      if (event.target.src !== placeholderImg) {
+                        event.target.src = placeholderImg;
+                      }
+                    }}
                   />
                 </div>
                 <label
@@ -100,6 +115,7 @@ function ProductoAdminModal({
                     {...register("nombre", {
                       required: "El nombre es obligatorio",
                       minLength: { value: 5, message: "Mínimo 5 caracteres" },
+                      maxLength: { value: 30, message: "Máximo 30 caracteres" },
                     })}
                     id="product-name"
                   />
@@ -120,13 +136,26 @@ function ProductoAdminModal({
                     </label>
                     <input
                       type="number"
+                      step="0.01"
                       className={`form-control form-control-dark ${errors.precio ? "is-invalid" : ""}`}
                       {...register("precio", {
-                        required: "Obligatorio",
-                        min: { value: 0, message: "Mínimo 0" },
+                        required: "El precio es obligatorio",
+                        min: {
+                          value: 1,
+                          message: "El precio debe ser mayor que 0",
+                        },
+                        max: {
+                          value: 3000000,
+                          message: "El máximo es $3.000.000",
+                        },
                       })}
                       id="product-price"
                     />
+                    {errors.precio && (
+                      <div className="invalid-feedback small">
+                        {errors.precio.message}
+                      </div>
+                    )}
                   </div>
                   <div className="col-6 mb-3">
                     <label
@@ -139,11 +168,20 @@ function ProductoAdminModal({
                       type="number"
                       className={`form-control form-control-dark ${errors.stock ? "is-invalid" : ""}`}
                       {...register("stock", {
-                        required: "Obligatorio",
+                        required: "El stock es obligatorio",
                         min: { value: 0, message: "Mínimo 0" },
+                        max: {
+                          value: 100000,
+                          message: "Máximo 100.000 unidades",
+                        },
                       })}
                       id="product-stock"
                     />
+                    {errors.stock && (
+                      <div className="invalid-feedback small">
+                        {errors.stock.message}
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -162,12 +200,17 @@ function ProductoAdminModal({
                     id="product-category"
                   >
                     <option value="">Seleccione...</option>
-                    {categorias.map((cat) => (
-                      <option key={cat._id} value={cat._id}>
-                        {cat.nombre}
+                    {categorias.map((categoria) => (
+                      <option key={categoria._id} value={categoria._id}>
+                        {categoria.nombre}
                       </option>
                     ))}
                   </select>
+                  {errors.categoria && (
+                    <div className="invalid-feedback small">
+                      {errors.categoria.message}
+                    </div>
+                  )}
                 </div>
 
                 <div className="mb-0">
@@ -180,9 +223,20 @@ function ProductoAdminModal({
                   <textarea
                     className="form-control form-control-dark"
                     rows="3"
-                    {...register("descripcion")}
+                    {...register("descripcion", {
+                      maxLength: {
+                        value: 200,
+                        message:
+                          "La descricpión no puede superar los 200 caracteres",
+                      },
+                    })}
                     id="product-desc"
                   ></textarea>
+                  {errors.descripcion && (
+                    <div className="invalid-feedback small">
+                      {errors.descripcion.message}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

@@ -37,9 +37,11 @@ const MisReservas = () => {
   const ejecutarCancelacion = async () => {
     if (!reservaSeleccionada) return;
     try {
-      const res = await apiReserva.delete(reservaSeleccionada._id);
-      if (res.ok) {
-        setReservas(reservas.filter((r) => r._id !== reservaSeleccionada._id));
+      const response = await apiReserva.delete(reservaSeleccionada._id);
+      if (response.ok) {
+        setReservas(
+          reservas.filter((reserva) => reserva._id !== reservaSeleccionada._id),
+        );
         setShowModal(false);
         showToast("La reserva se canceló correctamente.", "success");
       } else {
@@ -54,21 +56,12 @@ const MisReservas = () => {
   const handlePagar = async (reserva) => {
     setPagandoId(reserva._id);
     try {
-      const totalPagar = (reserva.cancha?.precio || 0) * reserva.horas;
-      if (totalPagar === 0) {
-        showToast("Error: No se pudo calcular el precio.", "danger");
-        setPagandoId(null);
-        return;
-      }
-      const datosPago = {
-        titulo: `Reserva - ${reserva.cancha?.nombre}`,
-        cantidad: 1,
-        precio: totalPagar,
-        reservaId: reserva._id,
-      };
-      const res = await pagarMercadoPago(datosPago);
-      if (res.ok && res.id) {
-        window.location.href = `https://www.mercadopago.com.ar/checkout/v1/redirect?pref_id=${res.id}`;
+      const response = await pagarMercadoPago({
+        tipo: "reserva",
+        id: reserva._id,
+      });
+      if (response.ok && res.id) {
+        window.location.href = `https://www.mercadopago.com.ar/checkout/v1/redirect?pref_id=${response.id}`;
       } else {
         showToast("No se pudo generar link de pago.", "danger");
         setPagandoId(null);
@@ -104,23 +97,23 @@ const MisReservas = () => {
             <div className="col-lg-4">Acciones</div>
           </div>
 
-          {reservas.map((r) => (
+          {reservas.map((reserva) => (
             <div
-              key={r._id}
+              key={reserva._id}
               className="row itemRow-adminScreen py-3 align-items-center mx-0 px-2 text-center text-lg-start border-bottom border-secondary border-opacity-25"
             >
               <div className="col-12 col-lg-3 mb-2 mb-lg-0 text-center fw-bold">
                 <span className="d-lg-none text-secondary d-block small">
                   Cancha
                 </span>
-                {r.cancha?.nombre}
+                {reserva.cancha?.nombre}
               </div>
 
               <div className="col-12 col-lg-3 mb-2 mb-lg-0 text-center opacity-75">
                 <span className="d-lg-none text-secondary d-block small">
                   Fecha
                 </span>
-                {new Date(r.fecha).toLocaleString("es-AR", {
+                {new Date(reserva.fecha).toLocaleString("es-AR", {
                   day: "2-digit",
                   month: "2-digit",
                   hour: "2-digit",
@@ -128,7 +121,7 @@ const MisReservas = () => {
                 })}{" "}
                 <br />
                 <span className="badge bg-dark border border-secondary mt-1 text-secondary">
-                  {r.horas} hrs
+                  {reserva.horas} hrs
                 </span>
               </div>
 
@@ -136,7 +129,7 @@ const MisReservas = () => {
                 <span className="d-lg-none text-secondary d-block small mb-1">
                   Estado
                 </span>
-                {r.estadoPago === "Pagado" ? (
+                {reserva.estadoPago === "Pagado" ? (
                   <span className="badge bg-success w-75 py-2">
                     <i className="bi bi-check-circle-fill me-1"></i> Pagado
                   </span>
@@ -148,14 +141,14 @@ const MisReservas = () => {
               </div>
 
               <div className="col-12 col-lg-4 d-flex flex-column flex-sm-row justify-content-center align-items-center gap-2">
-                {r.estadoPago === "Pendiente" && (
+                {reserva.estadoPago === "Pendiente" && (
                   <button
                     className="btn btn-sm btn-info text-white rounded-pill px-4 fw-bold w-100"
                     style={{ backgroundColor: "#009ee3", border: "none" }}
-                    onClick={() => handlePagar(r)}
-                    disabled={pagandoId === r._id}
+                    onClick={() => handlePagar(reserva)}
+                    disabled={pagandoId === reserva._id}
                   >
-                    {pagandoId === r._id ? (
+                    {pagandoId === reserva._id ? (
                       <span className="spinner-border spinner-border-sm"></span>
                     ) : (
                       <>

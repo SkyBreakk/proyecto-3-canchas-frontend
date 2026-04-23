@@ -4,7 +4,7 @@ export const apiCancha = {
   get: (limit, offset) =>
     fetch(`${url}?limite=${limit}&desde=${offset}`, {
       credentials: "include",
-    }).then((r) => r.json()),
+    }).then((response) => response.json()),
 
   create: (data) =>
     fetch(`${url}/register`, {
@@ -12,7 +12,7 @@ export const apiCancha = {
       headers: { "Content-Type": "application/json" },
       credentials: "include",
       body: JSON.stringify(data),
-    }).then((r) => r.json()),
+    }).then((response) => response.json()),
 
   update: (data) =>
     fetch(`${url}/update/${data._id}`, {
@@ -20,11 +20,11 @@ export const apiCancha = {
       headers: { "Content-Type": "application/json" },
       credentials: "include",
       body: JSON.stringify(data),
-    }).then((r) => r.json()),
+    }).then((response) => response.json()),
 
   delete: (id) =>
     fetch(`${url}/${id}`, {
       method: "DELETE",
       credentials: "include",
-    }).then((r) => r.json()),
+    }).then((response) => response.json()),
 };

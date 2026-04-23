@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { registerUser } from "../helpers/auth";
@@ -6,9 +6,11 @@ import zona5 from "../assets/img/logo.png";
 import VerifyEmailModal from "../components/VerifyEmailModal";
 import { useToast } from "../context/ToastContext.jsx";
 import "../assets/css/login.css";
+import { UserContext } from "../context/UserContext.jsx";
 
 function RegisterScreen() {
   const navigate = useNavigate();
+  const { loadUserData } = useContext(UserContext);
   const { showToast } = useToast();
   const [response, setResponse] = useState(null);
   const [showVerifyModal, setShowVerifyModal] = useState(false);
@@ -32,45 +34,22 @@ function RegisterScreen() {
     }
 
     const result = await registerUser(data);
-    setResponse(result);
-
-    if (
-      result?.message?.includes("ya existe") ||
-      result?.message?.includes("ya está registrado")
-    ) {
-      const field = result.message.includes("usuario")
-        ? "nombre de usuario"
-        : "correo electrónico";
-      showToast(`Este ${field} ya está en uso. Prueba con otro.`, "warning");
-      return;
-    }
-
-    if (
-      result?.message?.includes("usuario") &&
-      result?.message?.includes("existe")
-    ) {
-      showToast(
-        "Este nombre de usuario no está disponible. Prueba con otro.",
-        "danger",
-      );
-      return;
-    }
-
-    if (result?.message && !result.ok) {
-      showToast(result.message, "danger");
-      return;
-    }
-
     if (result?.ok) {
       setUserEmail(data.email);
       setShowVerifyModal(true);
-      showToast("¡Cuenta creada! Revisa tu email para verificarla.", "success");
+      showToast(result.message, "success");
     } else {
-      showToast(
-        "Ocurrió un error al registrar tu cuenta. Intenta nuevamente.",
-        "danger",
-      );
+      const errorMsg =
+        result?.message || "Ocurrió un error al registrar tu cuenta.";
+      showToast(errorMsg, "warning");
     }
+  };
+
+  const handleVerificationSuccess = async () => {
+    setShowVerifyModal(false);
+    await loadUserData();
+    showToast("Email verificado con éxito. Bienvenido a Zona 5", "success");
+    navigate("/");
   };
 
   return (
@@ -90,22 +69,29 @@ function RegisterScreen() {
                   required: "El nombre de usuario es obligatorio",
                   minLength: {
                     value: 5,
-                    message: "Mínimo 5 caracteres",
+                    message: "El nombre debe tener al menos 5 caracteres",
                   },
                   maxLength: {
                     value: 20,
-                    message: "Máximo 20 caracteres",
-                  },
-                  pattern: {
-                    value: /^(?![0-9]+$)[a-zA-Z0-9_]+$/,
-                    message:
-                      "Solo letras, números y guiones bajos. No puede ser solo números",
+                    message: "El nombre no puede superar los 20 caracteres",
                   },
                   validate: {
                     notEmpty: (value) =>
                       value?.trim() !== "" || "El usuario no puede estar vacío",
-                    noSpaces: (value) =>
-                      !value?.includes(" ") || "No puede contener espacios",
+                    validChars: (value) =>
+                      /^[a-zA-Z0-9_\sáéíóúÁÉÍÓÚñÑ]+$/.test(value) ||
+                      "Solo letras, números, espacios, tildes y guiones bajos (_)",
+                    noMultipleSpaces: (value) =>
+                      !/\s{2,}/.test(value) ||
+                      "El nombre no puede tener múltiples espacios seguidos",
+                    notOnlyNumbers: (value) =>
+                      !/^[0-9\s]+$/.test(value) ||
+                      "El usuario no puede ser solo números",
+                  },
+                  onChange: (event) => {
+                    if (event.target.value.startsWith(" ")) {
+                      event.target.value = event.target.value.trimStart();
+                    }
                   },
                 })}
               />
@@ -125,6 +111,10 @@ function RegisterScreen() {
                 autoComplete="email"
                 {...register("email", {
                   required: "El correo electrónico es obligatorio",
+                  maxLength: {
+                    value: 254,
+                    message: "El correo no puede superar los 254 caracteres",
+                  },
                   pattern: {
                     value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
                     message:
@@ -167,18 +157,29 @@ function RegisterScreen() {
                     required: "La contraseña es obligatoria",
                     minLength: {
                       value: 6,
-                      message: "Mínimo 6 caracteres",
+                      message:
+                        "La contraseña debe tener un mínimo de 6 caracteres",
                     },
-                    pattern: {
-                      value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-                      message: "Debe incluir mayúscula, minúscula y número",
+                    maxLength: {
+                      value: 128,
+                      message: "La contraseña es demasiado larga (máximo 128)",
                     },
                     validate: {
                       notEmpty: (value) =>
                         value?.trim() !== "" ||
-                        "La contraseña no puede estar vacía",
+                        "La contraseña no puede estar formada solo por espacios",
                       noSpaces: (value) =>
-                        !value?.includes(" ") || "No puede contener espacios",
+                        !value?.includes(" ") ||
+                        "La contraseña no puede contener espacios en blanco",
+                      hasUpper: (value) =>
+                        /[A-Z]/.test(value) ||
+                        "Te falta incluir al menos una letra mayúscula",
+                      hasLower: (value) =>
+                        /[a-z]/.test(value) ||
+                        "Te falta incluir al menos una letra minúscula",
+                      hasNumber: (value) =>
+                        /\d/.test(value) ||
+                        "Te falta incluir al menos un número",
                     },
                   })}
                 />
@@ -212,13 +213,14 @@ function RegisterScreen() {
                   placeholder="Confirmar contraseña"
                   autoComplete="new-password"
                   {...register("confirmPassword", {
-                    required: "Confirma tu contraseña",
+                    required: "Por favor, confirma tu contraseña",
                     validate: {
                       match: (value) =>
-                        value === password || "Las contraseñas no coinciden",
+                        value === password ||
+                        "Las contraseñas no coinciden, revísalas",
                       notEmpty: (value) =>
                         value?.trim() !== "" ||
-                        "Este campo no puede estar vacío",
+                        "Este campo no puede quedar en blanco",
                     },
                   })}
                 />
@@ -285,10 +287,7 @@ function RegisterScreen() {
       {showVerifyModal && (
         <VerifyEmailModal
           email={userEmail}
-          onSuccess={() => {
-            setShowVerifyModal(false);
-            navigate("/login");
-          }}
+          onSuccess={handleVerificationSuccess}
           onClose={() => setShowVerifyModal(false)}
         />
       )}

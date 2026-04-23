@@ -354,6 +354,7 @@ body {
   object-fit: cover;
   transition: transform 0.3s ease;
   aspect-ratio: 4 / 3;
+  background-color: white;
 }
 
 @media (max-width: 991.98px) {

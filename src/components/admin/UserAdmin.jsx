@@ -9,14 +9,16 @@ function UserAdmin() {
   const { user, authLoading } = useContext(UserContext);
   const [users, setUsers] = useState([]);
   const [total, setTotal] = useState(0);
-  const [pagina, setPagina] = useState(0);
+  const [paginado, setPaginado] = useState(0);
   const [deleteModal, setDeleteModal] = useState({ show: false, user: null });
   const [roleModal, setRoleModal] = useState({ show: false, user: null });
+  const [loading, setLoading] = useState(true);
   const { showToast } = useToast();
 
   const cargarUsuarios = () => {
+    setLoading(true);
     apiUser
-      .get(5, pagina)
+      .get(5, paginado)
       .then((data) => {
         if (data && data.users) {
           setUsers(data.users);
@@ -26,38 +28,39 @@ function UserAdmin() {
           setTotal(0);
         }
       })
-      .catch((err) => {
-        console.error("Error en la carga:", err);
-        setUsers([]);
+      .catch((error) => {
+        console.error("Error en la carga:", error);
+        showToast("Error de conexión", "danger");
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
   useEffect(() => {
-    if (!authLoading && user) {
-      cargarUsuarios();
-    }
-  }, [pagina, authLoading, user]);
+    cargarUsuarios();
+  }, [paginado]);
 
   const handleRoleChange = async (formData) => {
     if (!roleModal.user?._id || !roleModal.user?.email) return;
 
     const nuevoRol = formData.role;
     const rolActual = roleModal.user.role;
-    let res = { ok: false };
+    let response = { ok: false };
 
     if (nuevoRol === "admin" && rolActual === "user") {
-      res = await apiUser.addAdmin(roleModal.user.email);
+      response = await apiUser.addAdmin(roleModal.user.email);
     } else if (nuevoRol === "user" && rolActual === "admin") {
-      res = await apiUser.delAdmin(roleModal.user._id);
+      response = await apiUser.delAdmin(roleModal.user._id);
     }
 
-    if (res.ok) {
+    if (response.ok) {
       cargarUsuarios();
       setRoleModal({ show: false, user: null });
       showToast(`El rol se actualizó a ${nuevoRol.toUpperCase()}.`, "success");
     } else {
       showToast(
-        res.message || "Se produjo un error al cambiar el rol.",
+        response.message || "Se produjo un error al cambiar el rol.",
         "danger",
       );
     }
@@ -66,8 +69,8 @@ function UserAdmin() {
   const handleBorrar = async () => {
     if (!deleteModal.user?._id) return;
 
-    const res = await apiUser.delete(deleteModal.user._id);
-    if (res.ok) {
+    const response = await apiUser.delete(deleteModal.user._id);
+    if (response.ok) {
       cargarUsuarios();
       setDeleteModal({ show: false, user: null });
       showToast("El usuario fue borrado correctamente.", "success");
@@ -78,9 +81,29 @@ function UserAdmin() {
 
   return (
     <>
-      <h1 className="display-4 text-center neon-text mb-5 fw-bold">
+      <h1 className="display-4 text-center neon-text mb-4 fw-bold">
         Gestión de Usuarios
       </h1>
+
+      <div className="d-flex justify-content-center align-items-center gap-3 my-3">
+        <button
+          className="btn btn-sm btn-neon"
+          onClick={() => setPaginado((pagina) => Math.max(0, pagina - 5))}
+          disabled={paginado === 0}
+        >
+          <i className="bi bi-chevron-left"></i>
+        </button>
+        <span className="text-secondary align-self-center small">
+          Mostrando {paginado + 1} - {paginado + users.length} de {total}
+        </span>
+        <button
+          className="btn btn-sm btn-neon"
+          onClick={() => setPaginado((pagina) => pagina + 5)}
+          disabled={paginado + 5 >= total}
+        >
+          <i className="bi bi-chevron-right"></i>
+        </button>
+      </div>
 
       <div className="row fw-bold border-bottom pb-2 mb-2 neon-text px-3">
         <div className="col-3 d-none d-md-block">Usuario</div>
@@ -89,98 +112,97 @@ function UserAdmin() {
         <div className="col-5 col-sm-2 text-center">Acciones</div>
       </div>
 
-      {users.map((userItem) => (
+      {loading ? (
         <div
-          key={userItem?._id}
-          className="row itemRow-adminScreen py-3 align-items-center mx-0 px-2"
+          className="d-flex flex-column justify-content-center align-items-center"
+          style={{ minHeight: "50vh" }}
         >
-          <div className="col-3 fw-bold d-none d-md-block text-truncate">
-            {userItem.username}
+          <div className="spinner-border mb-3 admin-loader" role="status">
+            <span className="visually-hidden">Cargando...</span>
           </div>
-          <div className="col-7 col-md-3 opacity-75 text-truncate">
-            {userItem.email}
-          </div>
-          <div className="col-3 d-none d-sm-block text-center">
-            <span
-              className={`badge ${
-                userItem.role === "superadmin"
-                  ? "bg-warning text-dark"
-                  : userItem.role === "admin"
-                    ? "bg-danger"
-                    : "bg-success"
-              } bg-opacity-25 border border-${
-                userItem.role === "superadmin"
-                  ? "warning"
-                  : userItem.role === "admin"
-                    ? "danger"
-                    : "success"
-              } text-${
-                userItem.role === "superadmin"
-                  ? "warning"
-                  : userItem.role === "admin"
-                    ? "danger"
-                    : "success"
-              }`}
-            >
-              {userItem.role.toUpperCase()}
-            </span>
-          </div>
-          <div className="col-5 col-sm-2 text-center">
-            <div className="d-flex justify-content-center gap-2">
-              {user?.role === "superadmin" && (
-                <button
-                  className="btn btn-sm btn-outline-warning border-0"
-                  onClick={() => setRoleModal({ show: true, user: userItem })}
-                  title="Cambiar rol"
-                  disabled={
-                    userItem.username === user.username ||
-                    userItem.role === user.role
-                  }
-                >
-                  <i className="bi bi-person-gear fs-5"></i>
-                </button>
-              )}
-
-              <button
-                className="btn btn-sm btn-outline-danger border-0"
-                onClick={() => setDeleteModal({ show: true, user: userItem })}
-                disabled={
-                  userItem.role === user.role ||
-                  (userItem.role === "superadmin" && user.role === "admin") ||
-                  userItem.username === user.username
-                }
-                title={
-                  userItem.role === "superadmin"
-                    ? "No se puede eliminar un Superadmin"
-                    : "Eliminar usuario"
-                }
-              >
-                <i className="bi bi-person-x fs-5"></i>
-              </button>
-            </div>
-          </div>
+          <h3 className="neon-text opacity-75">Cargando usuarios...</h3>
         </div>
-      ))}
+      ) : (
+        <>
+          {users.map((userItem) => (
+            <div
+              key={userItem?._id}
+              className="row itemRow-adminScreen py-3 align-items-center mx-0 px-2"
+            >
+              <div className="col-3 fw-bold d-none d-md-block text-truncate">
+                {userItem.username}
+              </div>
+              <div className="col-7 col-md-3 opacity-75 text-truncate">
+                {userItem.email}
+              </div>
+              <div className="col-3 d-none d-sm-block text-center">
+                <span
+                  className={`badge ${
+                    userItem.role === "superadmin"
+                      ? "bg-warning text-dark"
+                      : userItem.role === "admin"
+                        ? "bg-danger"
+                        : "bg-success"
+                  } bg-opacity-25 border border-${
+                    userItem.role === "superadmin"
+                      ? "warning"
+                      : userItem.role === "admin"
+                        ? "danger"
+                        : "success"
+                  } text-${
+                    userItem.role === "superadmin"
+                      ? "warning"
+                      : userItem.role === "admin"
+                        ? "danger"
+                        : "success"
+                  }`}
+                >
+                  {userItem.role.toUpperCase()}
+                </span>
+              </div>
+              <div className="col-5 col-sm-2 text-center">
+                <div className="d-flex justify-content-center gap-2">
+                  {user?.role === "superadmin" && (
+                    <button
+                      className="btn btn-sm btn-outline-warning border-0"
+                      onClick={() =>
+                        setRoleModal({ show: true, user: userItem })
+                      }
+                      title="Cambiar rol"
+                      disabled={
+                        userItem.username === user.username ||
+                        userItem.role === user.role
+                      }
+                    >
+                      <i className="bi bi-person-gear fs-5"></i>
+                    </button>
+                  )}
 
-      <div className="d-flex justify-content-center align-items-center gap-3 mt-4">
-        <button
-          className="btn btn-sm btn-neon"
-          onClick={() => setPagina((p) => Math.max(0, p - 5))}
-          disabled={pagina === 0}
-        >
-          <i className="bi bi-chevron-left"></i>
-        </button>
-        <span className="text-secondary small">
-          Mostrando {pagina + 1} - {pagina + users.length} de {total}
-        </span>
-        <button
-          className="btn btn-sm btn-neon"
-          onClick={() => setPagina((p) => p + 5)}
-          disabled={pagina + 5 >= total}
-        >
-          <i className="bi bi-chevron-right"></i>
-        </button>
-      </div>
+                  <button
+                    className="btn btn-sm btn-outline-danger border-0"
+                    onClick={() =>
+                      setDeleteModal({ show: true, user: userItem })
+                    }
+                    disabled={
+                      userItem.role === user.role ||
+                      (userItem.role === "superadmin" &&
+                        user.role === "admin") ||
+                      userItem.username === user.username
+                    }
+                    title={
+                      userItem.role === "superadmin"
+                        ? "No se puede eliminar un Superadmin"
+                        : "Eliminar usuario"
+                    }
+                  >
+                    <i className="bi bi-person-x fs-5"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </>
+      )}
 
       <UserAdminModal
         show={roleModal.show}

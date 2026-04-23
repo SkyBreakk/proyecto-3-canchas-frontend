@@ -17,7 +17,7 @@ function UserAdminModal({ show, close, onSubmit, user }) {
     <div className="modal-custom-overlay" onClick={close}>
       <div
         className="modal-content-zona5 w-50 rounded shadow-lg"
-        onClick={(e) => e.stopPropagation()}
+        onClick={(event) => event.stopPropagation()}
       >
         <div className="modal-header p-4 border-0">
           <h2 className="modal-title neon-text fs-4">

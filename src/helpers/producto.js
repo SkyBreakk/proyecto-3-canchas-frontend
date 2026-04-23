@@ -14,14 +14,19 @@ const apiFetch = async (endpoint, method = "GET", body = null) => {
       : url;
 
     const response = await fetch(finalUrl, config);
-    const resultado = await response.json();
+    const data = await response.json();
 
-    if (!response.ok)
-      throw new Error(resultado.message || `Error: ${response.status}`);
-    return { ok: true, ...resultado };
+    if (!data.ok) {
+      return {
+        ok: false,
+        message: data.message || "Error al hacer fetch de productos",
+      };
+    }
+
+    return data;
   } catch (error) {
-    console.error(error);
-    return { ok: false, message: error.message };
+    console.error("Error en el Producto Helper:", error);
+    return { ok: false, message: "Error de conexión con el servidor" };
   }
 };
 

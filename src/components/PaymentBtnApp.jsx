@@ -2,27 +2,28 @@ import React, { useEffect, useState } from "react";
 import { Wallet } from "@mercadopago/sdk-react";
 import { pagarMercadoPago } from "../helpers/payment";
 
-const PaymentBtnApp = ({ total }) => {
+const PaymentBtnApp = ({ total, compraDirecta, cantidad }) => {
   const [idReference, setIdReference] = useState(null);
-
   useEffect(() => {
-    if (!total || total <= 0) return;
+    if (!total || total <= 0) {
+      setIdReference(null);
+      return;
+    }
+    setIdReference(null);
 
-    pagarMercadoPago({
-      titulo: "Reserva en Zona5",
-      cantidad: 1,
-      precio: total,
-    })
-      .then((response) => {
-        console.log("Respuesta de MP:", response);
-        if (response && response.id) {
-          setIdReference(response.id);
+    const datosPago = compraDirecta
+      ? {
+          tipo: "directa",
+          cantidad: cantidad,
+          id: compraDirecta._id,
         }
+      : { tipo: "carrito", id: "carrito_actual" };
+    pagarMercadoPago(datosPago)
+      .then((res) => {
+        if (res.ok) setIdReference(res.id);
       })
-      .catch((error) => {
-        console.error("Error al traer la preferencia de pago:", error);
-      });
-  }, [total]);
+      .catch(console.error);
+  }, [total, compraDirecta]);
 
   return (
     <div className="w-100 d-flex justify-content-center mt-3">
