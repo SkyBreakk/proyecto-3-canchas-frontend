@@ -20,13 +20,13 @@ const apiCall = async (endpoint, method = "GET", body = null) => {
     if (!response.ok) {
       return {
         ok: false,
-        mensaje: data.mensaje || `Error al hacer fetch de categoria`,
+        message: data.message || `Error al hacer fetch de categoria`,
       };
     }
     return data;
   } catch (error) {
     console.error(`Error en ${endpoint}:`, error);
-    return { ok: false, mensaje: "Error de conexión con el servidor" };
+    return { ok: false, message: "Error de conexión con el servidor" };
   }
 };
 

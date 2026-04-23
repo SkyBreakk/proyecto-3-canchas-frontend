@@ -78,7 +78,6 @@ function CategoriaAdmin() {
           + Agregar Categoría
         </button>
       </div>
-      egoria
       <div className="d-flex justify-content-center gap-3 my-4">
         <button
           className="btn btn-neon btn-sm"
