@@ -33,7 +33,7 @@ function ReservaAdmin() {
   const borrarReserva = async () => {
     const response = await apiReserva.delete(deleteModal.id);
     if (response.ok) {
-      setReservas(reservas.filter((r) => r._id !== deleteModal.id));
+      setReservas(reservas.filter((reserva) => reserva._id !== deleteModal.id));
       setTotal((cantidadPrevia) => cantidadPrevia - 1);
       setDeleteModal({ show: false, id: null });
       showToast("La reserva se eliminó correctamente.", "success");

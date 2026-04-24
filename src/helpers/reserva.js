@@ -75,8 +75,10 @@ export const getHorariosDisponibles = async (fecha, canchaID) => {
 
     if (result.ok) {
       const horarios = Array.isArray(result.horarios)
-        ? result.horarios.map((h) =>
-            typeof h === "string" ? h : h.hora || h.horaStr,
+        ? result.horarios.map((horario) =>
+            typeof horario === "string"
+              ? horario
+              : horario.hora || horario.horaStr,
           )
         : [];
 

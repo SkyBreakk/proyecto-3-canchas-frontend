@@ -15,7 +15,7 @@ export const pagarMercadoPago = async (datos) => {
 
     return data;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     throw new Error("Error");
   }
 };

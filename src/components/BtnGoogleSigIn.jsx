@@ -19,7 +19,6 @@ const BtnGoogleSigIn = () => {
 
     try {
       const response = await loginWithGoogle();
-      console.log("RESPONSE GOOGLE:", response);
       if (!response.ok) {
         showToast(response.message, "danger");
         return;

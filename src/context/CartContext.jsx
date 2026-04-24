@@ -73,7 +73,8 @@ export const CartProvider = ({ children }) => {
         ...prev,
         items: nuevosItems,
         total: nuevosItems.reduce(
-          (acc, i) => acc + i.precioUnitario * i.cantidad,
+          (acc, itemCarrito) =>
+            acc + itemCarrito.precioUnitario * itemCarrito.cantidad,
           0,
         ),
       };
